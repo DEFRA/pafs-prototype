@@ -1,0 +1,344 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Layout Catalogue" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-xl">Admin User Journey</span>
+    <h1 class="govuk-heading-xl">
+      Screens Catalogue
+    </h1>
+
+    <p class="govuk-body-l">
+      Select a screen to view the user journey.
+    </p>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">Layout Variants</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 1
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Short service name in service navigation and header with user navigation on right.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/users?variant=1">
+            View<span class="govuk-visually-hidden"> variant 1</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 2
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Long service name in header. Combined navigation bar with service links on left and user info on right.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/users?variant=2">
+            View<span class="govuk-visually-hidden"> variant 2</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 3
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Long service name in header. Service navigation below. User info in phase banner style area.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/users?variant=3">
+            View<span class="govuk-visually-hidden"> variant 3</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">Login Screens</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Default Login
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Simple login form with email and password fields.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login">
+            View<span class="govuk-visually-hidden"> default login</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email Empty
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Enter an email address
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/email-empty">
+            View<span class="govuk-visually-hidden"> email empty error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Empty
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Enter a password
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/password-empty">
+            View<span class="govuk-visually-hidden"> password empty error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Multiple Errors
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Errors: Enter an email address and Enter a password
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/multiple-errors">
+            View<span class="govuk-visually-hidden"> multiple errors</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Too Short
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Password should be at least 8 characters
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/password-short">
+            View<span class="govuk-visually-hidden"> password too short error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Missing Digit
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Password must contain at least one digit
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/password-missing-digit">
+            View<span class="govuk-visually-hidden"> password missing digit error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Missing Lowercase
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Password must contain at least one lower-case letter
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/password-missing-lowercase">
+            View<span class="govuk-visually-hidden"> password missing lowercase error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Missing Uppercase
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Password must contain at least one upper-case letter
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/password-missing-uppercase">
+            View<span class="govuk-visually-hidden"> password missing uppercase error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Invalid Credentials
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Your email address or password is incorrect
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/invalid-credentials">
+            View<span class="govuk-visually-hidden"> invalid credentials error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Not Admin User
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: You must be an administrator to use this service
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/not-admin">
+            View<span class="govuk-visually-hidden"> not admin error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Concurrent Session
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Warning: Your login credentials were used in another browser
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/concurrent-session">
+            View<span class="govuk-visually-hidden"> concurrent session warning</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Account Locked
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Your account is locked
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/account-locked">
+            View<span class="govuk-visually-hidden"> account locked error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Last Attempt Warning
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Warning: You have one more attempt before your account is locked
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/last-attempt-warning">
+            View<span class="govuk-visually-hidden"> last attempt warning</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Session Timeout
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Warning: Your session expired. Please sign in again to continue
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/session-timeout">
+            View<span class="govuk-visually-hidden"> session timeout warning</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Account Disabled
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Your account is disabled contact administrator
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/account-disabled">
+            View<span class="govuk-visually-hidden"> account disabled error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Account Unlocked Success
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Success: Your account has been unlocked successfully
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/account-unlocked-success">
+            View<span class="govuk-visually-hidden"> account unlocked success</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Unlock Token Invalid
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Separate page: The link has expired with options to request new unlock email
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/unlock-token-invalid">
+            View<span class="govuk-visually-hidden"> unlock token invalid page</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">User Management</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Pending Users
+        </dt>
+        <dd class="govuk-summary-list__value">
+          View and manage pending user account requests with search and filter functionality.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/user-management-pending">
+            View<span class="govuk-visually-hidden"> pending users</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Active Users
+        </dt>
+        <dd class="govuk-summary-list__value">
+          View and manage active user accounts with admin status and last sign in information.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/user-management-active">
+            View<span class="govuk-visually-hidden"> active users</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/journey-selection" class="govuk-link">Back to journey selection</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,266 +1,318 @@
-# pafs-prototype
+# PAFS Prototype
 
-`Node.js` prototype template, using the [GOV.UK Prototype Kit](https://github.com/alphagov/govuk-prototype-kit) and
-the [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend).
+Prototype for the **Project Application and Funding Service (PAFS)** built with the [GOV.UK Prototype Kit](https://github.com/alphagov/govuk-prototype-kit) and deployed on the Core Delivery Platform (CDP).
 
-> Basically the `GOV.UK Prototype Kit` and `GOV.UK Frontend` wrapped up and provided on the Core Delivery Platform
+> This prototype is used for testing user journeys and gathering feedback. It is not a production application.
 
-- [Requirements](#requirements)
-  - [Node.js](#nodejs)
-- [GOV.UK Prototype Kit and GOV.UK Frontend](#govuk-prototype-kit-and-govuk-frontend)
-- [Using the refreshed GOV.UK brand](#using-the-refreshed-govuk-brand)
-- [Setting a password](#setting-a-password)
-- [Setting multiple passwords](#setting-multiple-passwords)
-- [Removing the need for a password](#removing-the-need-for-a-password)
-- [Npm scripts](#npm-scripts)
-- [Updating dependencies](#updating-dependencies)
-- [Environment Variables and Secrets](#environment-variables-and-secrets)
-  - [Local development](#local-development)
-  - [Environment Variables on CDP](#environment-variables-on-cdp)
-  - [Environment Variables in the GOV.UK Prototype Kit](#environment-variables-in-the-govuk-prototype-kit)
-  - [Secrets](#secrets)
-- [Creating a secret](#creating-a-secret)
-- [Docker](#docker)
-  - [Development image](#development-image)
-  - [Production image](#production-image)
-  - [Debug docker](#debug-docker)
-- [Licence](#licence)
-  - [About the licence](#about-the-licence)
+## Table of Contents
 
-## Requirements
+- [PAFS Prototype](#pafs-prototype)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+    - [Node.js Installation](#nodejs-installation)
+    - [Visual Studio Code](#visual-studio-code)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Environment Setup (.env)](#environment-setup-env)
+    - [VS Code Launch Configuration](#vs-code-launch-configuration)
+    - [Running Locally](#running-locally)
+  - [Development](#development)
+    - [Available Scripts](#available-scripts)
+    - [Using Launch Configurations](#using-launch-configurations)
+  - [Password Protection](#password-protection)
+    - [Local Development](#local-development)
+    - [CDP Environments](#cdp-environments)
+  - [Environment Variables](#environment-variables)
+  - [Deployment](#deployment)
+  - [GOV.UK Resources](#govuk-resources)
+  - [Licence](#licence)
 
-### Node.js
+## Prerequisites
 
-Install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v11`. You will find it easier to use
-the Node Version Manager [nvm](https://github.com/creationix/nvm)
+### Node.js Installation
 
-To use the correct version of Node.js for this application, via nvm:
+**Required Version:** Node.js `>= v22` and npm `>= v11`
 
-```bash
-cd pafs-prototype
-nvm use
-```
+**Option 1: Using Node Version Manager (Recommended)**
 
-## GOV.UK Prototype Kit and GOV.UK Frontend
+1. Install [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm):
+   
+   **Windows:**
+   - Download and install [nvm-windows](https://github.com/coreybutler/nvm-windows/releases)
+   
+   **macOS/Linux:**
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+   ```
 
-The [GOV.UK Prototype Kit](https://github.com/alphagov/govuk-prototype-kit) is a tool for building interactive
-prototypes that look like pages on GOV.UK, it provides components and styles from the
-[GOV.UK Frontend](https://github.com/alphagov/govuk-frontend). Both are provided by the
-[Government Digital Service (GDS)](https://www.gov.uk/government/organisations/government-digital-service), this
-template provides both tools in a wrapper that runs on the Core Delivery Platform at Defra.
+2. Install Node.js v22:
+   ```bash
+   nvm install 22
+   nvm use 22
+   ```
+
+3. Verify installation:
+   ```bash
+   node --version  # Should show v22.x.x
+   npm --version   # Should show v11.x.x or higher
+   ```
+
+**Option 2: Direct Installation**
+
+Download and install Node.js v22+ from [nodejs.org](https://nodejs.org/)
+
+### Visual Studio Code
+
+**Recommended IDE:** [Visual Studio Code](https://code.visualstudio.com/)
+
+**Recommended Extensions:**
+- **Prettier** - Code formatter
+- **ESLint** - JavaScript linting
+- **Nunjucks** - Template syntax highlighting
+
+Install VS Code from [code.visualstudio.com](https://code.visualstudio.com/download)
+
+## Getting Started
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone git@github.com:DEFRA/pafs-prototype.git
+   cd pafs-prototype
+   ```
+
+2. **Use the correct Node version (if using nvm):**
+   ```bash
+   nvm use
+   ```
+   This reads the version from `.nvmrc` file.
+
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+### Environment Setup (.env)
+
+The `.env` file contains environment variables for **local development only**.
+
+> [!CAUTION]
+> **NEVER commit the `.env` file to version control!** It's already in `.gitignore` to prevent accidental commits.
+
+**Setup Steps:**
+
+1. **Copy the template:**
+   ```bash
+   cp .env.template .env
+   ```
+
+2. **Edit `.env` file** (optional for local development):
+   ```dotenv
+   # Uncomment to enable password protection locally
+   #PASSWORD=yourpassword
+   
+   # Uncomment for multiple passwords
+   #PASSWORD_KEYS=password1,password2
+   
+   # Add your custom environment variables below
+   ```
+
+3. **What NOT to do:**
+   - Don't commit `.env` to Git
+   - Don't share `.env` files via email or chat
+   - Don't store production secrets in `.env`
+
+4. **What to do instead:**
+   - Use `.env` only for local development
+   - Use CDP Portal Secrets for production
+   - Use launch.json for local configuration (recommended)
+
+### VS Code Launch Configuration
+
+**Recommended approach for running the prototype in VS Code.**
+
+1. **Create `.vscode/launch.json`** in the project root:
+
+   ```json
+   {
+     "version": "0.2.0",
+     "configurations": [
+       {
+         "type": "node",
+         "request": "launch",
+         "name": "Dev Server",
+         "runtimeExecutable": "npm",
+         "runtimeArgs": ["run", "dev"],
+         "skipFiles": ["<node_internals>/**"],
+         "console": "integratedTerminal",
+         "env": {
+           "NODE_ENV": "development"
+         }
+       }
+     ]
+   }
+   ```
+
+2. **Benefits of using launch.json:**
+   - No need to create `.env` file
+   - Can be committed to Git (no secrets)
+   - Easy to switch between configurations
+   - Integrated debugging in VS Code
+   - Team members get the same setup
 
 > [!NOTE]
-> The `GOV.UK Prototype Kit` is built with [express.js](https://expressjs.com/). The `Node.js`
-> applications [cdp-node-frontend-template](https://github.com/DEFRA/cdp-node-frontend-template)
-> and [cdp-node-backend-template](https://github.com/DEFRA/cdp-node-backend-template) at Defra are built with
-> [Hapi.js](https://hapi.dev/)
+> Local development doesn't require passwords since localhost is only accessible from your machine. Password protection is configured when deploying to CDP environments.
 
-- For information on the `GOV.UK Prototype Kit` see https://prototype-kit.service.gov.uk/docs/
-- For tutorials on how to use the `GOV.UK Prototype Kit`
-  see https://prototype-kit.service.gov.uk/docs/tutorials-and-guides
-- For help with the underlying `GOV.UK Frontend` see:
-  - https://design-system.service.gov.uk/
-  - https://github.com/alphagov/govuk-frontend
+### Running Locally
+
+**Option 1: Using VS Code (Recommended)**
+
+1. Open the project in VS Code
+2. Press `F5` or go to **Run and Debug** panel (Ctrl+Shift+D)
+3. Select a configuration:
+   - **Dev Server (No Password)** - Standard development
+   - **Production Server** - Test production build
+4. Click the green play button or press `F5`
+
+**Option 2: Command Line**
+
+```bash
+# Development mode (with hot reload)
+npm run dev
+
+# Production mode
+npm start
+
+# Serve (production mode alternative)
+npm run serve
+```
+
+The prototype will be available at **http://localhost:3000**
 
 > [!WARNING]
-> The `pafs-prototype` is not a production ready application, it is a tool for prototyping. It is not
-> designed to be used in production or to be resilient, secure or performant, nor should it be. It is designed to be
-> used for prototyping ideas and testing them with users. It's a great tool for prototyping GOV web applications.
+> This is a prototype for testing user journeys only. It is **not production-ready** and should never be used for live services.
 
-## Using the refreshed GOV.UK brand
+## Development
 
-The refreshed GOV.UK brand is available and turned on by default in the `pafs-prototype`. To turn it
-off simply go to [app/config.json](./app/config.json) and set the `"rebrand"` property to `false`. This will turn off
-the refreshed brand and use the legacy brand instead.
+### Available Scripts
 
-```json
-{
-  "plugins": {
-    "govuk-frontend": {
-      "rebrand": true
-    }
-  }
-}
-```
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server with hot reload |
+| `npm run serve` | Serve the prototype (production mode) |
+| `npm start` | Start production server |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check code formatting |
 
-## Setting a password
+### Using Launch Configurations
 
-> [!CAUTION]
-> Do not commit the `.env` file to GitHub, it is in the `.gitignore` file by default. Sensitive information such as a
-> password can be provided to a prototype via the Secrets page of your prototype in the CDP Portal Frontend
+**Recommended:** Use VS Code launch configurations instead of `.env` files.
 
-Basic authentication is on by default in CDP environments for prototypes. This means you will need to set a password
-for your prototype. You can do this via your prototypes secrets tab in the Portal Frontend. For information on how to do
-this, follow these steps:
+**Available Configurations:**
 
-1. Read the **Setting a password** section on https://prototype-kit.service.gov.uk/docs/publishing
-1. Go to the CDP Portal Frontend
-1. Log in
-1. Navigate to your prototype on the services list page
-1. Navigate to your prototypes `Secrets` tab
-1. Add a secret with a name `PASSWORD` and a `value` of your choosing
-1. Re-deploy your prototype for the new secrets to be made available to it
+1. **Dev Server (No Password)**
+   - Standard local development
+   - Hot reload enabled
+   - No password required (localhost only)
 
-## Setting multiple passwords
+2. **Production Server**
+   - Simulates production environment
+   - No hot reload
+   - Tests production build locally
 
-The `GOV.UK Prototype Kit` has the ability to set up multiple passwords via secrets. For more information on how to do
-this read the **If you want to create additional passwords** section on
-https://prototype-kit.service.gov.uk/docs/publishing. To add a secret to an environment your prototype is running in
-see [Creating a secret](#creating-a-secret)
+**To use:**
+- Press `F5` in VS Code
+- Or use Run and Debug panel (Ctrl+Shift+D)
+- Select your desired configuration
+- Click the green play button
 
-## Removing the need for a password
+## Password Protection
 
-By default, the `GOV.UK Prototype Kit` requires a password has been set on your prototype when it has been deployed to
-an environment. If you would like to turn off this requirement you can do so by setting the following environment
-variable:
+> [!IMPORTANT]
+> Password protection is designed for **deployed/hosted environments** (CDP, Heroku, Railway, etc.), not for local development.
 
-```dotenv
-ENV USE_AUTH=false
-```
+### Local Development
 
-This can be set in `cdp-app-config` for instructions on how to do so
-read [Environment Variables on CDP](#environment-variables-on-cdp).
+**For local development on your machine:**
+- Password protection is **NOT required**
+- Run with `npm run dev` - no password needed
+- Your prototype runs on `localhost` which is only accessible from your computer
 
-## Npm scripts
+> [!NOTE]
+> You don't need password protection locally because localhost is already private to your machine.
 
-All available Npm scripts can be seen in [package.json](./package.json)
-To view them in your command line run:
+### CDP Environments
 
-```bash
-npm run
-```
+Basic authentication is **enabled by default** on CDP environments.
 
-## Updating dependencies
+**Setting a Password:**
 
-To update dependencies use [npm-check-updates](https://github.com/raineorshine/npm-check-updates):
+1. Go to [CDP Portal Frontend](https://portal.cdp-int.defra.cloud/)
+2. Navigate to your service → **Secrets** tab
+3. Add a secret:
+   - Name: `PASSWORD`
+   - Value: Your chosen password
+4. Re-deploy the prototype
 
-> The following script is a good start. Check out all the options on
-> the [npm-check-updates](https://github.com/raineorshine/npm-check-updates)
+**Multiple Passwords:**
 
-```bash
-ncu --interactive --format group
-```
+Add `PASSWORD_KEYS` secret as a comma-separated list in CDP Portal Secrets tab. See [GOV.UK Prototype Kit docs](https://prototype-kit.service.gov.uk/docs/publishing) for details.
 
-## Environment Variables and Secrets
+**Disable Authentication:**
 
-Environment variables and Secrets are used to configure your prototype. Where you set them can be seen in the table
-below.
+Add `USE_AUTH=false` as a secret in CDP Portal Secrets tab.
 
-| Type                                                      | Environment | Where to set them                                   |
-| --------------------------------------------------------- | ----------- | --------------------------------------------------- |
-| Sensitive secrets and Non-sensitive environment variables | local       | `.env` file                                         |
-| Sensitive secrets                                         | CDP         | CDP Portal Frontend services secrets page           |
-| Non-sensitive environment variables                       | CDP         | CDP App Config repository by raising a pull request |
+## Environment Variables
 
-### Local development
+**For Local Development:**
+- Use `launch.json` (recommended) or `.env` file
 
-> [!CAUTION]
-> Do not store passwords in GitHub. Sensitive information such as a password can be provided to a prototype via the
-> secrets page in the CDP Portal Frontend. The `.env` file is for local development only.
+**For CDP Environments:**
+- **All secrets** (both sensitive and non-sensitive) go to **CDP Portal → Secrets tab**
 
-To set environment variables and secrets locally copy the [.env.template](./.env.template) file to `.env` and add any
-environment variables or secrets your local environment needs.
+**Available Variables:**
 
-### Environment Variables on CDP
+| Variable | Description | Example |
+|----------|-------------|----------|
+| `PASSWORD` | Basic authentication password | `mySecurePassword123` |
+| `PASSWORD_KEYS` | Comma-separated list for multiple passwords | `password1,password2` |
+| `USE_AUTH` | Set to `false` to disable authentication | `false` |
+| `PORT` | Server port (default: 3000) | `3000` |
+| `NODE_ENV` | Environment mode | `development` or `production` |
 
-When your prototype is running on a CDP environment, E.g. `dev` or `ext-test`. You can set environment variables via a
-GitHub pull request.
+## Deployment
 
-To add environment variables read - https://github.com/DEFRA/cdp-documentation/blob/main/how-to/config.md. This will
-guide you to add non-sensitive environment variables to the https://github.com/DEFRA/cdp-app-config repository via a
-pull request.
+Deployment to CDP environments is automated. Docker images are built and deployed via the CDP Portal.
 
-### Environment Variables in the GOV.UK Prototype Kit
-
-The following environment variables are available in the `GOV.UK Prototype Kit`. For more information see
-their https://prototype-kit.service.gov.uk/docs/ or https://github.com/alphagov/govuk-prototype-kit.
-
-| Name            | Value    | Description                                              |
-| --------------- | -------- | -------------------------------------------------------- |
-| `PASSWORD`      | `string` | Password for basic authentication                        |
-| `PASSWORD_KEYS` | `string` | Comma-separated list of keys for password authentication |
-
-### Secrets
-
-To add sensitive environment variables know as secrets to your prototype. Add them via your prototypes secrets page on
-the CDP Portal.
-
-## Creating a secret
-
-1. Go to the CDP Portal Frontend
-1. Log in
-1. Navigate to your prototype on the services list page
-1. Navigate to your prototypes `Secrets` tab
-1. Add a secret on your chosen environment with a `name` and `value` of your choosing
-1. Re-deploy your prototype for the new secrets to be made available to it
-
-## Docker
-
-For the most part you will not need to be concerned with `docker` when running this prototype. Everything is set up and
-your `docker` will automatically be built, published and pushed when you deploy a new version of your prototype via the
-UI in the CDP Portal.
-
-### Development image
-
-Build:
+**Manual Docker Build (Optional):**
 
 ```bash
-docker build --target development --no-cache --tag pafs-prototype:development .
+# Development
+docker build --target development --tag pafs-prototype:dev .
+docker run -e PORT=3000 -p 3000:3000 pafs-prototype:dev
+
+# Production
+docker build --tag pafs-prototype .
+docker run -e PASSWORD=yourpassword -e PORT=3000 -p 3000:3000 pafs-prototype
 ```
 
-Run:
-
+**Debug Container:**
 ```bash
-docker run -e PORT=3000 -p 3000:3000 pafs-prototype:development
-```
-
-### Production image
-
-Build:
-
-```bash
-docker build --no-cache --tag pafs-prototype .
-```
-
-Run:
-
-> Update the password field to your password
-
-```bash
-docker run -e PASSWORD=beepBoopBeep -e PORT=3000 -p 3000:3000 pafs-prototype
-```
-
-### Debug docker
-
-To debug issues in docker and to have a look at the built docker container in the same way as when it runs on CDP. You
-can run an interactive shell:
-
-Build:
-
-```bash
-docker build --no-cache --tag pafs-prototype .
-```
-
-Run:
-
-```bash
+docker build --tag pafs-prototype .
 docker run -it --entrypoint /bin/ash pafs-prototype
 ```
 
+## GOV.UK Resources
+
+- [GOV.UK Prototype Kit Documentation](https://prototype-kit.service.gov.uk/docs/)
+- [GOV.UK Design System](https://design-system.service.gov.uk/)
+- [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend)
+- [CDP Documentation](https://github.com/DEFRA/cdp-documentation)
+
 ## Licence
 
-THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
+This project is licensed under the [Open Government Licence v3.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3) and MIT License (see [LICENSES](./LICENSES/) directory).
 
-<http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3>
-
-The following attribution statement MUST be cited in your products and applications when using this information.
-
-> Contains public sector information licensed under the Open Government license v3
-
-### About the licence
-
-The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable
-information providers in the public sector to license the use and re-use of their information under a common open
-licence.
-
-It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.
+**Attribution:**
+> Contains public sector information licensed under the Open Government Licence v3.0

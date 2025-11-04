@@ -1,0 +1,61 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Request an account" %}
+
+{# Load areas data #}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedEaAreas = data['rmaEaAreas'] or [] %}
+
+{% block beforeContent %}
+  <a href="/general/request-account/rma-ea-areas" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Select PSO areas</h1>
+
+    <p class="govuk-body">Select the PSO areas within your selected EA areas.</p>
+
+    <form action="/general/request-account/rma-pso-areas" method="post" novalidate>
+
+      {% for ea in eaAreas %}
+        {% if ea.id in selectedEaAreas %}
+        <div class="govuk-form-group govuk-!-margin-bottom-8">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend">
+              {{ ea.name }} - PSO areas
+            </legend>
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+              {% for pso in ea.pso_areas %}
+              <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" 
+                       id="rmaPsoAreas-{{ pso.id }}" 
+                       name="rmaPsoAreas" 
+                       type="checkbox" 
+                       value="{{ pso.id }}"
+                       {% if data['rmaPsoAreas'] and pso.id in data['rmaPsoAreas'] %}checked{% endif %}>
+                <label class="govuk-label govuk-checkboxes__label" for="rmaPsoAreas-{{ pso.id }}">
+                  {{ pso.name }}
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
+        {% endif %}
+      {% endfor %}
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Request an account" %}
+
+{# Load areas data #}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedPsoAreas = data['rmaPsoAreas'] or [] %}
+
+{% block beforeContent %}
+  <a href="/general/request-account/rma-pso-areas" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Select main RMA area</h1>
+
+    <form action="/general/request-account/rma-main-area" method="post" novalidate>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--m" for="mainArea">
+          Main RMA area
+        </label>
+        <div id="mainArea-hint" class="govuk-hint">
+          This will be your primary area
+        </div>
+        <select class="govuk-select" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
+          <option value="">Select an RMA area</option>
+          {% for ea in eaAreas %}
+            {% for pso in ea.pso_areas %}
+              {% if pso.id in selectedPsoAreas %}
+                <optgroup label="{{ ea.name }} - {{ pso.name }}">
+                  {% for rma in pso.rma_areas %}
+                  <option value="{{ rma.id }}" {% if data['mainArea'] == rma.id %}selected{% endif %}>{{ rma.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

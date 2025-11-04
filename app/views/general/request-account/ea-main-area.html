@@ -1,0 +1,46 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Request an account" %}
+
+{# Load areas data #}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+
+{% block beforeContent %}
+  <a href="/general/request-account/details" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Select main EA area</h1>
+
+    <form action="/general/request-account/ea-main-area" method="post" novalidate>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--m" for="mainArea">
+          Main EA area
+        </label>
+        <div id="mainArea-hint" class="govuk-hint">
+          This will be your primary area
+        </div>
+        <select class="govuk-select" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
+          <option value="">Select an area</option>
+          {% for ea in eaAreas %}
+          <option value="{{ ea.id }}" {% if data['mainArea'] == ea.id %}selected{% endif %}>{{ ea.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

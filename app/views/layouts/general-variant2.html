@@ -1,0 +1,69 @@
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set serviceNameLong = "Submit a proposal for flood and coastal erosion risk management project funding" %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/general/proposals",
+    serviceName: serviceNameLong,
+    serviceUrl: "/general/proposals"
+  }) }}
+  
+  {{ govukServiceNavigation({
+    navigationId: "service-nav",
+    menuButtonText: "Menu",
+    menuButtonLabel: "Show or hide navigation menu",
+    navigation: [
+      {
+        href: "/general/proposals",
+        text: "Your proposals",
+        current: true
+      },
+      {
+        href: "/general/download-all",
+        text: "Download All"
+      },
+      {
+        href: "/general/archive",
+        text: "Archive"
+      }
+    ],
+    slots: {
+      navigationEnd: '<ul class="govuk-service-navigation__list govuk-service-navigation__list--end">
+        <li class="govuk-service-navigation__item">
+          <span class="govuk-service-navigation__text">
+            Signed in as: <strong>' + (data.userName or "John Smith") + '</strong>
+          </span>
+        </li>
+        <li class="govuk-service-navigation__item">
+          <a class="govuk-service-navigation__link" href="/general/signout">
+            Sign out
+          </a>
+        </li>
+      </ul>'
+    }
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      html: '<p class="govuk-body">Environment Agency (England) helpline: <a href="tel:03708506506" class="govuk-footer__link">0370 8506 506</a></p>',
+      items: [
+        {
+          href: "#",
+          text: "Privacy"
+        },
+        {
+          href: "#",
+          text: "Cookies"
+        },
+        {
+          href: "#",
+          text: "Accessibility"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "layouts/admin-variant1.html" %}
+
+{% set pageName="Users" %}
+
+{% set pendingCount = pendingUsers.length or 5 %}
+{% set activeCount = activeUsers.length or 6 %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">
+      Manage users
+    </h1>
+
+    {# Navigation links #}
+    <nav class="govuk-!-margin-bottom-6" aria-label="User categories">
+      <ul class="govuk-list" style="display: flex; list-style: none; padding: 0; margin: 0;">
+        <li style="margin-right: 0;">
+          <a href="/admin/user-management-pending" class="govuk-link"
+            style="display: inline-block; padding: 10px 20px; background-color: #1d70b8; color: #ffffff; text-decoration: none; font-weight: bold;"
+            aria-current="page">Pending ({{ pendingCount }})</a>
+        </li>
+        <li style="margin-right: 0;">
+          <a href="/admin/user-management-active" class="govuk-link"
+            style="display: inline-block; padding: 10px 20px; background-color: #f3f2f1; color: #0b0c0c; text-decoration: none;">Active
+            ({{ activeCount }})</a>
+        </li>
+      </ul>
+    </nav>
+
+    {# Filter section - applies to all views #}
+    <form method="get" action="/admin/user-management-pending" class="govuk-!-margin-bottom-6">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="search">
+          Search by name or email
+        </label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="search" name="search" type="text" value="{{ data['search'] }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="area-filter">
+          Filter by area
+        </label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="area-filter" name="area">
+              <option value="">All areas</option>
+              <optgroup label="EA Areas">
+                <option value="ea1">Wessex</option>
+                <option value="ea2">Thames</option>
+                <option value="ea3">Midlands</option>
+                <option value="ea4">South East</option>
+                <option value="ea5">North West</option>
+                <option value="ea6">Yorkshire</option>
+                <option value="ea7">North East</option>
+              </optgroup>
+              <optgroup label="PSO Areas">
+                <option value="pso1">PSO West of England</option>
+                <option value="pso2">PSO Dorset</option>
+                <option value="pso3">PSO Somerset</option>
+                <option value="pso19">PSO Greater Manchester</option>
+                <option value="pso20">PSO Merseyside</option>
+              </optgroup>
+              <optgroup label="RMA Areas">
+                <option value="rma1">Bristol City Council</option>
+                <option value="rma5">Dorset Council</option>
+                <option value="rma66">Liverpool City Council</option>
+                <option value="rma70">Lancashire County Council</option>
+              </optgroup>
+            </select>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Filter
+        </button>
+        <a href="/admin/user-management-pending" class="govuk-link">Clear filters</a>
+      </div>
+    </form>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Name</th>
+          <th scope="col" class="govuk-table__header">Email</th>
+          <th scope="col" class="govuk-table__header">Area</th>
+          <th scope="col" class="govuk-table__header">Requested</th>
+          <th scope="col" class="govuk-table__header">Action</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">John Smith</td>
+          <td class="govuk-table__cell">john.smith@liverpool.gov.uk</td>
+          <td class="govuk-table__cell">Liverpool City Council</td>
+          <td class="govuk-table__cell">18 Oct 2025</td>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Sarah Jones</td>
+          <td class="govuk-table__cell">sarah.jones@example.org</td>
+          <td class="govuk-table__cell">Environment Agency - North West</td>
+          <td class="govuk-table__cell">15 Oct 2025</td>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Michael Brown</td>
+          <td class="govuk-table__cell">m.brown@manchester.gov.uk</td>
+          <td class="govuk-table__cell">PSO Greater Manchester</td>
+          <td class="govuk-table__cell">14 Oct 2025</td>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Emily Davis</td>
+          <td class="govuk-table__cell">e.davis@bristol.gov.uk</td>
+          <td class="govuk-table__cell">Bristol City Council</td>
+          <td class="govuk-table__cell">12 Oct 2025</td>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">James Wilson</td>
+          <td class="govuk-table__cell">james.wilson@example.com</td>
+          <td class="govuk-table__cell">Environment Agency - Thames</td>
+          <td class="govuk-table__cell">10 Oct 2025</td>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+      <p class="govuk-body" style="margin: 0;">Showing <strong>1 to 5</strong> of <strong>5</strong> users</p>
+      
+      <nav class="govuk-pagination" role="navigation" aria-label="Pagination" style="margin: 0;">
+        <div class="govuk-pagination__prev">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="prev">
+            <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+            </svg>
+            <span class="govuk-pagination__link-title">
+              Previous<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+        <ul class="govuk-pagination__list">
+          <li class="govuk-pagination__item govuk-pagination__item--current">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 1" aria-current="page">1</a>
+          </li>
+          <li class="govuk-pagination__item">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 2">2</a>
+          </li>
+        </ul>
+        <div class="govuk-pagination__next">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="next">
+            <span class="govuk-pagination__link-title">
+              Next<span class="govuk-visually-hidden"> page</span>
+            </span>
+            <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-6">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+      <a href="#" class="govuk-link">Add new user</a>
+      <a href="#" class="govuk-link">Download all users</a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

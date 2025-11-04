@@ -1,0 +1,68 @@
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set serviceNameLong = "Project Application and Funding Service Admin" %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/admin/users",
+    serviceName: serviceNameLong,
+    serviceUrl: "/admin/users"
+  }) }}
+  
+  {{ govukServiceNavigation({
+    navigationId: "service-nav",
+    navigation: [
+      {
+        href: "/admin/users",
+        text: "Users",
+        current: true if pageName == "Users"
+      },
+      {
+        href: "/admin/projects",
+        text: "Projects",
+        current: true if pageName == "Projects"
+      },
+      {
+        href: "/admin/submissions",
+        text: "Submissions",
+        current: true if pageName == "Submissions"
+      },
+      {
+        href: "/admin/organisations",
+        text: "Organisations",
+        current: true if pageName == "Organisations"
+      },
+      {
+        href: "/admin/download-projects",
+        text: "Download Projects",
+        current: true if pageName == "Download Projects"
+      },
+      {
+        href: "/admin/download-rma",
+        text: "Download RMA",
+        current: true if pageName == "Download RMA"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      html: '<p class="govuk-body">Any issues call CIS service desk on <strong>80 80</strong> or if external <a href="tel:08708508082" class="govuk-footer__link">08708 508 082</a></p>'
+    }
+  }) }}
+{% endblock %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-phase-banner" style="margin-top: 0; padding-top: 10px;">
+      <p class="govuk-phase-banner__content" style="display: flex; justify-content: flex-end; align-items: center; gap: 15px;">
+        <span style="font-size: 16px;">Signed in as: <strong>{{ data.userName or "Admin User" }}</strong></span>
+        <a class="govuk-link" href="/admin/signout">Sign out</a>
+      </p>
+    </div>
+  </div>
+  {{ super() }}
+{% endblock %}

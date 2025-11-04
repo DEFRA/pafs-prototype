@@ -1,0 +1,51 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Admin Login" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: "Your account is locked",
+          href: "#email"
+        }
+      ]
+    }) }}
+
+    <h1 class="govuk-heading-xl">
+      Sign in
+    </h1>
+
+    <form action="/admin/login" method="post" novalidate>
+      
+      <div class="govuk-form-group govuk-form-group--error">
+        <label class="govuk-label" for="email">
+          Email address
+        </label>
+        <p id="email-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Your account is locked
+        </p>
+        <input class="govuk-input govuk-input--error" id="email" name="email" type="email" autocomplete="email" value="admin@example.gov.uk" aria-describedby="email-error">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="password">
+          Password
+        </label>
+        <input class="govuk-input" id="password" name="password" type="password" autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Sign in
+      </button>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}
