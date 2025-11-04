@@ -4,6 +4,7 @@
   "description": "pafs-prototype. GOV.UK Prototype Kit with CDP Platform running capabilities",
   "author": "Defra DDTS",
   "license": "(OGL-UK-3, MIT) see licenses in /LICENSES",
+  "type": "module",
   "scripts": {
     "dev": "govuk-prototype-kit dev",
     "serve": "govuk-prototype-kit serve",
@@ -13,8 +14,8 @@
   },
   "dependencies": {
     "@govuk-prototype-kit/common-templates": "2.0.1",
-    "govuk-frontend": "5.11.1",
-    "govuk-prototype-kit": "13.18.0"
+    "govuk-frontend": "5.13.0",
+    "govuk-prototype-kit": "13.18.1"
   },
   "devDependencies": {
     "prettier": "3.6.2"

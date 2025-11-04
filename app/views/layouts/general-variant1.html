@@ -1,0 +1,69 @@
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set serviceNameShort = "Submit a flood risk management proposal" %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/general/proposals",
+    menuButtonText: "Profile",
+    menuButtonLabel: "Show or hide Profile menu",
+    navigation: [
+      {
+        text: "Signed in as: " + (data.userName or "John Smith")
+      },
+      {
+        href: "/general/signout",
+        text: "Sign out"
+      }
+    ],
+    navigationClasses: "govuk-header__navigation--end",
+    navigationLabel: "Profile",
+    navigationId: "profile-nav"
+  }) }}
+  
+  {{ govukServiceNavigation({
+    serviceName: serviceNameShort,
+    serviceUrl: "/general/proposals",
+    menuButtonText: "Menu",
+    menuButtonLabel: "Show or hide service navigation menu",
+    navigationId: "service-nav",
+    navigation: [
+      {
+        href: "/general/proposals",
+        text: "Your proposals",
+        current: true
+      },
+      {
+        href: "/general/download-all",
+        text: "Download All"
+      },
+      {
+        href: "/general/archive",
+        text: "Archive"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      html: '<p class="govuk-body">Environment Agency (England) helpline: <a href="tel:03708506506" class="govuk-footer__link">0370 8506 506</a></p>',
+      items: [
+        {
+          href: "#",
+          text: "Privacy"
+        },
+        {
+          href: "#",
+          text: "Cookies"
+        },
+        {
+          href: "#",
+          text: "Accessibility"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}

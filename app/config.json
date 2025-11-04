@@ -1,5 +1,13 @@
 {
-  "serviceName": "pafs-prototype",
+  "serviceName": "Project Application and Funding Service",
+  "serviceNames": {
+    "general": "Submit a flood risk management proposal",
+    "admin": "PAFS Admin"
+  },
+  "serviceNamesLong": {
+    "general": "Submit a proposal for flood and coastal erosion risk management project funding",
+    "admin": "Project Application and Funding Service Admin"
+  },
   "plugins": {
     "govuk-frontend": {
       "rebrand": true

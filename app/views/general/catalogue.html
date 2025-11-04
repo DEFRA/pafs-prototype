@@ -1,0 +1,116 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Layout Catalogue" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-xl">General User Journey</span>
+    <h1 class="govuk-heading-xl">
+      Screens Catalogue
+    </h1>
+
+    <p class="govuk-body-l">
+      Select a screen to view the screen of the general user journey.
+    </p>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">Layout Variants</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 1
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Short service name in service navigation and header with user navigation on right.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/proposals?variant=1">
+            View<span class="govuk-visually-hidden"> variant 1</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 2
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Long service name in header. Combined navigation bar with service links on left and user info on right.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/proposals?variant=2">
+            View<span class="govuk-visually-hidden"> variant 2</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Variant 3
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Long service name in header. Service navigation below. User info in phase banner style area.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/proposals?variant=3">
+            View<span class="govuk-visually-hidden"> variant 3</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">Login Screens</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Login
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Login form with email and password fields, forgot password and request account links.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/login">
+            View<span class="govuk-visually-hidden"> login</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Forgot Password
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Reset password form with email input.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/forgot-password">
+            View<span class="govuk-visually-hidden"> forgot password</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Request Account
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Multi-step journey to request an account.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/general/request-account">
+            View<span class="govuk-visually-hidden"> request account</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/journey-selection" class="govuk-link">Back to journey selection</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Unlock Token Invalid" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    <h1 class="govuk-heading-xl">
+      The link has expired
+    </h1>
+
+    <p class="govuk-body">
+      The unlock link you used is no longer valid. This could be because:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the link has already been used</li>
+      <li>the link has expired</li>
+      <li>the link was copied incorrectly</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">What you can do</h2>
+
+    <p class="govuk-body">
+      You can:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="#" class="govuk-link">request a new unlock email</a></li>
+      <li>wait for 1 hour for your account to be unlocked automatically</li>
+      <li>contact the administrator for help</li>
+    </ul>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/admin/login" class="govuk-link">Return to sign in</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

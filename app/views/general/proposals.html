@@ -1,0 +1,30 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="Your proposals" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">
+      Your proposals
+    </h1>
+
+    <p class="govuk-body">
+      You have <strong>0 proposals</strong> in progress.
+    </p>
+
+    {{ govukButton({
+      text: "Create new proposal",
+      href: "/general/create-proposal"
+    }) }}
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h2 class="govuk-heading-m">
+      No proposals yet
+    </h2>
+  </div>
+</div>
+
+{% endblock %}

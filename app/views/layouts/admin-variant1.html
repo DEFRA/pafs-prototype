@@ -1,0 +1,72 @@
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set serviceNameShort = "PAFS Admin" %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/admin/users",
+    menuButtonText: "Profile",
+    menuButtonLabel: "Show or hide Profile menu",
+    navigation: [
+      {
+        text: "Signed in as: " + (data.userName or "Admin User")
+      },
+      {
+        href: "/admin/signout",
+        text: "Sign out"
+      }
+    ],
+    navigationClasses: "govuk-header__navigation--end",
+    navigationLabel: "Profile",
+    navigationId: "profile-nav"
+  }) }}
+  
+  {{ govukServiceNavigation({
+    serviceName: serviceNameShort,
+    serviceUrl: "/admin/users",
+    menuButtonText: "Menu",
+    menuButtonLabel: "Show or hide service navigation menu",
+    navigationId: "service-nav",
+    navigation: [
+      {
+        href: "/admin/users",
+        text: "Users",
+        current: true if pageName == "Users"
+      },
+      {
+        href: "/admin/projects",
+        text: "Projects",
+        current: true if pageName == "Projects"
+      },
+      {
+        href: "/admin/submissions",
+        text: "Submissions",
+        current: true if pageName == "Submissions"
+      },
+      {
+        href: "/admin/organisations",
+        text: "Organisations",
+        current: true if pageName == "Organisations"
+      },
+      {
+        href: "/admin/download-projects",
+        text: "Download Projects",
+        current: true if pageName == "Download Projects"
+      },
+      {
+        href: "/admin/download-rma",
+        text: "Download RMA",
+        current: true if pageName == "Download RMA"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      html: '<p class="govuk-body">Any issues call CIS service desk on <strong>80 80</strong> or if external <a href="tel:08708508082" class="govuk-footer__link">08708 508 082</a></p>'
+    }
+  }) }}
+{% endblock %}
