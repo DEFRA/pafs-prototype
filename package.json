@@ -4,7 +4,6 @@
   "description": "pafs-prototype. GOV.UK Prototype Kit with CDP Platform running capabilities",
   "author": "Defra DDTS",
   "license": "(OGL-UK-3, MIT) see licenses in /LICENSES",
-  "type": "module",
   "scripts": {
     "dev": "govuk-prototype-kit dev",
     "serve": "govuk-prototype-kit serve",
