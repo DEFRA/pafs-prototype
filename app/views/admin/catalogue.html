@@ -63,6 +63,8 @@
 
     <h2 class="govuk-heading-l govuk-!-margin-top-8">Login Screens</h2>
 
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Default State</h3>
+
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -77,6 +79,11 @@
           </a>
         </dd>
       </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Validation Errors - Email Field</h3>
+
+    <dl class="govuk-summary-list">
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -94,6 +101,52 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
+          Email Invalid Format
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Enter an email address in the correct format, like name@example.com
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/email-invalid-format">
+            View<span class="govuk-visually-hidden"> email invalid format error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email Not Valid
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Enter a valid email address
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/email-not-valid">
+            View<span class="govuk-visually-hidden"> email not valid error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email Not Found
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: We could not find an account with that email address
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/email-not-found">
+            View<span class="govuk-visually-hidden"> email not found error</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Validation Errors - Password Field</h3>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
           Password Empty
         </dt>
         <dd class="govuk-summary-list__value">
@@ -102,20 +155,6 @@
         <dd class="govuk-summary-list__actions">
           <a class="govuk-link" href="/admin/login/password-empty">
             View<span class="govuk-visually-hidden"> password empty error</span>
-          </a>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Multiple Errors
-        </dt>
-        <dd class="govuk-summary-list__value">
-          Errors: Enter an email address and Enter a password
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/admin/login/multiple-errors">
-            View<span class="govuk-visually-hidden"> multiple errors</span>
           </a>
         </dd>
       </div>
@@ -175,7 +214,29 @@
           </a>
         </dd>
       </div>
+    </dl>
 
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Validation Errors - Multiple Fields</h3>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Multiple Errors
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Errors: Enter an email address and Enter a password
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/multiple-errors">
+            View<span class="govuk-visually-hidden"> multiple errors</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Authentication Errors</h3>
+
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Invalid Credentials
@@ -203,21 +264,11 @@
           </a>
         </dd>
       </div>
+    </dl>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Concurrent Session
-        </dt>
-        <dd class="govuk-summary-list__value">
-          Warning: Your login credentials were used in another browser
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/admin/login/concurrent-session">
-            View<span class="govuk-visually-hidden"> concurrent session warning</span>
-          </a>
-        </dd>
-      </div>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Account Status Errors</h3>
 
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Account Locked
@@ -228,6 +279,38 @@
         <dd class="govuk-summary-list__actions">
           <a class="govuk-link" href="/admin/login/account-locked">
             View<span class="govuk-visually-hidden"> account locked error</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Account Disabled
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Error: Your account is disabled contact administrator
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/account-disabled">
+            View<span class="govuk-visually-hidden"> account disabled error</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Warning Messages</h3>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Concurrent Session
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Warning: Your login credentials were used in another browser
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/admin/login/concurrent-session">
+            View<span class="govuk-visually-hidden"> concurrent session warning</span>
           </a>
         </dd>
       </div>
@@ -259,21 +342,11 @@
           </a>
         </dd>
       </div>
+    </dl>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Account Disabled
-        </dt>
-        <dd class="govuk-summary-list__value">
-          Error: Your account is disabled contact administrator
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/admin/login/account-disabled">
-            View<span class="govuk-visually-hidden"> account disabled error</span>
-          </a>
-        </dd>
-      </div>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Success Messages</h3>
 
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Account Unlocked Success
@@ -288,6 +361,11 @@
         </dd>
       </div>
 
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Separate Pages</h3>
+
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Unlock Token Invalid

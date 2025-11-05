@@ -1,0 +1,42 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Email Templates Catalogue" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-xl">GOV.UK Notify Email Templates</span>
+    <h1 class="govuk-heading-xl">
+      Email Templates Catalogue
+    </h1>
+
+    <p class="govuk-body-l">
+      Preview of email templates sent via GOV.UK Notify API for the PAFS service.
+    </p>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-8">Password Reset Journey</h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Password Reset Request
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Email sent when user requests to reset their password. Contains reset link valid for 6 hours.
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/email-templates/password-reset-request" target="_blank">
+            View template<span class="govuk-visually-hidden"> password reset request</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/journey-selection" class="govuk-link">Back to journey selection</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

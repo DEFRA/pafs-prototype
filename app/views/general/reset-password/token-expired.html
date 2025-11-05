@@ -1,0 +1,41 @@
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageName="Reset password link expired" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      Reset password link expired
+    </h1>
+
+    <p class="govuk-body">
+      The link you used to reset your password has expired.
+    </p>
+
+    <p class="govuk-body">
+      Password reset links are valid for 6 hours for security reasons.
+    </p>
+
+    <h2 class="govuk-heading-m">What you can do</h2>
+
+    <p class="govuk-body">
+      You can request a new password reset link.
+    </p>
+
+    <form action="/general/forgot-password" method="get">
+      {{ govukButton({
+        text: "Request new reset link"
+      }) }}
+    </form>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/general/login" class="govuk-link">Return to sign in</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

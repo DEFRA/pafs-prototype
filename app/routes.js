@@ -62,8 +62,15 @@ router.get('/general/forgot-password', function (req, res) {
 })
 
 router.post('/general/forgot-password', function (req, res) {
-  // Placeholder - would send reset email
-  res.redirect('/general/login')
+  // Save email for confirmation page
+  req.session.data.resetEmail = req.body.email
+  res.redirect('/general/forgot-password/confirmation')
+})
+
+router.get('/general/forgot-password/confirmation', function (req, res) {
+  res.render('general/forgot-password/confirmation', {
+    journeyData: req.journeyData
+  })
 })
 
 // Request account - start page

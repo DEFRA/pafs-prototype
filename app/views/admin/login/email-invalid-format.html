@@ -1,0 +1,62 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/password-input/macro.njk" import govukPasswordInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageName="Admin Login" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: "Enter an email address in the correct format, like name@example.com",
+          href: "#email"
+        }
+      ]
+    }) }}
+
+    <h1 class="govuk-heading-xl">
+      Sign in
+    </h1>
+
+    <form action="/admin/login" method="post" novalidate>
+      
+      {{ govukInput({
+        label: {
+          text: "Email address"
+        },
+        id: "email",
+        name: "email",
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false,
+        value: "admin.user@",
+        errorMessage: {
+          text: "Enter an email address in the correct format, like name@example.com"
+        }
+      }) }}
+
+      {{ govukPasswordInput({
+        label: {
+          text: "Password"
+        },
+        id: "password",
+        name: "password",
+        autocomplete: "current-password"
+      }) }}
+
+      {{ govukButton({
+        text: "Sign in"
+      }) }}
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

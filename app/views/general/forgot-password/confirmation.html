@@ -1,0 +1,49 @@
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set pageName="Password reset request" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    {{ govukPanel({
+      titleText: "Password reset request",
+      html: "We've sent a password reset link to your email address"
+    }) }}
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-7">What happens next</h2>
+
+    <p class="govuk-body">
+      We have sent you an email to <strong>fujale.defra+rma1@environment-agency.gov.uk</strong> with a link to reset your password.
+    </p>
+
+    <p class="govuk-body">
+      The link will expire in <strong>6 hours</strong> for security reasons.
+    </p>
+
+    {{ govukInsetText({
+      html: '<h3 class="govuk-heading-s">If you don\'t receive the email</h3>
+      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>Check your spam or junk folder</li>
+        <li>Make sure you entered the correct email address</li>
+        <li>Wait a few minutes - it may take some time to arrive</li>
+      </ul>'
+    }) }}
+
+    {{ govukDetails({
+      summaryText: "Need help?",
+      html: "<p class='govuk-body'>If you don't receive this email within 30 minutes, contact the Environment Agency helpline on <a href='tel:03708506506' class='govuk-link'>0370 8506 506</a> or email <a href='mailto:pafs-support@environment-agency.gov.uk' class='govuk-link'>pafs-support@environment-agency.gov.uk</a></p>"
+    }) }}
+
+    <p class="govuk-body govuk-!-margin-top-8">
+      <a href="/general/login" class="govuk-link">Return to sign in</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

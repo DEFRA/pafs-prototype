@@ -1,0 +1,37 @@
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set serviceNameShort = "Submit a flood risk management proposal" %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/general/login"
+  }) }}
+  
+  {{ govukServiceNavigation({
+    serviceName: serviceNameShort,
+    serviceUrl: "/general/login"
+  }) }}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      html: '<p class="govuk-body">Environment Agency (England) helpline: <a href="tel:03708506506" class="govuk-footer__link">0370 8506 506</a></p>',
+      items: [
+        {
+          href: "#",
+          text: "Privacy"
+        },
+        {
+          href: "#",
+          text: "Cookies"
+        },
+        {
+          href: "#",
+          text: "Accessibility"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}

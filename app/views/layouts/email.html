@@ -1,0 +1,107 @@
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+
+<!DOCTYPE html>
+<html lang="en" style="margin: 0; padding: 0;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ pageName }} - Email Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 19px;
+      line-height: 1.5;
+      color: #0b0c0c;
+      background-color: #f3f2f1;
+    }
+    .email-preview-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border: 1px solid #b1b4b6;
+    }
+    .email-container {
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .govuk-header {
+      margin-bottom: 30px;
+      background-color: #1d70b8;
+    }
+    .govuk-header__container {
+      border-bottom: none;
+    }
+    .govuk-header__logotype-crown,
+    .govuk-header__logotype-text,
+    .govuk-header__link--homepage {
+      color: white;
+    }
+    .govuk-header__logotype-crown-fallback-image {
+      fill: white;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      line-height: 1.25;
+    }
+    p {
+      margin: 0 0 20px 0;
+    }
+    a {
+      color: #1d70b8;
+      text-decoration: underline;
+      word-wrap: break-word;
+    }
+    .button {
+      display: inline-block;
+      background-color: #00703c;
+      color: white !important;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px 0;
+      border-radius: 0;
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #b1b4b6;
+      font-size: 16px;
+      color: #505a5f;
+    }
+    .preview-banner {
+      background: #1d70b8;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">
+    <strong>EMAIL PREVIEW</strong> - This is how the email will appear to users
+  </div>
+  
+  <div class="email-preview-wrapper">
+    <div class="email-container">
+      
+      {{ govukHeader({
+        homepageUrl: "#"
+      }) }}
+      
+      {% block emailContent %}{% endblock %}
+      
+      <div class="footer">
+        <p>This is an automated email from the Project Application and Funding Service (PAFS).</p>
+        <p>Please do not reply to this email. If you need help, contact <a href="mailto:pafs-support@environment-agency.gov.uk">pafs-support@environment-agency.gov.uk</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

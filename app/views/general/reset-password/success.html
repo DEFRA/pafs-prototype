@@ -1,0 +1,23 @@
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageName="Password reset successful" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukPanel({
+      titleText: "Password reset successful",
+      html: "You can now sign in with your new password"
+    }) }}
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/general/login" class="govuk-link govuk-!-font-size-19">Sign in to your account</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}
