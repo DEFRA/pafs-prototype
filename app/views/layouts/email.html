@@ -7,28 +7,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ pageName }} - Email Preview</title>
   <style>
+    /* GOV.UK Notify styling - matches actual email appearance */
     body {
       margin: 0;
       padding: 20px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 19px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
       line-height: 1.5;
       color: #0b0c0c;
       background-color: #f3f2f1;
     }
     .email-preview-wrapper {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
       background: white;
-      padding: 20px;
-      border: 1px solid #b1b4b6;
+      padding: 0;
     }
     .email-container {
-      max-width: 580px;
-      margin: 0 auto;
+      padding: 20px;
     }
     .govuk-header {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       background-color: #1d70b8;
     }
     .govuk-header__container {
@@ -45,47 +44,47 @@
     h1 {
       font-size: 24px;
       font-weight: bold;
-      margin: 0 0 20px 0;
+      margin: 0 0 15px 0;
       line-height: 1.25;
+      color: #0b0c0c;
     }
     p {
-      margin: 0 0 20px 0;
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      color: #0b0c0c;
     }
     a {
       color: #1d70b8;
       text-decoration: underline;
       word-wrap: break-word;
     }
-    .button {
-      display: inline-block;
-      background-color: #00703c;
-      color: white !important;
-      padding: 12px 20px;
-      text-decoration: none;
+    strong {
       font-weight: bold;
-      margin: 10px 0;
-      border-radius: 0;
     }
     .footer {
-      margin-top: 40px;
-      padding-top: 20px;
+      margin-top: 30px;
+      padding-top: 15px;
       border-top: 1px solid #b1b4b6;
-      font-size: 16px;
+      font-size: 14px;
       color: #505a5f;
+    }
+    .footer p {
+      font-size: 14px;
+      margin-bottom: 10px;
     }
     .preview-banner {
       background: #1d70b8;
       color: white;
       padding: 10px 20px;
       text-align: center;
-      font-size: 16px;
-      margin-bottom: 20px;
+      font-size: 14px;
+      margin-bottom: 0;
     }
   </style>
 </head>
 <body>
   <div class="preview-banner">
-    <strong>EMAIL PREVIEW</strong> - This is how the email will appear to users
+    <strong>EMAIL PREVIEW</strong> - Styled to match GOV.UK Notify's actual email appearance
   </div>
   
   <div class="email-preview-wrapper">

@@ -4,19 +4,26 @@
 {% set serviceNameShort = "Submit a flood risk management proposal" %}
 
 {% block header %}
+  {% set isAdminUser = data.isAdmin or journeyData.isAdmin %}
+  {% set displayName = data.userName or journeyData.userName or "John Smith" %}
+  
   {{ govukHeader({
     homepageUrl: "/general/proposals",
     menuButtonText: "Profile",
     menuButtonLabel: "Show or hide Profile menu",
     navigation: [
       {
-        text: "Signed in as: " + (data.userName or "John Smith")
+        text: "Signed in as: " + displayName
       },
+      {
+        href: "/admin/user-management-pending",
+        text: "Switch to Admin journey"
+      } if isAdminUser,
       {
         href: "/general/signout",
         text: "Sign out"
       }
-    ],
+    ] | reject("equalto", false) | list,
     navigationClasses: "govuk-header__navigation--end",
     navigationLabel: "Profile",
     navigationId: "profile-nav"

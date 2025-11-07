@@ -1,4 +1,5 @@
 {% extends "layouts/general-main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set pageName="Request an account" %}
 
@@ -6,6 +7,52 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    
+    {% if error %}
+      {% set errorArray = error.split(',') %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: "Tell us your first name",
+            href: "#first-name"
+          } if "first-name-empty" in errorArray,
+          {
+            text: "Tell us your last name",
+            href: "#last-name"
+          } if "last-name-empty" in errorArray,
+          {
+            text: "Enter your email address",
+            href: "#email"
+          } if "email-empty" in errorArray,
+          {
+            text: "Enter an email address in the correct format, like name@example.com",
+            href: "#email"
+          } if "email-invalid" in errorArray,
+          {
+            text: "Enter your telephone number",
+            href: "#telephone"
+          } if "telephone-empty" in errorArray,
+          {
+            text: "Enter a telephone number in the correct format",
+            href: "#telephone"
+          } if "telephone-invalid" in errorArray,
+          {
+            text: "Enter your organisation",
+            href: "#organisation"
+          } if "organisation-empty" in errorArray,
+          {
+            text: "Enter your job title",
+            href: "#job-title"
+          } if "job-title-empty" in errorArray,
+          {
+            text: "Select your responsibility area",
+            href: "#responsibility-ea"
+          } if "responsibility-empty" in errorArray
+        ] | reject("equalto", false) | list
+      }) }}
+    {% endif %}
+    
     <h1 class="govuk-heading-xl">
       Request an account
     </h1>
@@ -16,53 +63,100 @@
 
     <form action="/general/request-account/details" method="post" novalidate>
       
-      <div class="govuk-form-group">
+      {% if error %}
+        {% set errorArray = error.split(',') %}
+      {% endif %}
+      
+      <div class="govuk-form-group {% if error and 'first-name-empty' in errorArray %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="first-name">
           First name
         </label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="first-name" name="firstName" type="text" autocomplete="given-name" value="{{ data['firstName'] }}">
+        {% if error and 'first-name-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Tell us your first name
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'first-name-empty' in errorArray %}govuk-input--error{% endif %}" id="first-name" name="firstName" type="text" autocomplete="given-name" value="{{ data['firstName'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and 'last-name-empty' in errorArray %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="last-name">
           Last name
         </label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="last-name" name="lastName" type="text" autocomplete="family-name" value="{{ data['lastName'] }}">
+        {% if error and 'last-name-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Tell us your last name
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'last-name-empty' in errorArray %}govuk-input--error{% endif %}" id="last-name" name="lastName" type="text" autocomplete="family-name" value="{{ data['lastName'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and ('email-empty' in errorArray or 'email-invalid' in errorArray) %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="email">
           Email address
         </label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="email" name="email" type="email" spellcheck="false" autocomplete="email" value="{{ data['email'] }}">
+        {% if error and 'email-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter your email address
+          </p>
+        {% elif error and 'email-invalid' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter an email address in the correct format, like name@example.com
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and ('email-empty' in errorArray or 'email-invalid' in errorArray) %}govuk-input--error{% endif %}" id="email" name="email" type="email" spellcheck="false" autocomplete="email" value="{{ data['email'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and ('telephone-empty' in errorArray or 'telephone-invalid' in errorArray) %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="telephone">
           Telephone number
         </label>
-        <input class="govuk-input govuk-input--width-20" id="telephone" name="telephone" type="tel" autocomplete="tel" value="{{ data['telephone'] }}">
+        {% if error and 'telephone-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter your telephone number
+          </p>
+        {% elif error and 'telephone-invalid' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter a telephone number in the correct format
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-input--width-20 {% if error and ('telephone-empty' in errorArray or 'telephone-invalid' in errorArray) %}govuk-input--error{% endif %}" id="telephone" name="telephone" type="tel" autocomplete="tel" value="{{ data['telephone'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and 'organisation-empty' in errorArray %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="organisation">
           Organisation
         </label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="organisation" name="organisation" type="text" autocomplete="organization" value="{{ data['organisation'] }}">
+        {% if error and 'organisation-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter your organisation
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'organisation-empty' in errorArray %}govuk-input--error{% endif %}" id="organisation" name="organisation" type="text" autocomplete="organization" value="{{ data['organisation'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and 'job-title-empty' in errorArray %}govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="job-title">
           Job title
         </label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="job-title" name="jobTitle" type="text" autocomplete="organization-title" value="{{ data['jobTitle'] }}">
+        {% if error and 'job-title-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter your job title
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'job-title-empty' in errorArray %}govuk-input--error{% endif %}" id="job-title" name="jobTitle" type="text" autocomplete="organization-title" value="{{ data['jobTitle'] }}">
       </div>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error and 'responsibility-empty' in errorArray %}govuk-form-group--error{% endif %}">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend">
             What is your responsibility?
           </legend>
+          {% if error and 'responsibility-empty' in errorArray %}
+            <p class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> Select your responsibility area
+            </p>
+          {% endif %}
           <div class="govuk-radios" data-module="govuk-radios">
             <div class="govuk-radios__item">
               <input class="govuk-radios__input" id="responsibility-ea" name="responsibility" type="radio" value="ea" {% if data['responsibility'] == 'ea' %}checked{% endif %}>

@@ -1,0 +1,57 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageName = "Choose journey" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Which journey would you like to access?
+      </h1>
+
+      <p class="govuk-body">
+        As an administator, you can explore both the general user journey and the admin journey.
+      </p>
+
+      <form action="/admin/journey-selection" method="post" novalidate>
+
+        {{ govukRadios({
+          name: "journey",
+          fieldset: {
+            legend: {
+              text: "Which journey would you like to access?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              value: "user",
+              text: "General user journey",
+              hint: {
+                text: "Explore the user portal as an RMA, PSO, or EA user"
+              },
+              checked: true
+            },
+            {
+              value: "admin",
+              text: "Admin journey",
+              hint: {
+                text: "Explore the admin portal for managing users, proposals, and organisations"
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,4 +1,5 @@
-{% extends "layouts/main.html" %}
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set pageName="Request an account" %}
 
@@ -15,17 +16,34 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    {% if error == 'regions-not-selected' %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: "Select at least one EA region",
+            href: "#psoEaAreas"
+          }
+        ]
+      }) }}
+    {% endif %}
+
     <h1 class="govuk-heading-l">Select EA areas</h1>
 
     <p class="govuk-body">Select the Environment Agency areas you work with.</p>
 
     <form action="/general/request-account/pso-ea-areas" method="post" novalidate>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error == 'regions-not-selected' %}govuk-form-group--error{% endif %}">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend">
             EA areas
           </legend>
+          {% if error == 'regions-not-selected' %}
+            <p class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> Select at least one EA region
+            </p>
+          {% endif %}
           <div class="govuk-checkboxes" data-module="govuk-checkboxes">
             {% for ea in eaAreas %}
             <div class="govuk-checkboxes__item">

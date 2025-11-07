@@ -1,0 +1,45 @@
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageName="Unlock account link expired" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      Unlock account link expired
+    </h1>
+
+    <p class="govuk-body">
+      The link you used to unlock your account has expired.
+    </p>
+
+    <p class="govuk-body">
+      Unlock account links are valid for 1 hour for security reasons.
+    </p>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+
+    <p class="govuk-body">
+      Your account would have been automatically unlocked after 1 hour from when it was locked.
+    </p>
+
+    <p class="govuk-body">
+      Try signing in again. If you're still having problems, you can reset your password.
+    </p>
+
+    <form action="/general/forgot-password" method="get">
+      {{ govukButton({
+        text: "Reset your password"
+      }) }}
+    </form>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/general/login" class="govuk-link">Return to sign in</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

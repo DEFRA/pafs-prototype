@@ -1,4 +1,5 @@
-{% extends "layouts/main.html" %}
+{% extends "layouts/general-main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set pageName="Request an account" %}
 
@@ -16,18 +17,35 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    {% if error == 'area-not-selected' %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: "Select your main PSO area",
+            href: "#mainArea"
+          }
+        ]
+      }) }}
+    {% endif %}
+
     <h1 class="govuk-heading-l">Select main PSO area</h1>
 
     <form action="/general/request-account/pso-main-area" method="post" novalidate>
 
-      <div class="govuk-form-group">
+      <div class="govuk-form-group {% if error == 'area-not-selected' %}govuk-form-group--error{% endif %}">
         <label class="govuk-label govuk-label--m" for="mainArea">
           Main PSO area
         </label>
         <div id="mainArea-hint" class="govuk-hint">
           This will be your primary area
         </div>
-        <select class="govuk-select" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
+        {% if error == 'area-not-selected' %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Select your main PSO area
+          </p>
+        {% endif %}
+        <select class="govuk-select {% if error == 'area-not-selected' %}govuk-select--error{% endif %}" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
           <option value="">Select a PSO area</option>
           {% for ea in eaAreas %}
             {% if ea.id in selectedEaAreas %}
