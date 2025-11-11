@@ -157,23 +157,27 @@
               <span class="govuk-visually-hidden">Error:</span> Select your responsibility area
             </p>
           {% endif %}
-          <div class="govuk-radios" data-module="govuk-radios">
+                   <div class="govuk-radios" data-module="govuk-radios">
             <div class="govuk-radios__item">
               <input class="govuk-radios__input" id="responsibility-ea" name="responsibility" type="radio" value="ea" {% if data['responsibility'] == 'ea' %}checked{% endif %}>
               <label class="govuk-label govuk-radios__label" for="responsibility-ea">
-                Environment Agency Area
+                Environment Agency – Area Programme Team
+                <div class="govuk-hint">Allows you to view all records created within the boundary of your Area.</div>
               </label>
+              
             </div>
             <div class="govuk-radios__item">
               <input class="govuk-radios__input" id="responsibility-pso" name="responsibility" type="radio" value="pso" {% if data['responsibility'] == 'pso' %}checked{% endif %}>
               <label class="govuk-label govuk-radios__label" for="responsibility-pso">
-                Partnership & Strategic Overview Area
+                Environment Agency – Partnership & Strategic Overview Team
+                <div class="govuk-hint">Allows you to view and edit all records created within the boundary of your Team</div>
               </label>
             </div>
             <div class="govuk-radios__item">
               <input class="govuk-radios__input" id="responsibility-rma" name="responsibility" type="radio" value="rma" {% if data['responsibility'] == 'rma' %}checked{% endif %}>
               <label class="govuk-label govuk-radios__label" for="responsibility-rma">
-                Risk Management Authority Area
+                Risk Management Authority (RMA)
+                <div class="govuk-hint">Allows you to create, edit, and view all records created within the boundary of your RMA.</div>
               </label>
             </div>
           </div>
