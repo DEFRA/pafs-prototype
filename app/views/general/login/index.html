@@ -12,7 +12,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      
+
       {% if error == "session-timeout" %}
         {{ govukNotificationBanner({
           html: '<p class="govuk-notification-banner__heading">Your session has expired. Please sign in again to continue</p>'
@@ -59,7 +59,7 @@
           ] | reject("equalto", false) | list
         }) }}
       {% endif %}
-      
+
       <h1 class="govuk-heading-xl">
         Sign in
       </h1>
@@ -84,17 +84,29 @@
 
         {% set emailErrorMessage = false %}
         {% if error == "email-empty" %}
-          {% set emailErrorMessage = { text: "Enter your email address" } %}
+          {% set emailErrorMessage = {
+            text: "Enter your email address"
+          } %}
         {% elif error == "email-invalid" %}
-          {% set emailErrorMessage = { text: "Enter an email address in the correct format, like name@example.com" } %}
+          {% set emailErrorMessage = {
+            text: "Enter an email address in the correct format, like name@example.com"
+          } %}
         {% elif error == "invalid-credentials" or error == "last-attempt" %}
-          {% set emailErrorMessage = { text: "Your email address or password is incorrect" } %}
+          {% set emailErrorMessage = {
+            text: "Your email address or password is incorrect"
+          } %}
         {% elif error == "account-pending" %}
-          {% set emailErrorMessage = { text: "Your account request is pending approval. You will be unable to sign in until your account request is approved" } %}
+          {% set emailErrorMessage = {
+            text: "Your account request is pending approval. You will be unable to sign in until your account request is approved"
+          } %}
         {% elif error == "account-locked" %}
-          {% set emailErrorMessage = { text: "Your account has been locked due to too many failed login attempts" } %}
+          {% set emailErrorMessage = {
+            text: "Your account has been locked due to too many failed login attempts"
+          } %}
         {% elif error == "account-disabled" %}
-          {% set emailErrorMessage = { text: "Your account has been disabled. Contact the administrator" } %}
+          {% set emailErrorMessage = {
+            text: "Your account has been disabled. Contact the administrator"
+          } %}
         {% endif %}
 
         {{ govukInput({
@@ -111,7 +123,9 @@
 
         {% set passwordErrorMessage = false %}
         {% if error == "password-empty" %}
-          {% set passwordErrorMessage = { text: "Enter your password" } %}
+          {% set passwordErrorMessage = {
+            text: "Enter your password"
+          } %}
         {% endif %}
 
         {{ govukPasswordInput({
