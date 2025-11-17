@@ -1,0 +1,73 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="Proposal overview" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Proposal overview</h1>
+    
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">National proposal number</dt>
+        <dd class="govuk-summary-list__value govuk-body-s">FCRM1-000123</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">Last updated</dt>
+        <dd class="govuk-summary-list__value govuk-body-s">15 October 2024</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">Status</dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          {% if status == 'submitted' %}
+            Submitted &nbsp; | &nbsp;<a class="govuk-link" href="#">Archive</a>
+          {% else %}
+            Draft &nbsp; | &nbsp;<a class="govuk-link" href="#">Archive</a>
+          {% endif %}
+        </dd>
+      </div>
+    </dl>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-8">
+      <h2 class="govuk-heading-m">Legacy proposal data</h2>
+      
+      <p class="govuk-body">This proposal was created in the previous version of the PAFS system and contains data that is not supported in the current system.</p>
+
+      {% if status == 'submitted' %}
+        <p class="govuk-body">This proposal has been submitted. You can download the proposal data to view the information, or delete it if you no longer need it.</p>
+        
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          <a href="#" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+            Download proposal
+          </a>
+          <a class="govuk-link" href="#">Delete proposal</a>
+        </div>
+
+      {% else %}
+        <p class="govuk-body">This proposal is in draft status. You can download the proposal data to view the information, delete it if you no longer need it, or reinitiate the proposal using the new template to submit it again.</p>
+        
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          <a href="#" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+            Reinitiate proposal
+          </a>
+          <a href="#" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            Download proposal
+          </a>
+          <a class="govuk-link" href="#">Delete proposal</a>
+        </div>
+
+        <div class="govuk-inset-text govuk-!-margin-top-6">
+            <p class="govuk-body">If you reinitiate this proposal, we will use common information from the legacy data to populate the new template. You will need to fill in the rest of the information using the current PAFS template.</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a class="govuk-link" href="/general/proposals">Return to your proposals</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

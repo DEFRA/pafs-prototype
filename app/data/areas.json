@@ -19,7 +19,10 @@
           "name": "PSO Dorset",
           "rma_areas": [
             { "id": "rma5", "name": "Dorset Council" },
-            { "id": "rma6", "name": "Bournemouth, Christchurch and Poole Council" }
+            {
+              "id": "rma6",
+              "name": "Bournemouth, Christchurch and Poole Council"
+            }
           ]
         },
         {
@@ -52,7 +55,10 @@
             { "id": "rma12", "name": "London Borough of Richmond upon Thames" },
             { "id": "rma13", "name": "London Borough of Kingston upon Thames" },
             { "id": "rma14", "name": "City of London Corporation" },
-            { "id": "rma15", "name": "London Borough of Hammersmith and Fulham" },
+            {
+              "id": "rma15",
+              "name": "London Borough of Hammersmith and Fulham"
+            },
             { "id": "rma16", "name": "London Borough of Wandsworth" },
             { "id": "rma17", "name": "London Borough of Lambeth" },
             { "id": "rma18", "name": "London Borough of Southwark" }
@@ -98,7 +104,10 @@
             { "id": "rma28", "name": "Norfolk County Council" },
             { "id": "rma29", "name": "Norwich City Council" },
             { "id": "rma30", "name": "Great Yarmouth Borough Council" },
-            { "id": "rma31", "name": "King's Lynn and West Norfolk Borough Council" }
+            {
+              "id": "rma31",
+              "name": "King's Lynn and West Norfolk Borough Council"
+            }
           ]
         },
         {

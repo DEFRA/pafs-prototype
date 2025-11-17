@@ -1,0 +1,52 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="Create a new proposal" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if errors %}
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            {% if errors.projectType %}<li><a href="#projectType">{{ errors.projectType }}</a></li>{% endif %}
+            {% if errors.assetTypes %}<li><a href="#assetTypes">{{ errors.assetTypes }}</a></li>{% endif %}
+            {% if errors.primaryAsset %}<li><a href="#primaryAsset">{{ errors.primaryAsset }}</a></li>{% endif %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/general/create-proposal/project-type" novalidate>
+      <div class="govuk-form-group{% if errors.projectType %} govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+            What type of project are you proposing?
+          </legend>
+          {% if errors.projectType %}
+            <p class="govuk-error-message">{{ errors.projectType }}</p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for option in projectTypeOptions %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="projectType-{{ option.value }}" name="projectType" type="radio" value="{{ option.value }}" {% if formData.projectType == option.value %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="projectType-{{ option.value }}">
+                  {{ option.label }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

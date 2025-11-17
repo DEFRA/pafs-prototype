@@ -33,14 +33,14 @@ function sessionManager(req, res, next) {
   }
 
   // Helper function to save journey-specific data
-  req.saveJourneyData = function(data) {
+  req.saveJourneyData = function (data) {
     if (currentJourney) {
       Object.assign(req.session.data.journeys[currentJourney], data)
     }
   }
 
   // Helper function to clear journey-specific data
-  req.clearJourneyData = function() {
+  req.clearJourneyData = function () {
     if (currentJourney) {
       req.session.data.journeys[currentJourney] = {}
     }
