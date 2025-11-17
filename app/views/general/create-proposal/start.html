@@ -1,0 +1,24 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="Create a new proposal" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Start a new proposal</h1>
+
+    <p class="govuk-body">Use this service to create a new funding proposal for a flood or coastal erosion risk management project.</p>
+
+    <h2 class="govuk-heading-m">Before you start</h2>
+
+    <p class="govuk-body">Over the next few pages we will ask you for key details about your project so we can create a proposal record for you.</p>
+
+    {{ govukButton({
+      text: "Start now",
+      href: "/general/create-proposal/title"
+    }) }}
+  </div>
+</div>
+
+{% endblock %}

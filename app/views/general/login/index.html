@@ -45,7 +45,7 @@
               href: "#email"
             } if error == "invalid-credentials" or error == "last-attempt",
             {
-              text: "Your account request is pending approval",
+              text: "Your account request is pending approval. You will be unable to sign in until your account request is approved",
               href: "#email"
             } if error == "account-pending",
             {
@@ -90,7 +90,7 @@
         {% elif error == "invalid-credentials" or error == "last-attempt" %}
           {% set emailErrorMessage = { text: "Your email address or password is incorrect" } %}
         {% elif error == "account-pending" %}
-          {% set emailErrorMessage = { text: "Your account request is pending approval" } %}
+          {% set emailErrorMessage = { text: "Your account request is pending approval. You will be unable to sign in until your account request is approved" } %}
         {% elif error == "account-locked" %}
           {% set emailErrorMessage = { text: "Your account has been locked due to too many failed login attempts" } %}
         {% elif error == "account-disabled" %}

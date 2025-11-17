@@ -36,16 +36,18 @@ Prototype for the **Project Application and Funding Service (PAFS)** built with 
 **Option 1: Using Node Version Manager (Recommended)**
 
 1. Install [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm):
-   
+
    **Windows:**
    - Download and install [nvm-windows](https://github.com/coreybutler/nvm-windows/releases)
-   
+
    **macOS/Linux:**
+
    ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
    ```
 
 2. Install Node.js v22:
+
    ```bash
    nvm install 22
    nvm use 22
@@ -66,6 +68,7 @@ Download and install Node.js v22+ from [nodejs.org](https://nodejs.org/)
 **Recommended IDE:** [Visual Studio Code](https://code.visualstudio.com/)
 
 **Recommended Extensions:**
+
 - **Prettier** - Code formatter
 - **ESLint** - JavaScript linting
 - **Nunjucks** - Template syntax highlighting
@@ -77,15 +80,18 @@ Install VS Code from [code.visualstudio.com](https://code.visualstudio.com/downl
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone git@github.com:DEFRA/pafs-prototype.git
    cd pafs-prototype
    ```
 
 2. **Use the correct Node version (if using nvm):**
+
    ```bash
    nvm use
    ```
+
    This reads the version from `.nvmrc` file.
 
 3. **Install dependencies:**
@@ -103,18 +109,20 @@ The `.env` file contains environment variables for **local development only**.
 **Setup Steps:**
 
 1. **Copy the template:**
+
    ```bash
    cp .env.template .env
    ```
 
 2. **Edit `.env` file** (optional for local development):
+
    ```dotenv
    # Uncomment to enable password protection locally
    #PASSWORD=yourpassword
-   
+
    # Uncomment for multiple passwords
    #PASSWORD_KEYS=password1,password2
-   
+
    # Add your custom environment variables below
    ```
 
@@ -197,13 +205,13 @@ The prototype will be available at **http://localhost:3000**
 
 ### Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run serve` | Serve the prototype (production mode) |
-| `npm start` | Start production server |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
+| Script                 | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Start development server with hot reload |
+| `npm run serve`        | Serve the prototype (production mode)    |
+| `npm start`            | Start production server                  |
+| `npm run format`       | Format code with Prettier                |
+| `npm run format:check` | Check code formatting                    |
 
 ### Using Launch Configurations
 
@@ -222,6 +230,7 @@ The prototype will be available at **http://localhost:3000**
    - Tests production build locally
 
 **To use:**
+
 - Press `F5` in VS Code
 - Or use Run and Debug panel (Ctrl+Shift+D)
 - Select your desired configuration
@@ -235,6 +244,7 @@ The prototype will be available at **http://localhost:3000**
 ### Local Development
 
 **For local development on your machine:**
+
 - Password protection is **NOT required**
 - Run with `npm run dev` - no password needed
 - Your prototype runs on `localhost` which is only accessible from your computer
@@ -266,20 +276,22 @@ Add `USE_AUTH=false` as a secret in CDP Portal Secrets tab.
 ## Environment Variables
 
 **For Local Development:**
+
 - Use `launch.json` (recommended) or `.env` file
 
 **For CDP Environments:**
+
 - **All secrets** (both sensitive and non-sensitive) go to **CDP Portal → Secrets tab**
 
 **Available Variables:**
 
-| Variable | Description | Example |
-|----------|-------------|----------|
-| `PASSWORD` | Basic authentication password | `mySecurePassword123` |
-| `PASSWORD_KEYS` | Comma-separated list for multiple passwords | `password1,password2` |
-| `USE_AUTH` | Set to `false` to disable authentication | `false` |
-| `PORT` | Server port (default: 3000) | `3000` |
-| `NODE_ENV` | Environment mode | `development` or `production` |
+| Variable        | Description                                 | Example                       |
+| --------------- | ------------------------------------------- | ----------------------------- |
+| `PASSWORD`      | Basic authentication password               | `mySecurePassword123`         |
+| `PASSWORD_KEYS` | Comma-separated list for multiple passwords | `password1,password2`         |
+| `USE_AUTH`      | Set to `false` to disable authentication    | `false`                       |
+| `PORT`          | Server port (default: 3000)                 | `3000`                        |
+| `NODE_ENV`      | Environment mode                            | `development` or `production` |
 
 ## Deployment
 
@@ -298,6 +310,7 @@ docker run -e PASSWORD=yourpassword -e PORT=3000 -p 3000:3000 pafs-prototype
 ```
 
 **Debug Container:**
+
 ```bash
 docker build --tag pafs-prototype .
 docker run -it --entrypoint /bin/ash pafs-prototype
@@ -315,4 +328,5 @@ docker run -it --entrypoint /bin/ash pafs-prototype
 This project is licensed under the [Open Government Licence v3.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3) and MIT License (see [LICENSES](./LICENSES/) directory).
 
 **Attribution:**
+
 > Contains public sector information licensed under the Open Government Licence v3.0
