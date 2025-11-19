@@ -1,0 +1,103 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="What are the expected funding sources?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if data and data['funding-sources-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#funding-sources">{{ data['funding-sources-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/general/create-proposal/funding-sources">
+      <div class="govuk-form-group {%- if data and data['funding-sources-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data and data['funding-sources-error'] %}aria-describedby="funding-sources-error funding-sources-hint"{% else %}aria-describedby="funding-sources-hint"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+            <h1 class="govuk-fieldset__heading">
+              What are the expected funding sources?
+            </h1>
+          </legend>
+          <div id="funding-sources-hint" class="govuk-hint">
+            Select all that apply.
+          </div>
+          {% if data and data['funding-sources-error'] %}
+            <p id="funding-sources-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['funding-sources-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="funding-sources">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-grant-in-aid" name="funding-sources" type="checkbox" value="grant-in-aid" {% if data and data['funding-sources'] and 'grant-in-aid' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-grant-in-aid">
+                Grant in aid
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-local-levy" name="funding-sources" type="checkbox" value="local-levy" {% if data and data['funding-sources'] and 'local-levy' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-local-levy">
+                Local levy
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-fcrm-grant" name="funding-sources" type="checkbox" value="fcrm-grant" {% if data and data['funding-sources'] and 'fcrm-grant' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-fcrm-grant">
+                Additional FCRM Grant-in-Aid
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-public-sector" name="funding-sources" type="checkbox" value="public-sector" {% if data and data['funding-sources'] and 'public-sector' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-public-sector">
+                Public sector contributions
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-private-sector" name="funding-sources" type="checkbox" value="private-sector" {% if data and data['funding-sources'] and 'private-sector' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-private-sector">
+                Private sector contributions
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-ea-contributions" name="funding-sources" type="checkbox" value="ea-contributions" {% if data and data['funding-sources'] and 'ea-contributions' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-ea-contributions">
+                Contributions from other Environment Agency functions or sources
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-precept" name="funding-sources" type="checkbox" value="precept" {% if data and data['funding-sources'] and 'precept' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-precept">
+                Funds recovered from an internal drainage board by the Environment Agency, known as a precept
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="funding-other" name="funding-sources" type="checkbox" value="other" {% if data and data['funding-sources'] and 'other' in data['funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="funding-other">
+                Other funding sources not yet identified
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+

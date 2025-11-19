@@ -783,6 +783,314 @@ router.post(
   }
 )
 
+// Location page
+router.get('/general/create-proposal/location', function (req, res) {
+  // Clear any previous errors when accessing via GET
+  delete req.session.data['grid-reference-error']
+  
+  res.render('general/create-proposal/location', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/location', function (req, res) {
+  const gridReference = (req.body['grid-reference'] || '').trim()
+  
+  // Validate grid reference
+  if (!gridReference) {
+    req.session.data['grid-reference-error'] = 'Tell us the project\'s National Grid Reference'
+    req.session.data['grid-reference'] = gridReference
+    return res.render('general/create-proposal/location', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['grid-reference-error']
+  
+  // Save the grid reference to session
+  req.session.data['grid-reference'] = gridReference
+  
+  // Redirect to benefit area file upload page
+  res.redirect('/general/create-proposal/benefit-area-file')
+})
+
+// Benefit area file upload page
+router.get('/general/create-proposal/benefit-area-file', function (req, res) {
+  res.render('general/create-proposal/benefit-area-file', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/benefit-area-file', function (req, res) {
+  // In a real application, you would handle file upload here
+  // For prototype, we'll just store a filename
+  if (req.body['benefit-area-file'] || req.files) {
+    req.session.data['benefit-area-file'] = 'uploaded-shapefile.zip'
+    req.session.data['benefit-area-file-uploaded'] = true
+  }
+  
+  // Redirect back to proposal overview
+  res.redirect('/general/create-proposal/check-answers')
+})
+
+// Important dates - OBC start date
+router.get('/general/create-proposal/important-dates/obc-start', function (req, res) {
+  delete req.session.data['obc-start-error']
+  res.render('general/create-proposal/obc-start-date', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/important-dates/obc-start', function (req, res) {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = (req.body['obc-start-month'] || '').trim()
+  const year = (req.body['obc-start-year'] || '').trim()
+  
+  // Validate that both month and year are provided
+  if (!month || !year) {
+    req.session.data['obc-start-error'] = 'Enter the date you expect to start the project\'s outline business case'
+    req.session.data['obc-start-month'] = month
+    req.session.data['obc-start-year'] = year
+    return res.render('general/create-proposal/obc-start-date', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['obc-start-error']
+  
+  const monthInt = parseInt(month)
+  const monthName = monthNames[monthInt - 1] || month
+  req.session.data['obc-start-month'] = month
+  req.session.data['obc-start-year'] = year
+  req.session.data['obc-start-date'] = monthName + ' ' + year
+  
+  res.redirect('/general/create-proposal/important-dates/obc-completion')
+})
+
+// Important dates - OBC completion date
+router.get('/general/create-proposal/important-dates/obc-completion', function (req, res) {
+  delete req.session.data['obc-completion-error']
+  res.render('general/create-proposal/obc-completion-date', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/important-dates/obc-completion', function (req, res) {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = (req.body['obc-completion-month'] || '').trim()
+  const year = (req.body['obc-completion-year'] || '').trim()
+  
+  // Validate that both month and year are provided
+  if (!month || !year) {
+    req.session.data['obc-completion-error'] = 'Enter the date you expect to complete the project\'s outline business case'
+    req.session.data['obc-completion-month'] = month
+    req.session.data['obc-completion-year'] = year
+    return res.render('general/create-proposal/obc-completion-date', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['obc-completion-error']
+  
+  const monthInt = parseInt(month)
+  const monthName = monthNames[monthInt - 1] || month
+  req.session.data['obc-completion-month'] = month
+  req.session.data['obc-completion-year'] = year
+  req.session.data['obc-completion-date'] = monthName + ' ' + year
+  
+  res.redirect('/general/create-proposal/important-dates/contract-awarded')
+})
+
+// Important dates - Contract awarded date
+router.get('/general/create-proposal/important-dates/contract-awarded', function (req, res) {
+  delete req.session.data['contract-awarded-error']
+  res.render('general/create-proposal/contract-awarded-date', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/important-dates/contract-awarded', function (req, res) {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = (req.body['contract-awarded-month'] || '').trim()
+  const year = (req.body['contract-awarded-year'] || '').trim()
+  
+  // Validate that both month and year are provided
+  if (!month || !year) {
+    req.session.data['contract-awarded-error'] = 'Enter the date you expect to award the project\'s main contract'
+    req.session.data['contract-awarded-month'] = month
+    req.session.data['contract-awarded-year'] = year
+    return res.render('general/create-proposal/contract-awarded-date', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['contract-awarded-error']
+  
+  const monthInt = parseInt(month)
+  const monthName = monthNames[monthInt - 1] || month
+  req.session.data['contract-awarded-month'] = month
+  req.session.data['contract-awarded-year'] = year
+  req.session.data['contract-awarded-date'] = monthName + ' ' + year
+  
+  res.redirect('/general/create-proposal/important-dates/start-construction')
+})
+
+// Important dates - Start construction date
+router.get('/general/create-proposal/important-dates/start-construction', function (req, res) {
+  delete req.session.data['start-construction-error']
+  res.render('general/create-proposal/start-construction-date', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/important-dates/start-construction', function (req, res) {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = (req.body['start-construction-month'] || '').trim()
+  const year = (req.body['start-construction-year'] || '').trim()
+  
+  // Validate that both month and year are provided
+  if (!month || !year) {
+    req.session.data['start-construction-error'] = 'Enter the date you expect to start the work'
+    req.session.data['start-construction-month'] = month
+    req.session.data['start-construction-year'] = year
+    return res.render('general/create-proposal/start-construction-date', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['start-construction-error']
+  
+  const monthInt = parseInt(month)
+  const monthName = monthNames[monthInt - 1] || month
+  req.session.data['start-construction-month'] = month
+  req.session.data['start-construction-year'] = year
+  req.session.data['start-construction-date'] = monthName + ' ' + year
+  
+  res.redirect('/general/create-proposal/important-dates/ready-for-service')
+})
+
+// Important dates - Ready for service date
+router.get('/general/create-proposal/important-dates/ready-for-service', function (req, res) {
+  delete req.session.data['ready-for-service-error']
+  res.render('general/create-proposal/ready-for-service-date', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/important-dates/ready-for-service', function (req, res) {
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const month = (req.body['ready-for-service-month'] || '').trim()
+  const year = (req.body['ready-for-service-year'] || '').trim()
+  
+  // Validate that both month and year are provided
+  if (!month || !year) {
+    req.session.data['ready-for-service-error'] = 'Enter the date you expect the project to start achieving its benefits'
+    req.session.data['ready-for-service-month'] = month
+    req.session.data['ready-for-service-year'] = year
+    return res.render('general/create-proposal/ready-for-service-date', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['ready-for-service-error']
+  
+  const monthInt = parseInt(month)
+  const monthName = monthNames[monthInt - 1] || month
+  req.session.data['ready-for-service-month'] = month
+  req.session.data['ready-for-service-year'] = year
+  req.session.data['ready-for-service-date'] = monthName + ' ' + year
+  
+  // Mark that all important dates have been added
+  req.session.data['important-dates-added'] = true
+  
+  // Redirect back to proposal overview
+  res.redirect('/general/create-proposal/check-answers')
+})
+
+// Funding sources page
+router.get('/general/create-proposal/funding-sources', function (req, res) {
+  // Clear error when accessing via GET (fresh page load)
+  if (req.session.data) {
+    delete req.session.data['funding-sources-error']
+  }
+  res.render('general/create-proposal/funding-sources', {
+    journeyData: req.journeyData,
+    data: req.session.data || {}
+  })
+})
+
+router.post('/general/create-proposal/funding-sources', function (req, res) {
+  // Ensure session data object exists
+  if (!req.session.data) {
+    req.session.data = {}
+  }
+  
+  const fundingSources = req.body['funding-sources']
+  
+  // Validate that at least one funding source is selected
+  // When no checkboxes are selected, the field may be undefined, empty string, empty array, or '_unchecked'
+  let hasSelection = false
+  
+  if (fundingSources) {
+    if (Array.isArray(fundingSources)) {
+      // Filter out '_unchecked' values and check if any valid selections remain
+      const validSelections = fundingSources.filter(source => source && source !== '_unchecked')
+      hasSelection = validSelections.length > 0
+    } else if (typeof fundingSources === 'string') {
+      // Check if it's not empty and not '_unchecked'
+      const trimmed = fundingSources.trim()
+      hasSelection = trimmed.length > 0 && trimmed !== '_unchecked'
+    }
+  }
+  if (!hasSelection) {
+    req.session.data['funding-sources-error'] = 'The project must have at least one funding source.'
+    // Don't save empty funding sources
+    if (req.session.data['funding-sources']) {
+      delete req.session.data['funding-sources']
+    }
+    return res.render('general/create-proposal/funding-sources', {
+      journeyData: req.journeyData,
+      data: req.session.data
+    })
+  }
+  
+  // Clear any previous errors
+  delete req.session.data['funding-sources-error']
+  
+  // Save the funding sources to session
+  // Filter out '_unchecked' values and ensure it's always an array
+  if (Array.isArray(fundingSources)) {
+    // Filter out '_unchecked' values
+    req.session.data['funding-sources'] = fundingSources.filter(source => source && source !== '_unchecked')
+  } else {
+    // If it's a string and not '_unchecked', save it as an array
+    const trimmed = fundingSources.trim()
+    if (trimmed && trimmed !== '_unchecked') {
+      req.session.data['funding-sources'] = [trimmed]
+    } else {
+      req.session.data['funding-sources'] = []
+    }
+  }
+  
+  // Mark that funding sources have been added
+  req.session.data['funding-sources-added'] = true
+  
+  // Redirect back to proposal overview
+  res.redirect('/general/create-proposal/check-answers')
+})
+
 router.get('/general/create-proposal/check-answers', function (req, res) {
   const formData = getCreateProposalData(req)
   const variant = req.query.variant

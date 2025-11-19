@@ -1,0 +1,79 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="Where is the project located?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    <p class="govuk-body">
+      <a href="/general/create-proposal/check-answers" class="govuk-link">Return to proposal overview</a>
+    </p>
+
+    {% if data['grid-reference-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#grid-reference">{{ data['grid-reference-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Where is the project located?</h1>
+
+    <div class="govuk-hint">
+      <p class="govuk-body">Enter a National Grid Reference. This should consist of 2 letters followed by 10 digits, for example ST 58198 72725</p>
+
+      <p class="govuk-body">For projects over:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>multiple locations, choose the main location</li>
+        <li>a stretch of watercourse or coast, choose the middle point</li>
+      </ul>
+    </div>
+
+    <form method="post" action="/general/create-proposal/location">
+      <div class="govuk-form-group {%- if data['grid-reference-error'] %} govuk-form-group--error {%- endif %}">
+        {% if data['grid-reference-error'] %}
+          <p id="grid-reference-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['grid-reference-error'] }}
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if data['grid-reference-error'] %}govuk-input--error{% endif %}" id="grid-reference" name="grid-reference" type="text" value="{{ data['grid-reference'] }}" {% if data['grid-reference-error'] %}aria-describedby="grid-reference-error"{% endif %}>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+          How to find a National Grid Reference
+        </span>
+      </summary>
+      <div class="govuk-details__text">
+        <p class="govuk-body">Use the free <a href="https://gridreferencefinder.com/" class="govuk-link" target="_blank" rel="noopener noreferrer">UK Grid Reference Finder (opens new window)</a></p>
+        
+        <ol class="govuk-list govuk-list--number">
+          <li>Search for a location or postcode on the left of the page</li>
+          <li>Right-click to display the National Grid Reference</li>
+          <li>Select and copy the National Grid Reference</li>
+          <li>Return to this page and paste the National Grid Reference into the text-box above</li>
+        </ol>
+      </div>
+    </details>
+
+  </div>
+</div>
+{% endblock %}
+
