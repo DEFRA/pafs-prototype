@@ -1,6 +1,6 @@
 {% extends "layouts/general-variant1.html" %}
 
-{% set pageName="Proposal overview" %}
+{% set pageName="Proposal overview " %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -26,80 +26,142 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <div class="govuk-!-margin-bottom-6">
-      <h2 class="govuk-heading-m">Project name</h2>
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <p class="govuk-body" style="margin: 0;">{{ formData.projectTitle or 'Not provided' }}</p>
-        <a class="govuk-link" href="/general/create-proposal/title" style="white-space: nowrap;">Change</a>
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Project name</h2>
       </div>
-    </div>
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-    <div class="govuk-!-margin-bottom-6">
-      <h2 class="govuk-heading-m">Risk management authority</h2>
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <p class="govuk-body" style="margin: 0;">
-          {% set selectedRma = rmaOptions | selectattr('value', 'equalto', formData.rmaName) | first %}
-          {{ selectedRma.label if selectedRma else 'Not provided' }}
-        </p>
-        <a class="govuk-link" href="/general/create-proposal/rma-selection" style="white-space: nowrap;">Change</a>
-      </div>
-    </div>
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-    <div class="govuk-!-margin-bottom-6">
-      <h2 class="govuk-heading-m">Project type</h2>
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <p class="govuk-body" style="margin: 0;">
-          {% set selectedType = projectTypeOptions | selectattr('value', 'equalto', formData.projectType) | first %}
-          {{ selectedType.label if selectedType else 'Not provided' }}
-        </p>
-        <a class="govuk-link" href="/general/create-proposal/project-type" style="white-space: nowrap;">Change</a>
-      </div>
-
-      {% if formData.projectType == 'new_or_improve' %}
-        <div class="govuk-!-margin-top-4">
-          <h3 class="govuk-heading-s">Asset types</h3>
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <ul class="govuk-list govuk-list--bullet" style="margin: 0;">
-              {% for option in assetTypeOptions %}
-                {% if option.value in formData.assetTypes %}
-                  <li>{{ option.label }}</li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-            <a class="govuk-link" href="/general/create-proposal/project-type/assets" style="white-space: nowrap;">Change</a>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Project name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ formData.projectTitle or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/general/create-proposal/title">
+                Change<span class="govuk-visually-hidden"> project name</span>
+              </a>
+            </dd>
           </div>
-        </div>
-
-        <div class="govuk-!-margin-top-4">
-          <h3 class="govuk-heading-s">Primary asset type</h3>
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <p class="govuk-body" style="margin: 0;">
-              {% set primaryOption = assetTypeOptions | selectattr('value', 'equalto', formData.primaryAsset) | first %}
-              {{ primaryOption.label if primaryOption else 'Not provided' }}
-            </p>
-            <a class="govuk-link" href="/general/create-proposal/project-type/primary-asset" style="white-space: nowrap;">Change</a>
-          </div>
-        </div>
-      {% endif %}
+        </dl>
+      </div>
     </div>
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <div class="govuk-!-margin-bottom-6">
-      <h2 class="govuk-heading-m">Last financial year the project will spend funds</h2>
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <p class="govuk-body" style="margin: 0;">
-          {% if financialYearOptions %}
-            {% set selectedYear = financialYearOptions | selectattr('value', 'equalto', formData.financialYear) | first %}
-            {{ selectedYear.label if selectedYear else (formData.financialYear or 'Not provided') }}
-          {% else %}
-            {{ formData.financialYear or 'Not provided' }}
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Risk management authority</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Risk management authority
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% set selectedRma = rmaOptions | selectattr('value', 'equalto', formData.rmaName) | first %}
+              {{ selectedRma.label if selectedRma else 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/general/create-proposal/rma-selection">
+                Change<span class="govuk-visually-hidden"> risk management authority</span>
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Project type</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Project type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% set selectedType = projectTypeOptions | selectattr('value', 'equalto', formData.projectType) | first %}
+              {{ selectedType.label if selectedType else 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/general/create-proposal/project-type">
+                Change<span class="govuk-visually-hidden"> project type</span>
+              </a>
+            </dd>
+          </div>
+
+          {% if formData.projectType == 'new_or_improve' %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Asset types
+              </dt>
+              <dd class="govuk-summary-list__value">
+                <ul class="govuk-list govuk-list--bullet">
+                  {% for option in assetTypeOptions %}
+                    {% if option.value in formData.assetTypes %}
+                      <li>{{ option.label }}</li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/general/create-proposal/project-type/assets">
+                  Change<span class="govuk-visually-hidden"> asset types</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Primary asset type
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {% set primaryOption = assetTypeOptions | selectattr('value', 'equalto', formData.primaryAsset) | first %}
+                {{ primaryOption.label if primaryOption else 'Not provided' }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/general/create-proposal/project-type/primary-asset">
+                  Change<span class="govuk-visually-hidden"> primary asset type</span>
+                </a>
+              </dd>
+            </div>
           {% endif %}
-        </p>
-        <a class="govuk-link" href="/general/create-proposal/financial-year" style="white-space: nowrap;">Change</a>
+        </dl>
       </div>
     </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Last financial year the project will spend funds</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Last financial year the project will spend funds
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% if financialYearOptions %}
+                {% set selectedYear = financialYearOptions | selectattr('value', 'equalto', formData.financialYear) | first %}
+                {{ selectedYear.label if selectedYear else (formData.financialYear or 'Not provided') }}
+              {% else %}
+                {{ formData.financialYear or 'Not provided' }}
+              {% endif %}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/general/create-proposal/financial-year">
+                Change<span class="govuk-visually-hidden"> last financial year the project will spend funds</span>
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-6">
 
     <p class="govuk-body">All information needs to be completed before you can submit your proposal.</p>
