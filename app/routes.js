@@ -657,6 +657,8 @@ router.post(
     }
 
     formData.assetTypes = normaliseToArray(req.body.assetTypes)
+    // Filter out '_unchecked' values
+    formData.assetTypes = formData.assetTypes.filter(asset => asset && asset !== '_unchecked')
 
     if (formData.assetTypes.length === 0) {
       return res.render('general/create-proposal/project-type-assets', {
