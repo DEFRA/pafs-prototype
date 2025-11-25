@@ -28,9 +28,11 @@
           The project name should be meaningful and understandable and should not include abbreviations. For example, South Chesham River Colne Flood Alleviation Scheme or Clacton-on-Sea Coastal Erosion Project Phase 4.
         </div>
         {% if errorMessage %}
-          <p class="govuk-error-message">{{ errorMessage }}</p>
+          <p id="projectTitle-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ errorMessage }}
+          </p>
         {% endif %}
-        <input class="govuk-input govuk-!-width-full" id="projectTitle" name="projectTitle" type="text" value="{{ formData.projectTitle }}" aria-describedby="projectTitle-hint">
+        <input class="govuk-input govuk-!-width-full {% if errorMessage %}govuk-input--error{% endif %}" id="projectTitle" name="projectTitle" type="text" value="{{ formData.projectTitle }}" {% if errorMessage %}aria-describedby="projectTitle-error projectTitle-hint"{% else %}aria-describedby="projectTitle-hint"{% endif %}>
       </div>
 
       <button class="govuk-button" data-module="govuk-button">Save and continue</button>

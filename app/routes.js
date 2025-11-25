@@ -560,6 +560,14 @@ router.get('/general/create-proposal/title', function (req, res) {
   })
 })
 
+router.get('/general/create-proposal/title-unique', function (req, res) {
+  const formData = getCreateProposalData(req)
+  res.render('general/create-proposal/title-unique', {
+    journeyData: req.journeyData,
+    formData
+  })
+})
+
 router.post('/general/create-proposal/title', function (req, res) {
   const formData = getCreateProposalData(req)
   formData.projectTitle = (req.body.projectTitle || '').trim()
@@ -568,7 +576,18 @@ router.post('/general/create-proposal/title', function (req, res) {
     return res.render('general/create-proposal/title', {
       journeyData: req.journeyData,
       formData,
-      errorMessage: 'Enter a project title'
+      errorMessage: 'Enter a project Name'
+    })
+  }
+
+  // Validate that project title contains only alphanumeric characters and spaces
+  // This regex allows letters (a-z, A-Z), numbers (0-9), and spaces
+  const alphanumericRegex = /^[a-zA-Z0-9\s]+$/
+  if (!alphanumericRegex.test(formData.projectTitle)) {
+    return res.render('general/create-proposal/title', {
+      journeyData: req.journeyData,
+      formData,
+      errorMessage: 'The project name must only contain letters, underscores, hyphens and numbers'
     })
   }
 
