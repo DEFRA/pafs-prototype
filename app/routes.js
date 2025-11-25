@@ -554,9 +554,19 @@ router.get('/general/create-proposal/start', function (req, res) {
 
 router.get('/general/create-proposal/title', function (req, res) {
   const formData = getCreateProposalData(req)
+  const validation = req.query.validation
+  
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter a project title'
+  } else if (validation === 'alpha-numeric') {
+    errorMessage = 'The project name must only contain letters, underscores, hyphens and numbers'
+  }
+  
   res.render('general/create-proposal/title', {
     journeyData: req.journeyData,
-    formData
+    formData,
+    errorMessage
   })
 })
 
@@ -569,6 +579,7 @@ router.get('/general/create-proposal/title-unique', function (req, res) {
 })
 
 router.post('/general/create-proposal/title', function (req, res) {
+
   const formData = getCreateProposalData(req)
   formData.projectTitle = (req.body.projectTitle || '').trim()
 
@@ -591,6 +602,7 @@ router.post('/general/create-proposal/title', function (req, res) {
     })
   }
 
+
   res.redirect(
     rmaOptions.length > 1
       ? '/general/create-proposal/rma-selection'
@@ -598,12 +610,16 @@ router.post('/general/create-proposal/title', function (req, res) {
   )
 })
 
+
 router.get('/general/create-proposal/rma-selection', function (req, res) {
   const formData = getCreateProposalData(req)
+  const showError = req.query.required === 'true'
+  
   res.render('general/create-proposal/rma-selection', {
     journeyData: req.journeyData,
     formData,
-    rmaOptions
+    rmaOptions,
+    errorMessage: showError ? 'Select the lead RMA area' : undefined
   })
 })
 
