@@ -141,7 +141,7 @@ router.get('/general/login', function (req, res) {
 
 router.post('/general/login', function (req, res) {
   const email = req.body.email
-
+  
   // Check if admin user
   if (email === 'admin@environment-agency.gov.uk') {
     req.saveJourneyData({
@@ -230,9 +230,9 @@ router.get('/general/unlock-account/link-expired', function (req, res) {
 router.get(
   '/email-templates/account-approved-set-password',
   function (req, res) {
-    res.render('email-templates/account-approved-set-password', {
-      journeyData: req.journeyData
-    })
+  res.render('email-templates/account-approved-set-password', {
+    journeyData: req.journeyData
+  })
   }
 )
 
@@ -249,7 +249,7 @@ router.get('/general/request-account', function (req, res) {
   req.session.data = {
     authenticated: authenticated
   }
-
+  
   res.render('general/request-account/index', {
     journeyData: req.journeyData
   })
@@ -266,7 +266,7 @@ router.get('/general/request-account/details', function (req, res) {
 
 router.post('/general/request-account/details', function (req, res) {
   const responsibility = req.body.responsibility
-
+  
   // Redirect based on responsibility type
   if (responsibility === 'ea') {
     res.redirect('/general/request-account/ea-main-area')
@@ -322,7 +322,7 @@ router.get('/general/request-account/ea-additional-areas', function (req, res) {
 router.post(
   '/general/request-account/ea-additional-areas',
   function (req, res) {
-    res.redirect('/general/request-account/check-answers')
+  res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -358,18 +358,18 @@ router.post('/general/request-account/pso-main-area', function (req, res) {
 router.get(
   '/general/request-account/pso-additional-areas',
   function (req, res) {
-    req.session.data = req.session.data || {}
-    req.session.data.areasData = loadAreasData()
-    res.render('general/request-account/pso-additional-areas', {
-      journeyData: req.journeyData
-    })
+  req.session.data = req.session.data || {}
+  req.session.data.areasData = loadAreasData()
+  res.render('general/request-account/pso-additional-areas', {
+    journeyData: req.journeyData
+  })
   }
 )
 
 router.post(
   '/general/request-account/pso-additional-areas',
   function (req, res) {
-    res.redirect('/general/request-account/check-answers')
+  res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -419,18 +419,18 @@ router.post('/general/request-account/rma-main-area', function (req, res) {
 router.get(
   '/general/request-account/rma-additional-areas',
   function (req, res) {
-    req.session.data = req.session.data || {}
-    req.session.data.areasData = loadAreasData()
-    res.render('general/request-account/rma-additional-areas', {
-      journeyData: req.journeyData
-    })
+  req.session.data = req.session.data || {}
+  req.session.data.areasData = loadAreasData()
+  res.render('general/request-account/rma-additional-areas', {
+    journeyData: req.journeyData
+  })
   }
 )
 
 router.post(
   '/general/request-account/rma-additional-areas',
   function (req, res) {
-    res.redirect('/general/request-account/check-answers')
+  res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -446,14 +446,14 @@ router.get('/general/request-account/check-answers', function (req, res) {
 router.post('/general/request-account/check-answers', function (req, res) {
   // Store email temporarily for confirmation page
   req.session.data.submittedEmail = req.session.data.email
-
+  
   // Clear all form data except the submitted email
   const submittedEmail = req.session.data.submittedEmail
   req.session.data = {
     submittedEmail: submittedEmail,
     authenticated: req.session.data.authenticated
   }
-
+  
   // Account request submitted - redirect to confirmation
   res.redirect('/general/request-account/confirmation')
 })
@@ -462,12 +462,12 @@ router.post('/general/request-account/check-answers', function (req, res) {
 router.get('/general/request-account/confirmation', function (req, res) {
   // Use submittedEmail for display, then clear it
   const email = req.session.data.submittedEmail
-
+  
   res.render('general/request-account/confirmation', {
     journeyData: req.journeyData,
     data: { email: email }
   })
-
+  
   // Clear the submitted email after rendering
   delete req.session.data.submittedEmail
 })
@@ -487,18 +487,18 @@ router.get('/general/catalogue', function (req, res) {
 // Proposals page with variant support
 router.get('/general/proposals', function (req, res) {
   const variant = req.query.variant || '1'
-
+  
   // Preserve isAdmin flag if it exists, otherwise set to false
   const isAdmin = req.journeyData.isAdmin || false
   const userName = isAdmin ? 'Admin User' : 'John Smith'
-
+  
   req.saveJourneyData({
     journeyType: 'general',
     userName: userName,
     isAdmin: isAdmin,
     isLoggedIn: true
   })
-
+  
   // Render different templates based on variant
   if (variant === '2') {
     res.render('general/proposals-variant2', {
@@ -554,13 +554,32 @@ router.get('/general/create-proposal/start', function (req, res) {
 
 router.get('/general/create-proposal/title', function (req, res) {
   const formData = getCreateProposalData(req)
+  const validation = req.query.validation
+  
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter a project Name'
+  } else if (validation === 'alpha-numeric') {
+    errorMessage = 'The project name must only contain letters, underscores, hyphens and numbers'
+  }
+  
   res.render('general/create-proposal/title', {
+    journeyData: req.journeyData,
+    formData,
+    errorMessage
+  })
+})
+
+router.get('/general/create-proposal/title-unique', function (req, res) {
+  const formData = getCreateProposalData(req)
+  res.render('general/create-proposal/title-unique', {
     journeyData: req.journeyData,
     formData
   })
 })
 
 router.post('/general/create-proposal/title', function (req, res) {
+
   const formData = getCreateProposalData(req)
   formData.projectTitle = (req.body.projectTitle || '').trim()
 
@@ -568,9 +587,21 @@ router.post('/general/create-proposal/title', function (req, res) {
     return res.render('general/create-proposal/title', {
       journeyData: req.journeyData,
       formData,
-      errorMessage: 'Enter a project title'
+      errorMessage: 'Enter a project Name'
     })
   }
+
+  // Validate that project title contains only alphanumeric characters and spaces
+  // This regex allows letters (a-z, A-Z), numbers (0-9), and spaces
+  const alphanumericRegex = /^[a-zA-Z0-9\s]+$/
+  if (!alphanumericRegex.test(formData.projectTitle)) {
+    return res.render('general/create-proposal/title', {
+      journeyData: req.journeyData,
+      formData,
+      errorMessage: 'The project name must only contain letters, underscores, hyphens and numbers'
+    })
+  }
+
 
   res.redirect(
     rmaOptions.length > 1
@@ -579,12 +610,16 @@ router.post('/general/create-proposal/title', function (req, res) {
   )
 })
 
+
 router.get('/general/create-proposal/rma-selection', function (req, res) {
   const formData = getCreateProposalData(req)
+  const showError = req.query.required === 'true'
+  
   res.render('general/create-proposal/rma-selection', {
     journeyData: req.journeyData,
     formData,
-    rmaOptions
+    rmaOptions,
+    errorMessage: showError ? 'Select the lead RMA area' : undefined
   })
 })
 
@@ -606,11 +641,19 @@ router.post('/general/create-proposal/rma-selection', function (req, res) {
 
 router.get('/general/create-proposal/project-type', function (req, res) {
   const formData = getCreateProposalData(req)
+  const validation = req.query.validation
+  
+  let errors = undefined
+  if (validation === 'required') {
+    errors = { projectType: 'Select the type of project you are proposing' }
+  }
+  
   res.render('general/create-proposal/project-type', {
     journeyData: req.journeyData,
     formData,
     projectTypeOptions,
-    assetTypeOptions
+    assetTypeOptions,
+    errors
   })
 })
 
@@ -641,10 +684,18 @@ router.get('/general/create-proposal/project-type/assets', function (req, res) {
   if (formData.projectType !== 'new_or_improve') {
     return res.redirect('/general/create-proposal/financial-year')
   }
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Select the asset types your project will create'
+  }
+  
   res.render('general/create-proposal/project-type-assets', {
     journeyData: req.journeyData,
     formData,
-    assetTypeOptions
+    assetTypeOptions,
+    errorMessage
   })
 })
 
@@ -677,21 +728,30 @@ router.get(
   '/general/create-proposal/project-type/primary-asset',
   function (req, res) {
     const formData = getCreateProposalData(req)
-    if (
-      formData.projectType !== 'new_or_improve' ||
-      !formData.assetTypes.length
-    ) {
-      return res.redirect('/general/create-proposal/project-type')
+    const validation = req.query.validation
+    
+
+    // Use filtered assets if available, otherwise use all assets for error template
+    let filteredAssets = []
+    if (formData.assetTypes && formData.assetTypes.length > 0) {
+      filteredAssets = assetTypeOptions.filter((option) =>
+        formData.assetTypes.includes(option.value)
+      )
+    } else {
+      // For error template, show all assets
+      filteredAssets = assetTypeOptions
     }
 
-    const filteredAssets = assetTypeOptions.filter((option) =>
-      formData.assetTypes.includes(option.value)
-    )
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage = 'Select the asset type that will deliver the most flood risk benefit'
+    }
 
     res.render('general/create-proposal/project-type-primary-asset', {
       journeyData: req.journeyData,
       formData,
-      filteredAssets
+      filteredAssets,
+      errorMessage
     })
   }
 )
@@ -731,10 +791,18 @@ router.post(
 
 router.get('/general/create-proposal/financial-year', function (req, res) {
   const formData = getCreateProposalData(req)
+  const validation = req.query.validation
+  
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Select the last financial year the project will spend funds'
+  }
+  
   res.render('general/create-proposal/financial-year', {
     journeyData: req.journeyData,
     formData,
-    financialYearOptions
+    financialYearOptions,
+    errorMessage
   })
 })
 
@@ -759,9 +827,17 @@ router.get(
   '/general/create-proposal/financial-year/after',
   function (req, res) {
     const formData = getCreateProposalData(req)
+    const validation = req.query.validation
+    
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage = 'Enter the financial year the project will stop spending funds'
+    }
+    
     res.render('general/create-proposal/financial-year-after', {
       journeyData: req.journeyData,
-      formData
+      formData,
+      errorMessage
     })
   }
 )
@@ -1134,7 +1210,7 @@ router.get('/admin/journey-selection', function (req, res) {
 
 router.post('/admin/journey-selection', function (req, res) {
   const journey = req.body.journey
-
+  
   if (journey === 'user') {
     // Admin exploring user journey - ensure isAdmin flag is set
     req.saveJourneyData({
@@ -1205,14 +1281,14 @@ router.get('/admin/user-management-active', function (req, res) {
 // Admin users page with variant support
 router.get('/admin/users', function (req, res) {
   const variant = req.query.variant || '1'
-
+  
   req.saveJourneyData({
     journeyType: 'admin',
     userName: 'Admin User',
     isAdmin: true,
     isLoggedIn: true
   })
-
+  
   // Render different templates based on variant
   if (variant === '2') {
     res.render('admin/users-variant2', {
