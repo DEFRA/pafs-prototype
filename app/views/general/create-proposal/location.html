@@ -10,7 +10,7 @@
       <a href="/general/create-proposal/check-answers" class="govuk-link">Return to proposal overview</a>
     </p>
 
-    {% if data['grid-reference-error'] %}
+    {% if errorMessage or data['grid-reference-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
           <h2 class="govuk-error-summary__title">
@@ -19,7 +19,7 @@
           <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
               <li>
-                <a href="#grid-reference">{{ data['grid-reference-error'] }}</a>
+                <a href="#grid-reference">{{ errorMessage or data['grid-reference-error'] }}</a>
               </li>
             </ul>
           </div>
@@ -41,13 +41,13 @@
     </div>
 
     <form method="post" action="/general/create-proposal/location">
-      <div class="govuk-form-group {%- if data['grid-reference-error'] %} govuk-form-group--error {%- endif %}">
-        {% if data['grid-reference-error'] %}
+      <div class="govuk-form-group {%- if errorMessage or data['grid-reference-error'] %} govuk-form-group--error {%- endif %}">
+        {% if errorMessage or data['grid-reference-error'] %}
           <p id="grid-reference-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> {{ data['grid-reference-error'] }}
+            <span class="govuk-visually-hidden">Error:</span> {{ errorMessage or data['grid-reference-error'] }}
           </p>
         {% endif %}
-        <input class="govuk-input govuk-!-width-two-thirds {% if data['grid-reference-error'] %}govuk-input--error{% endif %}" id="grid-reference" name="grid-reference" type="text" value="{{ data['grid-reference'] }}" {% if data['grid-reference-error'] %}aria-describedby="grid-reference-error"{% endif %}>
+        <input class="govuk-input govuk-!-width-two-thirds {% if errorMessage or data['grid-reference-error'] %}govuk-input--error{% endif %}" id="grid-reference" name="grid-reference" type="text" value="{{ data['grid-reference'] }}" {% if errorMessage or data['grid-reference-error'] %}aria-describedby="grid-reference-error"{% endif %}>
       </div>
 
       <button class="govuk-button" data-module="govuk-button">

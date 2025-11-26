@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if data['obc-start-error'] %}
+    {% if errorMessage or data['obc-start-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
           <h2 class="govuk-error-summary__title">
@@ -15,7 +15,7 @@
           <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
               <li>
-                <a href="#obc-start-month">{{ data['obc-start-error'] }}</a>
+                <a href="#obc-start-month">{{ errorMessage or data['obc-start-error'] }}</a>
               </li>
             </ul>
           </div>
@@ -26,11 +26,11 @@
     <h1 class="govuk-heading-xl">When do you expect to start the project's outline business case?</h1>
 
     <form method="post" action="/general/create-proposal/important-dates/obc-start">
-      <div class="govuk-form-group {%- if data['obc-start-error'] %} govuk-form-group--error {%- endif %}">
-        <fieldset class="govuk-fieldset" role="group" {% if data['obc-start-error'] %}aria-describedby="obc-start-error obc-start-hint"{% else %}aria-describedby="obc-start-hint"{% endif %}>
-          {% if data['obc-start-error'] %}
+      <div class="govuk-form-group {%- if errorMessage or data['obc-start-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" role="group" {% if errorMessage or data['obc-start-error'] %}aria-describedby="obc-start-error obc-start-hint"{% else %}aria-describedby="obc-start-hint"{% endif %}>
+          {% if errorMessage or data['obc-start-error'] %}
             <p id="obc-start-error" class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span> {{ data['obc-start-error'] }}
+              <span class="govuk-visually-hidden">Error:</span> {{ errorMessage or data['obc-start-error'] }}
             </p>
           {% endif %}
           <div id="obc-start-hint" class="govuk-hint">
@@ -42,7 +42,7 @@
                 <label class="govuk-label govuk-date-input__label" for="obc-start-month">
                   Month
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if data['obc-start-error'] %}govuk-input--error{% endif %}" id="obc-start-month" name="obc-start-month" type="text" inputmode="numeric" value="{{ data['obc-start-month'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if errorMessage or data['obc-start-error'] %}govuk-input--error{% endif %}" id="obc-start-month" name="obc-start-month" type="text" inputmode="numeric" value="{{ data['obc-start-month'] }}">
               </div>
             </div>
             <div class="govuk-date-input__item">
@@ -50,7 +50,7 @@
                 <label class="govuk-label govuk-date-input__label" for="obc-start-year">
                   Year
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if data['obc-start-error'] %}govuk-input--error{% endif %}" id="obc-start-year" name="obc-start-year" type="text" inputmode="numeric" value="{{ data['obc-start-year'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if errorMessage or data['obc-start-error'] %}govuk-input--error{% endif %}" id="obc-start-year" name="obc-start-year" type="text" inputmode="numeric" value="{{ data['obc-start-year'] }}">
               </div>
             </div>
           </div>

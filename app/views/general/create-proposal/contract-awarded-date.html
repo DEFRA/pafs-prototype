@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if data['contract-awarded-error'] %}
+    {% if errorMessage or data['contract-awarded-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
           <h2 class="govuk-error-summary__title">
@@ -15,7 +15,7 @@
           <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
               <li>
-                <a href="#contract-awarded-month">{{ data['contract-awarded-error'] }}</a>
+                <a href="#contract-awarded-month">{{ errorMessage or data['contract-awarded-error'] }}</a>
               </li>
             </ul>
           </div>
@@ -26,11 +26,11 @@
     <h1 class="govuk-heading-xl">When do you expect to award the project's main contract?</h1>
 
     <form method="post" action="/general/create-proposal/important-dates/contract-awarded">
-      <div class="govuk-form-group {%- if data['contract-awarded-error'] %} govuk-form-group--error {%- endif %}">
-        <fieldset class="govuk-fieldset" role="group" {% if data['contract-awarded-error'] %}aria-describedby="contract-awarded-error contract-awarded-hint"{% else %}aria-describedby="contract-awarded-hint"{% endif %}>
-          {% if data['contract-awarded-error'] %}
+      <div class="govuk-form-group {%- if errorMessage or data['contract-awarded-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" role="group" {% if errorMessage or data['contract-awarded-error'] %}aria-describedby="contract-awarded-error contract-awarded-hint"{% else %}aria-describedby="contract-awarded-hint"{% endif %}>
+          {% if errorMessage or data['contract-awarded-error'] %}
             <p id="contract-awarded-error" class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span> {{ data['contract-awarded-error'] }}
+              <span class="govuk-visually-hidden">Error:</span> {{ errorMessage or data['contract-awarded-error'] }}
             </p>
           {% endif %}
           <div id="contract-awarded-hint" class="govuk-hint">
@@ -42,7 +42,7 @@
                 <label class="govuk-label govuk-date-input__label" for="contract-awarded-month">
                   Month
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if data['contract-awarded-error'] %}govuk-input--error{% endif %}" id="contract-awarded-month" name="contract-awarded-month" type="text" inputmode="numeric" value="{{ data['contract-awarded-month'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if errorMessage or data['contract-awarded-error'] %}govuk-input--error{% endif %}" id="contract-awarded-month" name="contract-awarded-month" type="text" inputmode="numeric" value="{{ data['contract-awarded-month'] }}">
               </div>
             </div>
             <div class="govuk-date-input__item">
@@ -50,7 +50,7 @@
                 <label class="govuk-label govuk-date-input__label" for="contract-awarded-year">
                   Year
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if data['contract-awarded-error'] %}govuk-input--error{% endif %}" id="contract-awarded-year" name="contract-awarded-year" type="text" inputmode="numeric" value="{{ data['contract-awarded-year'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if errorMessage or data['contract-awarded-error'] %}govuk-input--error{% endif %}" id="contract-awarded-year" name="contract-awarded-year" type="text" inputmode="numeric" value="{{ data['contract-awarded-year'] }}">
               </div>
             </div>
           </div>

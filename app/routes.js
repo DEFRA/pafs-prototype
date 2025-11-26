@@ -866,8 +866,16 @@ router.get('/general/create-proposal/location', function (req, res) {
   // Clear any previous errors when accessing via GET
   delete req.session.data['grid-reference-error']
   
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Tell us the project\'s National Grid Reference'
+  }
+  
   res.render('general/create-proposal/location', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
@@ -916,8 +924,17 @@ router.post('/general/create-proposal/benefit-area-file', function (req, res) {
 // Important dates - OBC start date
 router.get('/general/create-proposal/important-dates/obc-start', function (req, res) {
   delete req.session.data['obc-start-error']
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter the date you expect to start the project\'s outline business case'
+  }
+  
   res.render('general/create-proposal/obc-start-date', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
@@ -952,8 +969,17 @@ router.post('/general/create-proposal/important-dates/obc-start', function (req,
 // Important dates - OBC completion date
 router.get('/general/create-proposal/important-dates/obc-completion', function (req, res) {
   delete req.session.data['obc-completion-error']
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter the date you expect to complete the project\'s outline business case'
+  }
+  
   res.render('general/create-proposal/obc-completion-date', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
@@ -988,8 +1014,17 @@ router.post('/general/create-proposal/important-dates/obc-completion', function 
 // Important dates - Contract awarded date
 router.get('/general/create-proposal/important-dates/contract-awarded', function (req, res) {
   delete req.session.data['contract-awarded-error']
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter the date you expect to award the project\'s main contract'
+  }
+  
   res.render('general/create-proposal/contract-awarded-date', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
@@ -1024,8 +1059,17 @@ router.post('/general/create-proposal/important-dates/contract-awarded', functio
 // Important dates - Start construction date
 router.get('/general/create-proposal/important-dates/start-construction', function (req, res) {
   delete req.session.data['start-construction-error']
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter the date you expect to start the work'
+  }
+  
   res.render('general/create-proposal/start-construction-date', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
@@ -1060,8 +1104,17 @@ router.post('/general/create-proposal/important-dates/start-construction', funct
 // Important dates - Ready for service date
 router.get('/general/create-proposal/important-dates/ready-for-service', function (req, res) {
   delete req.session.data['ready-for-service-error']
+  
+  const validation = req.query.validation
+  let errorMessage = undefined
+  if (validation === 'required') {
+    errorMessage = 'Enter the date you expect the project to start achieving its benefits'
+  }
+  
   res.render('general/create-proposal/ready-for-service-date', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    data: req.session.data || {},
+    errorMessage
   })
 })
 
