@@ -26,7 +26,7 @@
     <form method="post" action="/general/create-proposal/funding-sources">
       <div class="govuk-form-group {%- if data and data['funding-sources-error'] %} govuk-form-group--error {%- endif %}">
         <fieldset class="govuk-fieldset" {% if data and data['funding-sources-error'] %}aria-describedby="funding-sources-error funding-sources-hint"{% else %}aria-describedby="funding-sources-hint"{% endif %}>
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
               What are the expected funding sources?
             </h1>
