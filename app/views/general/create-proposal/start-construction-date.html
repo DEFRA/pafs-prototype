@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if data['start-construction-error'] %}
+    {% if errorMessage or data['start-construction-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
           <h2 class="govuk-error-summary__title">
@@ -15,7 +15,7 @@
           <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
               <li>
-                <a href="#start-construction-month">{{ data['start-construction-error'] }}</a>
+                <a href="#start-construction-month">{{ errorMessage or data['start-construction-error'] }}</a>
               </li>
             </ul>
           </div>
@@ -23,16 +23,16 @@
       </div>
     {% endif %}
 
-    <h1 class="govuk-heading-xl">When do you expect to start the work?</h1>
+    <h1 class="govuk-heading-l">When do you expect to start the work?</h1>
 
     <p class="govuk-body">This could be construction or creating a strategy.</p>
 
     <form method="post" action="/general/create-proposal/important-dates/start-construction">
-      <div class="govuk-form-group {%- if data['start-construction-error'] %} govuk-form-group--error {%- endif %}">
-        <fieldset class="govuk-fieldset" role="group" {% if data['start-construction-error'] %}aria-describedby="start-construction-error start-construction-hint"{% else %}aria-describedby="start-construction-hint"{% endif %}>
-          {% if data['start-construction-error'] %}
+      <div class="govuk-form-group {%- if errorMessage or data['start-construction-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" role="group" {% if errorMessage or data['start-construction-error'] %}aria-describedby="start-construction-error start-construction-hint"{% else %}aria-describedby="start-construction-hint"{% endif %}>
+          {% if errorMessage or data['start-construction-error'] %}
             <p id="start-construction-error" class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span> {{ data['start-construction-error'] }}
+              <span class="govuk-visually-hidden">Error:</span> {{ errorMessage or data['start-construction-error'] }}
             </p>
           {% endif %}
           <div id="start-construction-hint" class="govuk-hint">
@@ -44,7 +44,7 @@
                 <label class="govuk-label govuk-date-input__label" for="start-construction-month">
                   Month
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-month" name="start-construction-month" type="text" inputmode="numeric" value="{{ data['start-construction-month'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if errorMessage or data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-month" name="start-construction-month" type="text" inputmode="numeric" value="{{ data['start-construction-month'] }}">
               </div>
             </div>
             <div class="govuk-date-input__item">
@@ -52,7 +52,7 @@
                 <label class="govuk-label govuk-date-input__label" for="start-construction-year">
                   Year
                 </label>
-                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-year" name="start-construction-year" type="text" inputmode="numeric" value="{{ data['start-construction-year'] }}">
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if errorMessage or data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-year" name="start-construction-year" type="text" inputmode="numeric" value="{{ data['start-construction-year'] }}">
               </div>
             </div>
           </div>
