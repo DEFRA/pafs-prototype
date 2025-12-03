@@ -141,7 +141,7 @@ router.get('/general/login', function (req, res) {
 
 router.post('/general/login', function (req, res) {
   const email = req.body.email
-  
+
   // Check if admin user
   if (email === 'admin@environment-agency.gov.uk') {
     req.saveJourneyData({
@@ -230,9 +230,9 @@ router.get('/general/unlock-account/link-expired', function (req, res) {
 router.get(
   '/email-templates/account-approved-set-password',
   function (req, res) {
-  res.render('email-templates/account-approved-set-password', {
-    journeyData: req.journeyData
-  })
+    res.render('email-templates/account-approved-set-password', {
+      journeyData: req.journeyData
+    })
   }
 )
 
@@ -249,7 +249,7 @@ router.get('/general/request-account', function (req, res) {
   req.session.data = {
     authenticated: authenticated
   }
-  
+
   res.render('general/request-account/index', {
     journeyData: req.journeyData
   })
@@ -266,7 +266,7 @@ router.get('/general/request-account/details', function (req, res) {
 
 router.post('/general/request-account/details', function (req, res) {
   const responsibility = req.body.responsibility
-  
+
   // Redirect based on responsibility type
   if (responsibility === 'ea') {
     res.redirect('/general/request-account/ea-main-area')
@@ -322,7 +322,7 @@ router.get('/general/request-account/ea-additional-areas', function (req, res) {
 router.post(
   '/general/request-account/ea-additional-areas',
   function (req, res) {
-  res.redirect('/general/request-account/check-answers')
+    res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -358,18 +358,18 @@ router.post('/general/request-account/pso-main-area', function (req, res) {
 router.get(
   '/general/request-account/pso-additional-areas',
   function (req, res) {
-  req.session.data = req.session.data || {}
-  req.session.data.areasData = loadAreasData()
-  res.render('general/request-account/pso-additional-areas', {
-    journeyData: req.journeyData
-  })
+    req.session.data = req.session.data || {}
+    req.session.data.areasData = loadAreasData()
+    res.render('general/request-account/pso-additional-areas', {
+      journeyData: req.journeyData
+    })
   }
 )
 
 router.post(
   '/general/request-account/pso-additional-areas',
   function (req, res) {
-  res.redirect('/general/request-account/check-answers')
+    res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -419,18 +419,18 @@ router.post('/general/request-account/rma-main-area', function (req, res) {
 router.get(
   '/general/request-account/rma-additional-areas',
   function (req, res) {
-  req.session.data = req.session.data || {}
-  req.session.data.areasData = loadAreasData()
-  res.render('general/request-account/rma-additional-areas', {
-    journeyData: req.journeyData
-  })
+    req.session.data = req.session.data || {}
+    req.session.data.areasData = loadAreasData()
+    res.render('general/request-account/rma-additional-areas', {
+      journeyData: req.journeyData
+    })
   }
 )
 
 router.post(
   '/general/request-account/rma-additional-areas',
   function (req, res) {
-  res.redirect('/general/request-account/check-answers')
+    res.redirect('/general/request-account/check-answers')
   }
 )
 
@@ -446,14 +446,14 @@ router.get('/general/request-account/check-answers', function (req, res) {
 router.post('/general/request-account/check-answers', function (req, res) {
   // Store email temporarily for confirmation page
   req.session.data.submittedEmail = req.session.data.email
-  
+
   // Clear all form data except the submitted email
   const submittedEmail = req.session.data.submittedEmail
   req.session.data = {
     submittedEmail: submittedEmail,
     authenticated: req.session.data.authenticated
   }
-  
+
   // Account request submitted - redirect to confirmation
   res.redirect('/general/request-account/confirmation')
 })
@@ -462,12 +462,12 @@ router.post('/general/request-account/check-answers', function (req, res) {
 router.get('/general/request-account/confirmation', function (req, res) {
   // Use submittedEmail for display, then clear it
   const email = req.session.data.submittedEmail
-  
+
   res.render('general/request-account/confirmation', {
     journeyData: req.journeyData,
     data: { email: email }
   })
-  
+
   // Clear the submitted email after rendering
   delete req.session.data.submittedEmail
 })
@@ -487,18 +487,18 @@ router.get('/general/catalogue', function (req, res) {
 // Proposals page with variant support
 router.get('/general/proposals', function (req, res) {
   const variant = req.query.variant || '1'
-  
+
   // Preserve isAdmin flag if it exists, otherwise set to false
   const isAdmin = req.journeyData.isAdmin || false
   const userName = isAdmin ? 'Admin User' : 'John Smith'
-  
+
   req.saveJourneyData({
     journeyType: 'general',
     userName: userName,
     isAdmin: isAdmin,
     isLoggedIn: true
   })
-  
+
   // Render different templates based on variant
   if (variant === '2') {
     res.render('general/proposals-variant2', {
@@ -555,14 +555,15 @@ router.get('/general/create-proposal/start', function (req, res) {
 router.get('/general/create-proposal/title', function (req, res) {
   const formData = getCreateProposalData(req)
   const validation = req.query.validation
-  
+
   let errorMessage = undefined
   if (validation === 'required') {
     errorMessage = 'Enter a project Name'
   } else if (validation === 'alpha-numeric') {
-    errorMessage = 'The project name must only contain letters, underscores, hyphens and numbers'
+    errorMessage =
+      'The project name must only contain letters, underscores, hyphens and numbers'
   }
-  
+
   res.render('general/create-proposal/title', {
     journeyData: req.journeyData,
     formData,
@@ -579,7 +580,6 @@ router.get('/general/create-proposal/title-unique', function (req, res) {
 })
 
 router.post('/general/create-proposal/title', function (req, res) {
-
   const formData = getCreateProposalData(req)
   formData.projectTitle = (req.body.projectTitle || '').trim()
 
@@ -598,10 +598,10 @@ router.post('/general/create-proposal/title', function (req, res) {
     return res.render('general/create-proposal/title', {
       journeyData: req.journeyData,
       formData,
-      errorMessage: 'The project name must only contain letters, underscores, hyphens and numbers'
+      errorMessage:
+        'The project name must only contain letters, underscores, hyphens and numbers'
     })
   }
-
 
   res.redirect(
     rmaOptions.length > 1
@@ -610,11 +610,10 @@ router.post('/general/create-proposal/title', function (req, res) {
   )
 })
 
-
 router.get('/general/create-proposal/rma-selection', function (req, res) {
   const formData = getCreateProposalData(req)
   const showError = req.query.required === 'true'
-  
+
   res.render('general/create-proposal/rma-selection', {
     journeyData: req.journeyData,
     formData,
@@ -642,12 +641,12 @@ router.post('/general/create-proposal/rma-selection', function (req, res) {
 router.get('/general/create-proposal/project-type', function (req, res) {
   const formData = getCreateProposalData(req)
   const validation = req.query.validation
-  
+
   let errors = undefined
   if (validation === 'required') {
     errors = { projectType: 'Select the type of project you are proposing' }
   }
-  
+
   res.render('general/create-proposal/project-type', {
     journeyData: req.journeyData,
     formData,
@@ -684,13 +683,13 @@ router.get('/general/create-proposal/project-type/assets', function (req, res) {
   if (formData.projectType !== 'new_or_improve') {
     return res.redirect('/general/create-proposal/financial-year')
   }
-  
+
   const validation = req.query.validation
   let errorMessage = undefined
   if (validation === 'required') {
     errorMessage = 'Select the asset types your project will create'
   }
-  
+
   res.render('general/create-proposal/project-type-assets', {
     journeyData: req.journeyData,
     formData,
@@ -709,7 +708,9 @@ router.post(
 
     formData.assetTypes = normaliseToArray(req.body.assetTypes)
     // Filter out '_unchecked' values
-    formData.assetTypes = formData.assetTypes.filter(asset => asset && asset !== '_unchecked')
+    formData.assetTypes = formData.assetTypes.filter(
+      (asset) => asset && asset !== '_unchecked'
+    )
 
     if (formData.assetTypes.length === 0) {
       return res.render('general/create-proposal/project-type-assets', {
@@ -729,7 +730,6 @@ router.get(
   function (req, res) {
     const formData = getCreateProposalData(req)
     const validation = req.query.validation
-    
 
     // Use filtered assets if available, otherwise use all assets for error template
     let filteredAssets = []
@@ -744,7 +744,8 @@ router.get(
 
     let errorMessage = undefined
     if (validation === 'required') {
-      errorMessage = 'Select the asset type that will deliver the most flood risk benefit'
+      errorMessage =
+        'Select the asset type that will deliver the most flood risk benefit'
     }
 
     res.render('general/create-proposal/project-type-primary-asset', {
@@ -792,12 +793,12 @@ router.post(
 router.get('/general/create-proposal/financial-year', function (req, res) {
   const formData = getCreateProposalData(req)
   const validation = req.query.validation
-  
+
   let errorMessage = undefined
   if (validation === 'required') {
     errorMessage = 'Select the last financial year the project will spend funds'
   }
-  
+
   res.render('general/create-proposal/financial-year', {
     journeyData: req.journeyData,
     formData,
@@ -828,12 +829,13 @@ router.get(
   function (req, res) {
     const formData = getCreateProposalData(req)
     const validation = req.query.validation
-    
+
     let errorMessage = undefined
     if (validation === 'required') {
-      errorMessage = 'Enter the financial year the project will stop spending funds'
+      errorMessage =
+        'Enter the financial year the project will stop spending funds'
     }
-    
+
     res.render('general/create-proposal/financial-year-after', {
       journeyData: req.journeyData,
       formData,
@@ -865,13 +867,13 @@ router.post(
 router.get('/general/create-proposal/location', function (req, res) {
   // Clear any previous errors when accessing via GET
   delete req.session.data['grid-reference-error']
-  
+
   const validation = req.query.validation
   let errorMessage = undefined
   if (validation === 'required') {
-    errorMessage = 'Tell us the project\'s National Grid Reference'
+    errorMessage = "Tell us the project's National Grid Reference"
   }
-  
+
   res.render('general/create-proposal/location', {
     journeyData: req.journeyData,
     data: req.session.data || {},
@@ -881,23 +883,24 @@ router.get('/general/create-proposal/location', function (req, res) {
 
 router.post('/general/create-proposal/location', function (req, res) {
   const gridReference = (req.body['grid-reference'] || '').trim()
-  
+
   // Validate grid reference
   if (!gridReference) {
-    req.session.data['grid-reference-error'] = 'Tell us the project\'s National Grid Reference'
+    req.session.data['grid-reference-error'] =
+      "Tell us the project's National Grid Reference"
     req.session.data['grid-reference'] = gridReference
     return res.render('general/create-proposal/location', {
       journeyData: req.journeyData,
       data: req.session.data
     })
   }
-  
+
   // Clear any previous errors
   delete req.session.data['grid-reference-error']
-  
+
   // Save the grid reference to session
   req.session.data['grid-reference'] = gridReference
-  
+
   // Redirect to benefit area file upload page
   res.redirect('/general/create-proposal/benefit-area-file')
 })
@@ -916,239 +919,343 @@ router.post('/general/create-proposal/benefit-area-file', function (req, res) {
     req.session.data['benefit-area-file'] = 'uploaded-shapefile.zip'
     req.session.data['benefit-area-file-uploaded'] = true
   }
-  
+
   // Redirect back to proposal overview
   res.redirect('/general/create-proposal/check-answers')
 })
 
 // Important dates - OBC start date
-router.get('/general/create-proposal/important-dates/obc-start', function (req, res) {
-  delete req.session.data['obc-start-error']
-  
-  const validation = req.query.validation
-  let errorMessage = undefined
-  if (validation === 'required') {
-    errorMessage = 'Enter the date you expect to start the project\'s outline business case'
-  }
-  
-  res.render('general/create-proposal/obc-start-date', {
-    journeyData: req.journeyData,
-    data: req.session.data || {},
-    errorMessage
-  })
-})
+router.get(
+  '/general/create-proposal/important-dates/obc-start',
+  function (req, res) {
+    delete req.session.data['obc-start-error']
 
-router.post('/general/create-proposal/important-dates/obc-start', function (req, res) {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const month = (req.body['obc-start-month'] || '').trim()
-  const year = (req.body['obc-start-year'] || '').trim()
-  
-  // Validate that both month and year are provided
-  if (!month || !year) {
-    req.session.data['obc-start-error'] = 'Enter the date you expect to start the project\'s outline business case'
+    const validation = req.query.validation
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage =
+        "Enter the date you expect to start the project's outline business case"
+    }
+
+    res.render('general/create-proposal/obc-start-date', {
+      journeyData: req.journeyData,
+      data: req.session.data || {},
+      errorMessage
+    })
+  }
+)
+
+router.post(
+  '/general/create-proposal/important-dates/obc-start',
+  function (req, res) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = (req.body['obc-start-month'] || '').trim()
+    const year = (req.body['obc-start-year'] || '').trim()
+
+    // Validate that both month and year are provided
+    if (!month || !year) {
+      req.session.data['obc-start-error'] =
+        "Enter the date you expect to start the project's outline business case"
+      req.session.data['obc-start-month'] = month
+      req.session.data['obc-start-year'] = year
+      return res.render('general/create-proposal/obc-start-date', {
+        journeyData: req.journeyData,
+        data: req.session.data
+      })
+    }
+
+    // Clear any previous errors
+    delete req.session.data['obc-start-error']
+
+    const monthInt = parseInt(month)
+    const monthName = monthNames[monthInt - 1] || month
     req.session.data['obc-start-month'] = month
     req.session.data['obc-start-year'] = year
-    return res.render('general/create-proposal/obc-start-date', {
-      journeyData: req.journeyData,
-      data: req.session.data
-    })
+    req.session.data['obc-start-date'] = monthName + ' ' + year
+
+    res.redirect('/general/create-proposal/important-dates/obc-completion')
   }
-  
-  // Clear any previous errors
-  delete req.session.data['obc-start-error']
-  
-  const monthInt = parseInt(month)
-  const monthName = monthNames[monthInt - 1] || month
-  req.session.data['obc-start-month'] = month
-  req.session.data['obc-start-year'] = year
-  req.session.data['obc-start-date'] = monthName + ' ' + year
-  
-  res.redirect('/general/create-proposal/important-dates/obc-completion')
-})
+)
 
 // Important dates - OBC completion date
-router.get('/general/create-proposal/important-dates/obc-completion', function (req, res) {
-  delete req.session.data['obc-completion-error']
-  
-  const validation = req.query.validation
-  let errorMessage = undefined
-  if (validation === 'required') {
-    errorMessage = 'Enter the date you expect to complete the project\'s outline business case'
-  }
-  
-  res.render('general/create-proposal/obc-completion-date', {
-    journeyData: req.journeyData,
-    data: req.session.data || {},
-    errorMessage
-  })
-})
+router.get(
+  '/general/create-proposal/important-dates/obc-completion',
+  function (req, res) {
+    delete req.session.data['obc-completion-error']
 
-router.post('/general/create-proposal/important-dates/obc-completion', function (req, res) {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const month = (req.body['obc-completion-month'] || '').trim()
-  const year = (req.body['obc-completion-year'] || '').trim()
-  
-  // Validate that both month and year are provided
-  if (!month || !year) {
-    req.session.data['obc-completion-error'] = 'Enter the date you expect to complete the project\'s outline business case'
+    const validation = req.query.validation
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage =
+        "Enter the date you expect to complete the project's outline business case"
+    }
+
+    res.render('general/create-proposal/obc-completion-date', {
+      journeyData: req.journeyData,
+      data: req.session.data || {},
+      errorMessage
+    })
+  }
+)
+
+router.post(
+  '/general/create-proposal/important-dates/obc-completion',
+  function (req, res) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = (req.body['obc-completion-month'] || '').trim()
+    const year = (req.body['obc-completion-year'] || '').trim()
+
+    // Validate that both month and year are provided
+    if (!month || !year) {
+      req.session.data['obc-completion-error'] =
+        "Enter the date you expect to complete the project's outline business case"
+      req.session.data['obc-completion-month'] = month
+      req.session.data['obc-completion-year'] = year
+      return res.render('general/create-proposal/obc-completion-date', {
+        journeyData: req.journeyData,
+        data: req.session.data
+      })
+    }
+
+    // Clear any previous errors
+    delete req.session.data['obc-completion-error']
+
+    const monthInt = parseInt(month)
+    const monthName = monthNames[monthInt - 1] || month
     req.session.data['obc-completion-month'] = month
     req.session.data['obc-completion-year'] = year
-    return res.render('general/create-proposal/obc-completion-date', {
-      journeyData: req.journeyData,
-      data: req.session.data
-    })
+    req.session.data['obc-completion-date'] = monthName + ' ' + year
+
+    res.redirect('/general/create-proposal/important-dates/contract-awarded')
   }
-  
-  // Clear any previous errors
-  delete req.session.data['obc-completion-error']
-  
-  const monthInt = parseInt(month)
-  const monthName = monthNames[monthInt - 1] || month
-  req.session.data['obc-completion-month'] = month
-  req.session.data['obc-completion-year'] = year
-  req.session.data['obc-completion-date'] = monthName + ' ' + year
-  
-  res.redirect('/general/create-proposal/important-dates/contract-awarded')
-})
+)
 
 // Important dates - Contract awarded date
-router.get('/general/create-proposal/important-dates/contract-awarded', function (req, res) {
-  delete req.session.data['contract-awarded-error']
-  
-  const validation = req.query.validation
-  let errorMessage = undefined
-  if (validation === 'required') {
-    errorMessage = 'Enter the date you expect to award the project\'s main contract'
-  }
-  
-  res.render('general/create-proposal/contract-awarded-date', {
-    journeyData: req.journeyData,
-    data: req.session.data || {},
-    errorMessage
-  })
-})
+router.get(
+  '/general/create-proposal/important-dates/contract-awarded',
+  function (req, res) {
+    delete req.session.data['contract-awarded-error']
 
-router.post('/general/create-proposal/important-dates/contract-awarded', function (req, res) {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const month = (req.body['contract-awarded-month'] || '').trim()
-  const year = (req.body['contract-awarded-year'] || '').trim()
-  
-  // Validate that both month and year are provided
-  if (!month || !year) {
-    req.session.data['contract-awarded-error'] = 'Enter the date you expect to award the project\'s main contract'
+    const validation = req.query.validation
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage =
+        "Enter the date you expect to award the project's main contract"
+    }
+
+    res.render('general/create-proposal/contract-awarded-date', {
+      journeyData: req.journeyData,
+      data: req.session.data || {},
+      errorMessage
+    })
+  }
+)
+
+router.post(
+  '/general/create-proposal/important-dates/contract-awarded',
+  function (req, res) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = (req.body['contract-awarded-month'] || '').trim()
+    const year = (req.body['contract-awarded-year'] || '').trim()
+
+    // Validate that both month and year are provided
+    if (!month || !year) {
+      req.session.data['contract-awarded-error'] =
+        "Enter the date you expect to award the project's main contract"
+      req.session.data['contract-awarded-month'] = month
+      req.session.data['contract-awarded-year'] = year
+      return res.render('general/create-proposal/contract-awarded-date', {
+        journeyData: req.journeyData,
+        data: req.session.data
+      })
+    }
+
+    // Clear any previous errors
+    delete req.session.data['contract-awarded-error']
+
+    const monthInt = parseInt(month)
+    const monthName = monthNames[monthInt - 1] || month
     req.session.data['contract-awarded-month'] = month
     req.session.data['contract-awarded-year'] = year
-    return res.render('general/create-proposal/contract-awarded-date', {
-      journeyData: req.journeyData,
-      data: req.session.data
-    })
+    req.session.data['contract-awarded-date'] = monthName + ' ' + year
+
+    res.redirect('/general/create-proposal/important-dates/start-construction')
   }
-  
-  // Clear any previous errors
-  delete req.session.data['contract-awarded-error']
-  
-  const monthInt = parseInt(month)
-  const monthName = monthNames[monthInt - 1] || month
-  req.session.data['contract-awarded-month'] = month
-  req.session.data['contract-awarded-year'] = year
-  req.session.data['contract-awarded-date'] = monthName + ' ' + year
-  
-  res.redirect('/general/create-proposal/important-dates/start-construction')
-})
+)
 
 // Important dates - Start construction date
-router.get('/general/create-proposal/important-dates/start-construction', function (req, res) {
-  delete req.session.data['start-construction-error']
-  
-  const validation = req.query.validation
-  let errorMessage = undefined
-  if (validation === 'required') {
-    errorMessage = 'Enter the date you expect to start the work'
-  }
-  
-  res.render('general/create-proposal/start-construction-date', {
-    journeyData: req.journeyData,
-    data: req.session.data || {},
-    errorMessage
-  })
-})
+router.get(
+  '/general/create-proposal/important-dates/start-construction',
+  function (req, res) {
+    delete req.session.data['start-construction-error']
 
-router.post('/general/create-proposal/important-dates/start-construction', function (req, res) {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const month = (req.body['start-construction-month'] || '').trim()
-  const year = (req.body['start-construction-year'] || '').trim()
-  
-  // Validate that both month and year are provided
-  if (!month || !year) {
-    req.session.data['start-construction-error'] = 'Enter the date you expect to start the work'
+    const validation = req.query.validation
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage = 'Enter the date you expect to start the work'
+    }
+
+    res.render('general/create-proposal/start-construction-date', {
+      journeyData: req.journeyData,
+      data: req.session.data || {},
+      errorMessage
+    })
+  }
+)
+
+router.post(
+  '/general/create-proposal/important-dates/start-construction',
+  function (req, res) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = (req.body['start-construction-month'] || '').trim()
+    const year = (req.body['start-construction-year'] || '').trim()
+
+    // Validate that both month and year are provided
+    if (!month || !year) {
+      req.session.data['start-construction-error'] =
+        'Enter the date you expect to start the work'
+      req.session.data['start-construction-month'] = month
+      req.session.data['start-construction-year'] = year
+      return res.render('general/create-proposal/start-construction-date', {
+        journeyData: req.journeyData,
+        data: req.session.data
+      })
+    }
+
+    // Clear any previous errors
+    delete req.session.data['start-construction-error']
+
+    const monthInt = parseInt(month)
+    const monthName = monthNames[monthInt - 1] || month
     req.session.data['start-construction-month'] = month
     req.session.data['start-construction-year'] = year
-    return res.render('general/create-proposal/start-construction-date', {
-      journeyData: req.journeyData,
-      data: req.session.data
-    })
+    req.session.data['start-construction-date'] = monthName + ' ' + year
+
+    res.redirect('/general/create-proposal/important-dates/ready-for-service')
   }
-  
-  // Clear any previous errors
-  delete req.session.data['start-construction-error']
-  
-  const monthInt = parseInt(month)
-  const monthName = monthNames[monthInt - 1] || month
-  req.session.data['start-construction-month'] = month
-  req.session.data['start-construction-year'] = year
-  req.session.data['start-construction-date'] = monthName + ' ' + year
-  
-  res.redirect('/general/create-proposal/important-dates/ready-for-service')
-})
+)
 
 // Important dates - Ready for service date
-router.get('/general/create-proposal/important-dates/ready-for-service', function (req, res) {
-  delete req.session.data['ready-for-service-error']
-  
-  const validation = req.query.validation
-  let errorMessage = undefined
-  if (validation === 'required') {
-    errorMessage = 'Enter the date you expect the project to start achieving its benefits'
-  }
-  
-  res.render('general/create-proposal/ready-for-service-date', {
-    journeyData: req.journeyData,
-    data: req.session.data || {},
-    errorMessage
-  })
-})
+router.get(
+  '/general/create-proposal/important-dates/ready-for-service',
+  function (req, res) {
+    delete req.session.data['ready-for-service-error']
 
-router.post('/general/create-proposal/important-dates/ready-for-service', function (req, res) {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const month = (req.body['ready-for-service-month'] || '').trim()
-  const year = (req.body['ready-for-service-year'] || '').trim()
-  
-  // Validate that both month and year are provided
-  if (!month || !year) {
-    req.session.data['ready-for-service-error'] = 'Enter the date you expect the project to start achieving its benefits'
-    req.session.data['ready-for-service-month'] = month
-    req.session.data['ready-for-service-year'] = year
-    return res.render('general/create-proposal/ready-for-service-date', {
+    const validation = req.query.validation
+    let errorMessage = undefined
+    if (validation === 'required') {
+      errorMessage =
+        'Enter the date you expect the project to start achieving its benefits'
+    }
+
+    res.render('general/create-proposal/ready-for-service-date', {
       journeyData: req.journeyData,
-      data: req.session.data
+      data: req.session.data || {},
+      errorMessage
     })
   }
-  
-  // Clear any previous errors
-  delete req.session.data['ready-for-service-error']
-  
-  const monthInt = parseInt(month)
-  const monthName = monthNames[monthInt - 1] || month
-  req.session.data['ready-for-service-month'] = month
-  req.session.data['ready-for-service-year'] = year
-  req.session.data['ready-for-service-date'] = monthName + ' ' + year
-  
-  // Mark that all important dates have been added
-  req.session.data['important-dates-added'] = true
-  
-  // Redirect back to proposal overview
-  res.redirect('/general/create-proposal/check-answers')
-})
+)
+
+router.post(
+  '/general/create-proposal/important-dates/ready-for-service',
+  function (req, res) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = (req.body['ready-for-service-month'] || '').trim()
+    const year = (req.body['ready-for-service-year'] || '').trim()
+
+    // Validate that both month and year are provided
+    if (!month || !year) {
+      req.session.data['ready-for-service-error'] =
+        'Enter the date you expect the project to start achieving its benefits'
+      req.session.data['ready-for-service-month'] = month
+      req.session.data['ready-for-service-year'] = year
+      return res.render('general/create-proposal/ready-for-service-date', {
+        journeyData: req.journeyData,
+        data: req.session.data
+      })
+    }
+
+    // Clear any previous errors
+    delete req.session.data['ready-for-service-error']
+
+    const monthInt = parseInt(month)
+    const monthName = monthNames[monthInt - 1] || month
+    req.session.data['ready-for-service-month'] = month
+    req.session.data['ready-for-service-year'] = year
+    req.session.data['ready-for-service-date'] = monthName + ' ' + year
+
+    // Mark that all important dates have been added
+    req.session.data['important-dates-added'] = true
+
+    // Redirect back to proposal overview
+    res.redirect('/general/create-proposal/check-answers')
+  }
+)
 
 // Funding sources page
 router.get('/general/create-proposal/funding-sources', function (req, res) {
@@ -1167,17 +1274,19 @@ router.post('/general/create-proposal/funding-sources', function (req, res) {
   if (!req.session.data) {
     req.session.data = {}
   }
-  
+
   const fundingSources = req.body['funding-sources']
-  
+
   // Validate that at least one funding source is selected
   // When no checkboxes are selected, the field may be undefined, empty string, empty array, or '_unchecked'
   let hasSelection = false
-  
+
   if (fundingSources) {
     if (Array.isArray(fundingSources)) {
       // Filter out '_unchecked' values and check if any valid selections remain
-      const validSelections = fundingSources.filter(source => source && source !== '_unchecked')
+      const validSelections = fundingSources.filter(
+        (source) => source && source !== '_unchecked'
+      )
       hasSelection = validSelections.length > 0
     } else if (typeof fundingSources === 'string') {
       // Check if it's not empty and not '_unchecked'
@@ -1186,7 +1295,8 @@ router.post('/general/create-proposal/funding-sources', function (req, res) {
     }
   }
   if (!hasSelection) {
-    req.session.data['funding-sources-error'] = 'The project must have at least one funding source.'
+    req.session.data['funding-sources-error'] =
+      'The project must have at least one funding source.'
     // Don't save empty funding sources
     if (req.session.data['funding-sources']) {
       delete req.session.data['funding-sources']
@@ -1196,15 +1306,17 @@ router.post('/general/create-proposal/funding-sources', function (req, res) {
       data: req.session.data
     })
   }
-  
+
   // Clear any previous errors
   delete req.session.data['funding-sources-error']
-  
+
   // Save the funding sources to session
   // Filter out '_unchecked' values and ensure it's always an array
   if (Array.isArray(fundingSources)) {
     // Filter out '_unchecked' values
-    req.session.data['funding-sources'] = fundingSources.filter(source => source && source !== '_unchecked')
+    req.session.data['funding-sources'] = fundingSources.filter(
+      (source) => source && source !== '_unchecked'
+    )
   } else {
     // If it's a string and not '_unchecked', save it as an array
     const trimmed = fundingSources.trim()
@@ -1214,10 +1326,10 @@ router.post('/general/create-proposal/funding-sources', function (req, res) {
       req.session.data['funding-sources'] = []
     }
   }
-  
+
   // Mark that funding sources have been added
   req.session.data['funding-sources-added'] = true
-  
+
   // Redirect back to proposal overview
   res.redirect('/general/create-proposal/check-answers')
 })
@@ -1263,7 +1375,7 @@ router.get('/admin/journey-selection', function (req, res) {
 
 router.post('/admin/journey-selection', function (req, res) {
   const journey = req.body.journey
-  
+
   if (journey === 'user') {
     // Admin exploring user journey - ensure isAdmin flag is set
     req.saveJourneyData({
@@ -1334,14 +1446,14 @@ router.get('/admin/user-management-active', function (req, res) {
 // Admin users page with variant support
 router.get('/admin/users', function (req, res) {
   const variant = req.query.variant || '1'
-  
+
   req.saveJourneyData({
     journeyType: 'admin',
     userName: 'Admin User',
     isAdmin: true,
     isLoggedIn: true
   })
-  
+
   // Render different templates based on variant
   if (variant === '2') {
     res.render('admin/users-variant2', {
@@ -1373,7 +1485,8 @@ router.get('/admin/submissions', function (req, res) {
 
 router.get('/admin/organisations', function (req, res) {
   res.render('admin/organisations', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    query: req.query // Include query parameters for success notification
   })
 })
 
@@ -1392,6 +1505,129 @@ router.get('/admin/download-rma', function (req, res) {
 router.get('/admin/signout', function (req, res) {
   req.clearJourneyData()
   res.redirect('/journey-selection')
+})
+
+router.get('/admin/organisations/add', function (req, res) {
+  const error = req.query.error
+  res.render('admin/add-organisation', {
+    error: error
+  })
+})
+
+router.post('/admin/organisations/add', function (req, res) {
+  const organisationType = req.body['organisation-type']
+
+  if (!organisationType) {
+    res.redirect('/admin/organisations/add?error=organisation-type')
+  } else {
+    // Redirect to the appropriate form based on organisation type
+    if (organisationType === 'Authority') {
+      res.redirect('/admin/organisations/add-authority')
+    } else if (organisationType === 'PSO') {
+      res.redirect('/admin/organisations/add-pso')
+    } else if (organisationType === 'RMA') {
+      res.redirect('/admin/organisations/add-rma')
+    }
+  }
+})
+
+router.get('/admin/organisations/add-authority', function (req, res) {
+  const error = req.query.error
+  res.render('admin/add-authority', {
+    error: error
+  })
+})
+
+router.get('/admin/organisations/add-pso', function (req, res) {
+  const error = req.query.error
+  res.render('admin/add-pso', {
+    error: error
+  })
+})
+
+router.get('/admin/organisations/add-rma', function (req, res) {
+  const error = req.query.error
+  res.render('admin/add-rma', {
+    error: error
+  })
+})
+
+router.post('/admin/organisations/add-authority', function (req, res) {
+  const authorityCode = req.body['authority-code']
+  const authorityType = req.body['authority-type']
+
+  if (!authorityCode) {
+    res.redirect(
+      '/admin/organisations/add-authority?error=authority-code-empty'
+    )
+  } else if (!authorityType) {
+    res.redirect(
+      '/admin/organisations/add-authority?error=authority-type-empty'
+    )
+  } else {
+    req.session.data = req.session.data || {}
+    req.session.data['organisationType'] = 'Authority'
+    req.session.data['authorityCode'] = authorityCode
+    req.session.data['authorityType'] = authorityType
+    res.redirect('/admin/organisations/check-your-answers')
+  }
+})
+
+router.post('/admin/organisations/add-pso', function (req, res) {
+  const psoName = req.body['pso-name']
+  const eaArea = req.body['ea-area']
+  const rfccCode = req.body['rfcc-code']
+
+  if (!psoName) {
+    res.redirect('/admin/organisations/add-pso?error=pso-name-empty')
+  } else if (!eaArea) {
+    res.redirect('/admin/organisations/add-pso?error=ea-area-empty')
+  } else if (!rfccCode) {
+    res.redirect('/admin/organisations/add-pso?error=rfcc-code-empty')
+  } else {
+    req.session.data = req.session.data || {}
+    req.session.data['organisationType'] = 'PSO'
+    req.session.data['psoName'] = psoName
+    req.session.data['eaArea'] = eaArea
+    req.session.data['rfccCode'] = rfccCode
+    res.redirect('/admin/organisations/check-your-answers')
+  }
+})
+
+router.post('/admin/organisations/add-rma', function (req, res) {
+  const organisationName = req.body['organisation-name']
+  const identifierCode = req.body['identifier-code']
+  const authorityCode = req.body['authority-code']
+  const associatedPso = req.body['associated-pso']
+
+  if (!organisationName) {
+    res.redirect('/admin/organisations/add-rma?error=organisation-name-empty')
+  } else if (!identifierCode) {
+    res.redirect('/admin/organisations/add-rma?error=identifier-code-empty')
+  } else if (!authorityCode) {
+    res.redirect('/admin/organisations/add-rma?error=authority-code-empty')
+  } else if (!associatedPso) {
+    res.redirect('/admin/organisations/add-rma?error=associated-pso-empty')
+  } else {
+    req.session.data = req.session.data || {}
+    req.session.data['organisationType'] = 'RMA'
+    req.session.data['organisationName'] = organisationName
+    req.session.data['identifierCode'] = identifierCode
+    req.session.data['authorityCode'] = authorityCode
+    req.session.data['associatedPso'] = associatedPso
+    res.redirect('/admin/organisations/check-your-answers')
+  }
+})
+
+router.get('/admin/organisations/check-your-answers', function (req, res) {
+  res.render('admin/check-your-answers', {
+    data: req.session.data
+  })
+})
+
+router.post('/admin/organisations/submit', function (req, res) {
+  // Handle submission logic here
+  res.redirect('/admin/organisations?success=true')
 })
 
 // Add your routes here

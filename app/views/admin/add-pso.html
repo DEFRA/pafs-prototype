@@ -1,0 +1,84 @@
+{% extends "layouts/admin-variant1.html" %} {% set pageName="Add a PSO" %} {%
+block content %} {% from "govuk/components/error-summary/macro.njk" import
+govukErrorSummary %} {% if error %} {{ govukErrorSummary({ titleText: "There is
+a problem", errorList: [ { text: "Name of PSO can't be blank", href: "#pso-name"
+} if error == 'pso-name-empty', { text: "Associated EA Area can't be blank",
+href: "#ea-area" } if error == 'ea-area-empty', { text: "RFCC code can't be
+blank", href: "#rfcc-code" } if error == 'rfcc-code-empty' ] }) }} {% endif %}
+
+<h1 class="govuk-heading-xl">Add a PSO</h1>
+
+<form method="post" action="/admin/organisations/add-pso" class="govuk-form">
+  <div
+    class="govuk-form-group {% if error == 'pso-name-empty' %}govuk-form-group--error{% endif %}"
+  >
+    <label class="govuk-label" for="pso-name">Name of PSO</label>
+    {% if error == 'pso-name-empty' %}
+    <p class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> Name of PSO can't be
+      blank
+    </p>
+    {% endif %}
+    <input
+      class="govuk-input govuk-!-width-two-thirds {% if error == 'pso-name-empty' %}govuk-input--error{% endif %}"
+      id="pso-name"
+      name="pso-name"
+      type="text"
+    />
+  </div>
+
+  <div
+    class="govuk-form-group {% if error == 'ea-area-empty' %}govuk-form-group--error{% endif %}"
+  >
+    <label class="govuk-label" for="ea-area">Associated EA Area</label>
+    {% if error == 'ea-area-empty' %}
+    <p class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> Associated EA Area can't
+      be blank
+    </p>
+    {% endif %}
+    <select
+      class="govuk-select govuk-!-width-two-thirds {% if error == 'ea-area-empty' %}govuk-input--error{% endif %}"
+      id="ea-area"
+      name="ea-area"
+    >
+      <option value="">Select an associated EA Area</option>
+      <option value="area1">Area 1</option>
+      <option value="area2">Area 2</option>
+    </select>
+  </div>
+
+  <div
+    class="govuk-form-group {% if error == 'rfcc-code-empty' %}govuk-form-group--error{% endif %}"
+  >
+    <label class="govuk-label" for="rfcc-code">RFCC code</label>
+    {% if error == 'rfcc-code-empty' %}
+    <p class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> RFCC code can't be blank
+    </p>
+    {% endif %}
+    <select
+      class="govuk-select govuk-!-width-two-thirds {% if error == 'rfcc-code-empty' %}govuk-input--error{% endif %}"
+      id="rfcc-code"
+      name="rfcc-code"
+    >
+      <option value="">Select a RFCC code</option>
+      <option value="code1">Code 1</option>
+      <option value="code2">Code 2</option>
+    </select>
+  </div>
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="end-date">End date if available</label>
+    <input
+      class="govuk-input govuk-input--width-10"
+      id="end-date"
+      name="end-date"
+      type="date"
+    />
+  </div>
+
+  <button class="govuk-button" type="submit">Continue</button>
+</form>
+
+{% endblock %}

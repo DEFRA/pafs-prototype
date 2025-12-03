@@ -1,19 +1,210 @@
-{% extends "layouts/admin-variant1.html" %}
-
-{% set pageName="Organisations" %}
-
+{% extends "layouts/admin-variant1.html" %} {% set pageName="Organisations" %}
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">
-      Organisations
-    </h1>
-
-    <p class="govuk-body">
-      Manage organisations and their details.
-    </p>
+    <h1 class="govuk-heading-xl">Manage Organisations</h1>
   </div>
 </div>
 
+{% if query.success == 'true' %}
+<div
+  class="govuk-notification-banner govuk-notification-banner--success"
+  role="alert"
+  aria-labelledby="govuk-notification-banner-title"
+  data-module="govuk-notification-banner"
+>
+  <div class="govuk-notification-banner__header">
+    <h2
+      class="govuk-notification-banner__title"
+      id="govuk-notification-banner-title"
+    >
+      Success
+    </h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-body">The organisation has been successfully added.</p>
+  </div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <form method="get" action="/admin/organisations" class="govuk-form">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="organisation-name"
+          >Enter an organisation name</label
+        >
+        <input
+          class="govuk-input govuk-!-width-two-thirds"
+          id="organisation-name"
+          name="organisation-name"
+          type="text"
+        />
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="organisation-type"
+          >Select an organisation type</label
+        >
+        <select
+          class="govuk-select govuk-!-width-two-thirds"
+          id="organisation-type"
+          name="organisation-type"
+        >
+          <option value="">--Select organisation type--</option>
+          <option value="Authority">Authority</option>
+          <option value="PSO">PSO</option>
+          <option value="RMA">RMA</option>
+        </select>
+      </div>
+
+      <div class="govuk-button-group">
+        <button class="govuk-button" type="submit">Filter</button>
+        <a href="/admin/organisations" class="govuk-link">Clear filters</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Organisation Name</th>
+          <th scope="col" class="govuk-table__header">Organisation Type</th>
+          <th scope="col" class="govuk-table__header">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Adur District Council</td>
+          <td class="govuk-table__cell">RMA</td>
+          <td class="govuk-table__cell">
+            <a href="/admin/organisations/edit/1" class="govuk-link">Edit</a>
+          </td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Liverpool City Council</td>
+          <td class="govuk-table__cell">RMA</td>
+          <td class="govuk-table__cell">
+            <a href="/admin/organisations/edit/2" class="govuk-link">Edit</a>
+          </td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">PSO Greater Manchester</td>
+          <td class="govuk-table__cell">PSO</td>
+          <td class="govuk-table__cell">
+            <a href="/admin/organisations/edit/3" class="govuk-link">Edit</a>
+          </td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Environment Agency - Thames</td>
+          <td class="govuk-table__cell">Authority</td>
+          <td class="govuk-table__cell">
+            <a href="/admin/organisations/edit/4" class="govuk-link">Edit</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+      "
+    >
+      <p class="govuk-body" style="margin: 0">
+        Showing <strong>1 to 4</strong> of <strong>4</strong> organisations
+      </p>
+
+      <nav
+        class="govuk-pagination"
+        role="navigation"
+        aria-label="Pagination"
+        style="margin: 0"
+      >
+        <div class="govuk-pagination__prev">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="prev">
+            <svg
+              class="govuk-pagination__icon govuk-pagination__icon--prev"
+              xmlns="http://www.w3.org/2000/svg"
+              height="13"
+              width="15"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 15 13"
+            >
+              <path
+                d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"
+              ></path>
+            </svg>
+            <span class="govuk-pagination__link-title">
+              Previous<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+        <ul class="govuk-pagination__list">
+          <li class="govuk-pagination__item govuk-pagination__item--current">
+            <a
+              class="govuk-link govuk-pagination__link"
+              href="#"
+              aria-label="Page 1"
+              aria-current="page"
+              >1</a
+            >
+          </li>
+          <li class="govuk-pagination__item">
+            <a
+              class="govuk-link govuk-pagination__link"
+              href="#"
+              aria-label="Page 2"
+              >2</a
+            >
+          </li>
+        </ul>
+        <div class="govuk-pagination__next">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="next">
+            <span class="govuk-pagination__link-title">
+              Next<span class="govuk-visually-hidden"> page</span>
+            </span>
+            <svg
+              class="govuk-pagination__icon govuk-pagination__icon--next"
+              xmlns="http://www.w3.org/2000/svg"
+              height="13"
+              width="15"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 15 13"
+            >
+              <path
+                d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <hr
+      class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-6"
+    />
+
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+      "
+    >
+      <a href="/admin/organisations/add" class="govuk-link"
+        >Add a new organisation</a
+      >
+    </div>
+  </div>
+</div>
 {% endblock %}

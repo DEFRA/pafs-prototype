@@ -1,517 +1,1098 @@
-{% extends "layouts/general-main.html" %}
-{% from "govuk/components/tabs/macro.njk" import govukTabs %}
-
-{% set pageName="Screens and Messages Catalogue" %}
-
-{% block content %}
+{% extends "layouts/general-main.html" %} {% from
+"govuk/components/tabs/macro.njk" import govukTabs %} {% set pageName="Screens
+and Messages Catalogue" %} {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl">Screens and Messages Catalogue</h1>
-    
+
     <p class="govuk-body-l">
-      Browse all screens, validation messages, and components used in the PAFS prototype.
+      Browse all screens, validation messages, and components used in the PAFS
+      prototype.
     </p>
 
-    {{ govukTabs({
-      items: [
-        {
-          label: "User Portal",
-          id: "user",
-          panel: {
-            html: '
-              <h2 class="govuk-heading-l">General User Portal</h2>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">Your proposals</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Your proposals (no projects yet)</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/proposals-empty" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    {{ govukTabs({ items: [ { label: "User Portal", id: "user", panel: { html: '
+    <h2 class="govuk-heading-l">General User Portal</h2>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">Login - Account Status</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account pending approval</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=account-pending" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account Journey</h3>
-              
-              <h4 class="govuk-heading-s govuk-!-margin-top-4">Pages</h4>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Request account start page</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Your proposals</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Your proposals (no projects yet)
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/proposals-empty" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - Personal Details</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account details form</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details" class="govuk-link">View page</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">First name empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=first-name-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Last name empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=last-name-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=email-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email invalid format</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=email-invalid" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Telephone empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=telephone-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Telephone invalid format</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=telephone-invalid" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Organisation empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=organisation-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Job title empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=job-title-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Responsibility not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=responsibility-empty" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Login - Account Status</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account pending approval</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=account-pending" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - Multiple Errors</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">All required fields empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=first-name-empty,last-name-empty,email-empty,telephone-empty,organisation-empty,job-title-empty,responsibility-empty" class="govuk-link">View errors</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Name and email errors</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=first-name-empty,last-name-empty,email-invalid" class="govuk-link">View errors</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Contact details errors</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=email-invalid,telephone-invalid" class="govuk-link">View errors</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Organisation details missing</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/details?error=organisation-empty,job-title-empty,responsibility-empty" class="govuk-link">View errors</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account Journey
+    </h3>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - EA User Area Selection</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">EA main area not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/ea-main-area?error=area-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h4 class="govuk-heading-s govuk-!-margin-top-4">Pages</h4>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Request account start page</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/request-account" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - PSO User Area Selection</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">PSO EA regions not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/pso-ea-areas?error=regions-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">PSO main area not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/pso-main-area?error=area-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - Personal Details
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account details form</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/request-account/details" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">First name empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=first-name-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Last name empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=last-name-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=email-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email invalid format</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=email-invalid"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Telephone empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=telephone-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Telephone invalid format</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=telephone-invalid"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Organisation empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=organisation-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Job title empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=job-title-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Responsibility not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=responsibility-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - RMA User Area Selection</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">RMA EA regions not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/rma-ea-areas?error=regions-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">RMA PSO regions not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/rma-pso-areas?error=regions-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">RMA main area not selected</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/rma-main-area?error=area-not-selected" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - Multiple Errors
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">All required fields empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=first-name-empty,last-name-empty,email-empty,telephone-empty,organisation-empty,job-title-empty,responsibility-empty"
+            class="govuk-link"
+            >View errors</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Name and email errors</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=first-name-empty,last-name-empty,email-invalid"
+            class="govuk-link"
+            >View errors</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Contact details errors</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=email-invalid,telephone-invalid"
+            class="govuk-link"
+            >View errors</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Organisation details missing</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/details?error=organisation-empty,job-title-empty,responsibility-empty"
+            class="govuk-link"
+            >View errors</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Request Account - Success Pages</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Auto-approved success</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/success-auto-approved" class="govuk-link">View page</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Pending approval success</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/request-account/success-pending-approval" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
-            '
-          }
-        },
-        {
-          label: "Admin Portal",
-          id: "admin",
-          panel: {
-            html: '
-              <h2 class="govuk-heading-l">Admin Journey - User Management</h2>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">User Account Management</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Pending user accounts</dt>
-                  <dd class="govuk-summary-list__value"><a href="/admin/user-management-pending" class="govuk-link">View page</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Active user accounts</dt>
-                  <dd class="govuk-summary-list__value"><a href="/admin/user-management-active" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
-            '
-          }
-        },
-        {
-          label: "Common",
-          id: "common",
-          panel: {
-            html: '
-              <h2 class="govuk-heading-l">Login Journey</h2>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">Login Page</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Login page</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - EA User Area Selection
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">EA main area not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/ea-main-area?error=area-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Validation Errors - Email Field</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=email-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email invalid format</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=email-invalid" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - PSO User Area Selection
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">PSO EA regions not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/pso-ea-areas?error=regions-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">PSO main area not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/pso-main-area?error=area-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Validation Errors - Password Field</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=password-empty" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - RMA User Area Selection
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">RMA EA regions not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/rma-ea-areas?error=regions-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">RMA PSO regions not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/rma-pso-areas?error=regions-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">RMA main area not selected</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/rma-main-area?error=area-not-selected"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Authentication Errors</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Invalid credentials</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=invalid-credentials" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Request Account - Success Pages
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Auto-approved success</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/success-auto-approved"
+            class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Pending approval success</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/request-account/success-pending-approval"
+            class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } }, { label: "Admin Portal", id: "admin", panel: { html: '
+    <h2 class="govuk-heading-l">Admin Journey - User Management</h2>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Account Status Errors</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account locked</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=account-locked" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account disabled</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=account-disabled" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">
+      User Account Management
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Pending user accounts</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/user-management-pending" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Active user accounts</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/user-management-active" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } }, { label: "Common", id: "common", panel: { html: '
+    <h2 class="govuk-heading-l">Login Journey</h2>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Warning Messages</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Last attempt warning</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=last-attempt" class="govuk-link">View warning</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Session timeout</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=session-timeout" class="govuk-link">View warning</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Concurrent session</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/login?error=concurrent-session" class="govuk-link">View warning</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Login Page</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Login page</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
 
-              <h2 class="govuk-heading-l govuk-!-margin-top-9">Password Reset Journey</h2>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">Reset Request Form</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Forgot password page</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/forgot-password" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Validation Errors - Email Field
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=email-empty" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email invalid format</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=email-invalid" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Reset Request Form - Validation Errors</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/forgot-password?error=email-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Email invalid format</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/forgot-password?error=email-invalid" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Validation Errors - Password Field
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=password-empty" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Reset Password Form</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Reset password page</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Authentication Errors</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Invalid credentials</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=invalid-credentials" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Reset Password - Error Pages</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Reset link expired</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password/token-expired" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Account Status Errors</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account locked</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=account-locked" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account disabled</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=account-disabled" class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Reset Password Form - Validation Errors</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">New password empty</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-empty" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password too short</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-short" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password missing uppercase</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-no-uppercase" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password missing lowercase</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-no-lowercase" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password missing number</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-no-number" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password previously used</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-used" class="govuk-link">View error</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Passwords do not match</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/reset-password?error=password-mismatch" class="govuk-link">View error</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Warning Messages</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Last attempt warning</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=last-attempt" class="govuk-link"
+            >View warning</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Session timeout</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=session-timeout" class="govuk-link"
+            >View warning</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Concurrent session</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/login?error=concurrent-session" class="govuk-link"
+            >View warning</a
+          >
+        </dd>
+      </div>
+    </dl>
 
-              <h2 class="govuk-heading-l govuk-!-margin-top-9">3. Account Management</h2>
+    <h2 class="govuk-heading-l govuk-!-margin-top-9">Password Reset Journey</h2>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-4">Set Password - Error Pages</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Set password link expired</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/set-password/link-expired" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Reset Request Form</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Forgot password page</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/forgot-password" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
 
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Unlock Account - Error Pages</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Unlock account link expired</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/unlock-account/link-expired" class="govuk-link">View page</a></dd>
-                </div>
-              </dl>
-            '
-          }
-        },
-        {
-          label: "Email Templates",
-          id: "email",
-          panel: {
-            html: '
-              <h2 class="govuk-heading-l">Email Templates</h2>
-              <p class="govuk-body">Email templates for GOV.UK Notify integration.</p>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Account Management</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account approved - Set password</dt>
-                  <dd class="govuk-summary-list__value"><a href="/email-templates/account-approved-set-password" class="govuk-link">View template</a></dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Account unlock</dt>
-                  <dd class="govuk-summary-list__value"><a href="/email-templates/account-unlock" class="govuk-link">View template</a></dd>
-                </div>
-              </dl>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Password Reset</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Password reset request</dt>
-                  <dd class="govuk-summary-list__value"><a href="/email-templates/password-reset-request" class="govuk-link">View template</a></dd>
-                </div>
-              </dl>
-            '
-          }
-        },
-        {
-          label: "Project Proposals",
-          id: "proposal",
-          panel: {
-            html: '
-              <h2 class="govuk-heading-l">Project Proposals</h2>
-              <p class="govuk-body">Project proposals journey.</p>
-              
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Project Name</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/title" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/title?validation=required" class="govuk-link">required-template</a> | 
-                    <a href="/general/create-proposal/title?validation=alpha-numeric" class="govuk-link">alpha-numeric-template</a> |
-                    <a href="/general/create-proposal/title-unique" class="govuk-link">unique-template</a>
-                  </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">RMA Selection</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/rma-selection" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/rma-selection?required=true" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Project Type</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/project-type" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/project-type?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Project Type - Assets</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/project-type/assets" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/project-type/assets?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Project Type - Primary Asset</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/project-type/primary-asset" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/project-type/primary-asset?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Financial Year</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/financial-year" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/financial-year?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Financial Year - After</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/financial-year/after" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/financial-year/after?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-              </dl>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Project Proposal Overview</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/create-proposal/check-answers" class="govuk-link">View template</a></dd>
-                </div>
-              </dl>
-              
-              <h3 class="govuk-heading-m govuk-!-margin-top-6">Additional Proposal Sections</h3>
-              <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Location (National Grid Reference)</dt>
-                  <dd class="govuk-summary-list__value">
-                    <a href="/general/create-proposal/location" class="govuk-link">View template</a> | 
-                    <a href="/general/create-proposal/location?validation=required" class="govuk-link">required-template</a>
-                  </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Benefit Area File Upload (Shapefile)</dt>
-                  <dd class="govuk-summary-list__value"><a href="/general/create-proposal/benefit-area-file" class="govuk-link">View template</a></dd>
-                </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Important Dates - OBC Start Date</dt>
-                <dd class="govuk-summary-list__value">
-                  <a href="/general/create-proposal/important-dates/obc-start" class="govuk-link">View template</a> | 
-                  <a href="/general/create-proposal/important-dates/obc-start?validation=required" class="govuk-link">required-template</a>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Important Dates - OBC Completion Date</dt>
-                <dd class="govuk-summary-list__value">
-                  <a href="/general/create-proposal/important-dates/obc-completion" class="govuk-link">View template</a> | 
-                  <a href="/general/create-proposal/important-dates/obc-completion?validation=required" class="govuk-link">required-template</a>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Important Dates - Contract Awarded Date</dt>
-                <dd class="govuk-summary-list__value">
-                  <a href="/general/create-proposal/important-dates/contract-awarded" class="govuk-link">View template</a> | 
-                  <a href="/general/create-proposal/important-dates/contract-awarded?validation=required" class="govuk-link">required-template</a>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Important Dates - Start Construction Date</dt>
-                <dd class="govuk-summary-list__value">
-                  <a href="/general/create-proposal/important-dates/start-construction" class="govuk-link">View template</a> | 
-                  <a href="/general/create-proposal/important-dates/start-construction?validation=required" class="govuk-link">required-template</a>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Important Dates - Ready for Service Date</dt>
-                <dd class="govuk-summary-list__value">
-                  <a href="/general/create-proposal/important-dates/ready-for-service" class="govuk-link">View template</a> | 
-                  <a href="/general/create-proposal/important-dates/ready-for-service?validation=required" class="govuk-link">required-template</a>
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Funding Sources</dt>
-                <dd class="govuk-summary-list__value"><a href="/general/create-proposal/funding-sources" class="govuk-link">View template</a></dd>
-              </div>
-              </dl>
-            '
-          }
-        }
-      ]
-    }) }}
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Reset Request Form - Validation Errors
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/forgot-password?error=email-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email invalid format</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/forgot-password?error=email-invalid"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
 
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Reset Password Form</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Reset password page</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/reset-password" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Reset Password - Error Pages
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Reset link expired</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/reset-password/token-expired" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Reset Password Form - Validation Errors
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">New password empty</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password too short</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-short"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password missing uppercase</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-no-uppercase"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password missing lowercase</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-no-lowercase"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password missing number</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-no-number"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password previously used</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-used"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Passwords do not match</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/reset-password?error=password-mismatch"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-9">3. Account Management</h2>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">
+      Set Password - Error Pages
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Set password link expired</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/set-password/link-expired" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Unlock Account - Error Pages
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Unlock account link expired</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/unlock-account/link-expired" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } }, { label: "Email Templates", id: "email", panel: { html: '
+    <h2 class="govuk-heading-l">Email Templates</h2>
+    <p class="govuk-body">Email templates for GOV.UK Notify integration.</p>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Account Management</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account approved - Set password</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/email-templates/account-approved-set-password"
+            class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Account unlock</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/email-templates/account-unlock" class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Password Reset</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Password reset request</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/email-templates/password-reset-request" class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } }, { label: "Project Proposals", id: "proposal", panel: { html: '
+    <h2 class="govuk-heading-l">Project Proposals</h2>
+    <p class="govuk-body">Project proposals journey.</p>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Project Name</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/title" class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/title?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/title?validation=alpha-numeric"
+            class="govuk-link"
+            >alpha-numeric-template</a
+          >
+          |
+          <a href="/general/create-proposal/title-unique" class="govuk-link"
+            >unique-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">RMA Selection</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/rma-selection" class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/rma-selection?required=true"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Project Type</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/project-type" class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/project-type?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Project Type - Assets</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/project-type/assets"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/project-type/assets?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Project Type - Primary Asset</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/project-type/primary-asset"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/project-type/primary-asset?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Financial Year</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/financial-year" class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/financial-year?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Financial Year - After</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/financial-year/after"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/financial-year/after?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Project Proposal Overview</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/check-answers" class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">
+      Additional Proposal Sections
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Location (National Grid Reference)
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/location" class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/location?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Benefit Area File Upload (Shapefile)
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/benefit-area-file"
+            class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Important Dates - OBC Start Date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/important-dates/obc-start"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/important-dates/obc-start?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Important Dates - OBC Completion Date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/important-dates/obc-completion"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/important-dates/obc-completion?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Important Dates - Contract Awarded Date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/important-dates/contract-awarded"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/important-dates/contract-awarded?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Important Dates - Start Construction Date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/important-dates/start-construction"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/important-dates/start-construction?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Important Dates - Ready for Service Date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/general/create-proposal/important-dates/ready-for-service"
+            class="govuk-link"
+            >View template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/important-dates/ready-for-service?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Funding Sources</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/funding-sources" class="govuk-link"
+            >View template</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } }, { label: "Organisations", id: "organisations", panel: { html: '
+
+    <h2 class="govuk-heading-l">Organisations</h2>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Management Screens</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Manage Organisations</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations" class="govuk-link">View page</a>
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">
+      Add Organisation Screens
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Add Organisation</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations/add" class="govuk-link">View page</a>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Add Authority</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations/add-authority" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Add PSO</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations/add-pso" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Add RMA</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations/add-rma" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Validation Screens</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Organisation Type Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add?error=organisation-type"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Authority Code Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-authority?error=authority-code-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Authority Type Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-authority?error=authority-type-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">PSO Name Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-pso?error=pso-name-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">EA Area Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-pso?error=ea-area-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">RFCC Code Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-pso?error=rfcc-code-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          RMA Organisation Name Validation
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-rma?error=organisation-name-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Identifier Code Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-rma?error=identifier-code-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Authority Code Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-rma?error=authority-code-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Associated PSO Validation</dt>
+        <dd class="govuk-summary-list__value">
+          <a
+            href="/admin/organisations/add-rma?error=associated-pso-empty"
+            class="govuk-link"
+            >View error</a
+          >
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">
+      Review and Success Screens
+    </h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Check Your Answers</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations/check-your-answers" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Success Notification</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/admin/organisations?success=true" class="govuk-link"
+            >View page</a
+          >
+        </dd>
+      </div>
+    </dl>
+    ' } } ] }) }}
   </div>
 </div>
 

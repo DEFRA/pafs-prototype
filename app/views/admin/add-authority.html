@@ -1,0 +1,65 @@
+{% extends "layouts/admin-variant1.html" %} {% set pageName="Add an Authority
+Code" %} {% block content %} {% from "govuk/components/error-summary/macro.njk"
+import govukErrorSummary %} {% if error %} {{ govukErrorSummary({ titleText:
+"There is a problem", errorList: [ { text: "Authority code can't be blank",
+href: "#authority-code" } if error == 'authority-code-empty', { text: "Authority
+type can't be blank", href: "#authority-type" } if error ==
+'authority-type-empty' ] }) }} {% endif %}
+
+<h1 class="govuk-heading-xl">Add an Authority Code</h1>
+
+<form
+  method="post"
+  action="/admin/organisations/add-authority"
+  class="govuk-form"
+>
+  <div
+    class="govuk-form-group {% if error == 'authority-code-empty' %}govuk-form-group--error{% endif %}"
+  >
+    <label class="govuk-label" for="authority-code">Authority code</label>
+    {% if error == 'authority-code-empty' %}
+    <p class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> Authority code can't be
+      blank
+    </p>
+    {% endif %}
+    <input
+      class="govuk-input govuk-!-width-two-thirds {% if error == 'authority-code-empty' %}govuk-input--error{% endif %}"
+      id="authority-code"
+      name="authority-code"
+      type="text"
+    />
+  </div>
+
+  <div
+    class="govuk-form-group {% if error == 'authority-type-empty' %}govuk-form-group--error{% endif %}"
+  >
+    <label class="govuk-label" for="authority-type">Authority type</label>
+    {% if error == 'authority-type-empty' %}
+    <p class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> Authority type can't be
+      blank
+    </p>
+    {% endif %}
+    <input
+      class="govuk-input govuk-!-width-two-thirds {% if error == 'authority-type-empty' %}govuk-input--error{% endif %}"
+      id="authority-type"
+      name="authority-type"
+      type="text"
+    />
+  </div>
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="end-date">End date if available</label>
+    <input
+      class="govuk-input govuk-input--width-10"
+      id="end-date"
+      name="end-date"
+      type="date"
+    />
+  </div>
+
+  <button class="govuk-button" type="submit">Continue</button>
+</form>
+
+{% endblock %}
