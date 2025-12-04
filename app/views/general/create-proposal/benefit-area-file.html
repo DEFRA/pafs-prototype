@@ -10,6 +10,19 @@
       <a href="/general/create-proposal/check-answers" class="govuk-link">Return to proposal overview</a>
     </p>
 
+    {% if errorMessage %}
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#benefit-area-file">{{ errorMessage }}</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
     <h1 class="govuk-heading-l">What area is the project likely to benefit?</h1>
 
     <p class="govuk-body">Upload a shapefile. The shapefile should show the approximate area the project is likely to benefit. Draw as many separate areas as necessary, but make sure they don't overlap.</p>
@@ -17,11 +30,16 @@
     <p class="govuk-body">Your shapefile files should be in a single compressed folder or zipfile (.zip) to upload successfully.</p>
 
     <form method="post" action="/general/create-proposal/benefit-area-file" enctype="multipart/form-data">
-      <div class="govuk-form-group">
+      <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}">
         <label class="govuk-label" for="benefit-area-file">
           Upload shapefile
         </label>
-        <input class="govuk-file-upload" id="benefit-area-file" name="benefit-area-file" type="file" accept=".zip">
+        {% if errorMessage %}
+          <p id="benefit-area-file-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ errorMessage }}
+          </p>
+        {% endif %}
+        <input class="govuk-file-upload" id="benefit-area-file" name="benefit-area-file" type="file" accept=".zip" {% if errorMessage %}aria-describedby="benefit-area-file-error"{% endif %}>
       </div>
 
       <button class="govuk-button" data-module="govuk-button">

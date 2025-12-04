@@ -871,7 +871,9 @@ router.get('/general/create-proposal/location', function (req, res) {
   const validation = req.query.validation
   let errorMessage = undefined
   if (validation === 'required') {
-    errorMessage = "Tell us the project's National Grid Reference"
+    errorMessage = 'Tell us the project\'s National Grid Reference'
+  } else if (validation === 'format') {
+    errorMessage = 'The National Grid Reference must be 2 letters followed by 10 digits'
   }
 
   res.render('general/create-proposal/location', {
@@ -907,8 +909,20 @@ router.post('/general/create-proposal/location', function (req, res) {
 
 // Benefit area file upload page
 router.get('/general/create-proposal/benefit-area-file', function (req, res) {
+  const validation = req.query.validation
+  let errorMessage = undefined
+  
+  if (validation === 'required') {
+    errorMessage = 'Upload a shapefile that outlines the area the project is likely to benefit'
+  } else if (validation === 'file-format') {
+    errorMessage = 'The selected file must be a zip file, containing the following mandatory files: dbf. shx. shp. prj.'
+  } else if (validation === 'virus') {
+    errorMessage = 'The file was rejected because it may contain virus.'
+  }
+  
   res.render('general/create-proposal/benefit-area-file', {
-    journeyData: req.journeyData
+    journeyData: req.journeyData,
+    errorMessage
   })
 })
 
@@ -920,6 +934,17 @@ router.post('/general/create-proposal/benefit-area-file', function (req, res) {
     req.session.data['benefit-area-file-uploaded'] = true
   }
 
+  // Redirect back to proposal overview
+  res.redirect('/general/create-proposal/check-answers')
+})
+
+router.get('/general/create-proposal/shape-file-uploaded', function (req, res) {
+  res.render('general/create-proposal/shape-file-uploaded', {
+    journeyData: req.journeyData
+  })
+})
+
+router.post('/general/create-proposal/shape-file-uploaded', function (req, res) {
   // Redirect back to proposal overview
   res.redirect('/general/create-proposal/check-answers')
 })

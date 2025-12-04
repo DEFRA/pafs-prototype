@@ -800,8 +800,11 @@ and Messages Catalogue" %} {% block content %}
           <a
             href="/general/create-proposal/location?validation=required"
             class="govuk-link"
-            >required-template</a
+            >required-template</
           >
+          |
+          <a href="/general/create-proposal/location?validation=format" class="govuk-link">format-template</a> 
+          
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -814,8 +817,33 @@ and Messages Catalogue" %} {% block content %}
             class="govuk-link"
             >View template</a
           >
+          |
+          <a
+            href="/general/create-proposal/benefit-area-file?validation=required"
+            class="govuk-link"
+            >required-template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/benefit-area-file?validation=file-format"
+            class="govuk-link"
+            >file-format-template</a
+          >
+          |
+          <a
+            href="/general/create-proposal/benefit-area-file?validation=virus"
+            class="govuk-link"
+            >virus-template</a
+          >
         </dd>
       </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Shape File Uploaded</dt>
+        <dd class="govuk-summary-list__value">
+          <a href="/general/create-proposal/shape-file-uploaded" class="govuk-link">View template</a>
+        </dd>
+      </div>
+
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Important Dates - OBC Start Date

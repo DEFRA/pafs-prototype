@@ -1,0 +1,45 @@
+{% extends "layouts/general-variant1.html" %}
+
+{% set pageName="The uploaded shapefile" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    <p class="govuk-body">
+      <a href="/general/create-proposal/check-answers" class="govuk-link">Return to proposal overview</a>
+    </p>
+
+    <h1 class="govuk-heading-xl">The uploaded shapefile</h1>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">File</th>
+          <th scope="col" class="govuk-table__header">Uploaded</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">
+            <a href="#" class="govuk-link">magic_graphics1.zip</a>
+          </td>
+          <td class="govuk-table__cell">24/11/2025</td>
+          <td class="govuk-table__cell">
+            <a href="#" class="govuk-link">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <form method="post" action="/general/create-proposal/shape-file-uploaded">
+      <button class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
