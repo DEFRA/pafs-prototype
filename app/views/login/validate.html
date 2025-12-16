@@ -1,0 +1,133 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/password-input/macro.njk" import govukPasswordInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set pageName = "Sign in - Validation Scenarios" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if error == "email-empty" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Enter your email address", href: "#email" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "email-invalid" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Enter an email address in the correct format, like name@example.com", href: "#email" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "password-empty" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Enter your password", href: "#password" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "both-empty" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Enter your email address", href: "#email" },
+          { text: "Enter your password", href: "#password" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "invalid-credentials" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Your email address or password is incorrect", href: "#email" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "invalid-credentials-warning" or variant == "summary" %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Your email address or password is incorrect", href: "#email" }
+        ]
+      }) }}
+    {% endif %}
+
+    {% if error == "invalid-credentials-warning" %}
+      {{ govukWarningText({ text: "You have one more attempt before your account is locked" }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Sign in</h1>
+
+    <form action="/login" method="post" novalidate>
+      {% set emailErrors = null %}
+      {% if error == "email-empty" %}
+        {% set emailErrors = { text: "Enter your email address" } %}
+      {% elseif error == "email-invalid" %}
+        {% set emailErrors = { text: "Enter an email address in the correct format, like name@example.com" } %}
+      {% elseif error == "invalid-credentials" %}
+        {% set emailErrors = { text: "Your email address or password is incorrect" } %}
+      {% elseif error == "invalid-credentials-warning" %}
+        {% set emailErrors = { text: "Your email address or password is incorrect" } %}
+      {% elseif error == "both-empty" %}
+        {% set emailErrors = { text: "Enter your email address" } %}
+      {% endif %}
+
+      {{ govukInput({
+        label: { text: "Email address" },
+        id: "email",
+        name: "email",
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false,
+        errorMessage: emailErrors
+      }) }}
+
+      {% set passwordErrors = null %}
+      {% if error == "password-empty" %}
+        {% set passwordErrors = { text: "Enter your password" } %}
+      {% elseif error == "both-empty" %}
+        {% set passwordErrors = { text: "Enter your password" } %}
+      {% endif %}
+
+      {{ govukPasswordInput({
+        label: { text: "Password" },
+        id: "password",
+        name: "password",
+        autocomplete: "current-password",
+        errorMessage: passwordErrors
+      }) }}
+
+      {{ govukButton({ text: "Sign in" }) }}
+    </form>
+
+    <p class="govuk-body govuk-!-margin-top-4">
+      <a href="/forgot-password" class="govuk-link">I have forgotten my password</a>
+    </p>
+
+    <p class="govuk-body">
+      <a href="/request-account" class="govuk-link">Request an account</a>
+    </p>
+
+    <p class="govuk-body govuk-!-margin-top-6">
+      <a href="/catalogue" class="govuk-link">View all screens and messages catalogue</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What is the estimated spend from Public sector contributions for each financial year?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if data and data['public-contributor-values-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#public-contributor-values">{{ data['public-contributor-values-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/funding/public-contributor-values">
+      <div class="govuk-form-group {%- if data and data['public-contributor-values-error'] %} govuk-form-group--error {%- endif %}" id="public-contributor-values">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the estimated spend from Public sector contributions for each financial year?
+            </h1>
+          </legend>
+
+          {% if data and data['public-contributor-values-error'] %}
+            <p id="public-contributor-values-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['public-contributor-values-error'] }}
+            </p>
+          {% endif %}
+
+          {% set contributors = data.publicContributors or [] %}
+          {% set years = fundingYears or [] %}
+
+          {% for name in contributors %}
+            <div class="govuk-form-group">
+              <h2 class="govuk-heading-m">{{ name }}</h2>
+
+              <table class="govuk-table">
+                <thead class="govuk-table__head">
+                  <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Financial year (April to March)</th>
+                    <th scope="col" class="govuk-table__header">Estimated spend from contributor in financial year (£)</th>
+                    <th scope="col" class="govuk-table__header">Is the funding secured?</th>
+                    <th scope="col" class="govuk-table__header">Is the funding Time Constrained?</th>
+                  </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                  {% set contributorValues = (data.publicContributorValues and data.publicContributorValues[name]) or {} %}
+                  {% for year in years %}
+                    {% set yearValue = contributorValues[year] or {} %}
+                    <tr class="govuk-table__row">
+                      <th scope="row" class="govuk-table__header">{{ year }} to {{ year + 1 }}</th>
+                      <td class="govuk-table__cell">
+                        <label class="govuk-visually-hidden" for="public-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}">
+                          Estimated spend for {{ name }} in {{ year }} to {{ year + 1 }}
+                        </label>
+                        <input
+                          class="govuk-input govuk-input--width-10"
+                          id="public-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}"
+                          name="public-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}"
+                          type="text"
+                          value="{{ yearValue.amount or '' }}"
+                        >
+                      </td>
+                      <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                          <div class="govuk-checkboxes__item">
+                            <input
+                              class="govuk-checkboxes__input"
+                              id="public-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}"
+                              name="public-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}"
+                              type="checkbox"
+                              value="on"
+                              {% if yearValue.secured %}checked{% endif %}
+                            >
+                            <label class="govuk-label govuk-checkboxes__label" for="public-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}">
+                              Secured
+                            </label>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                          <div class="govuk-checkboxes__item">
+                            <input
+                              class="govuk-checkboxes__input"
+                              id="public-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}"
+                              name="public-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}"
+                              type="checkbox"
+                              value="on"
+                              {% if yearValue.constrained %}checked{% endif %}
+                            >
+                            <label class="govuk-label govuk-checkboxes__label" for="public-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}">
+                              Time constrained
+                            </label>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

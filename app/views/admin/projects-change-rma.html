@@ -1,0 +1,54 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Projects" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-xl">
+      Change project RMA
+    </h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Project</h2>
+        <p class="govuk-body">{{ data.currentProject.projectName if data.currentProject else 'N/A' }}</p>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Project number</h2>
+        <p class="govuk-body">{{ data.currentProject.projectNumber if data.currentProject else 'N/A' }}</p>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Current RMA</h2>
+    <p class="govuk-body">{{ data.currentProject.assignedRMA if data.currentProject else 'N/A' }}</p>
+      </div>
+    </div>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Select new RMA</h2>
+
+    <form method="post" action="/admin/projects/{{ data.currentProject.id if data.currentProject else '#' }}/change-rma" novalidate>
+      <div class="govuk-form-group">
+        <select class="govuk-select govuk-!-width-two-thirds" id="rma-select" name="rma">
+          <option value="">Select an RMA</option>
+          {% for org in data.organisationsData or [] %}
+            {% if org.type == "RMA" %}
+              <option value="{{ org.name }}" {% if org.name == data.currentProject.assignedRMA %}selected{% endif %}>{{ org.name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save
+        </button>
+        <a href="/admin/projects" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

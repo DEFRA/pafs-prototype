@@ -1,0 +1,339 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Proposal Overview" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Proposal Overview</h1>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-l">National proposal number</dt>
+        <dd class="govuk-summary-list__value govuk-body-l">Not yet assigned</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-l">Last updated</dt>
+        <dd class="govuk-summary-list__value govuk-body-l">Not yet submitted</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-l">Status</dt>
+        <dd class="govuk-summary-list__value govuk-body-l">
+          Draft &nbsp; | &nbsp;<a class="govuk-link" href="#">Archive</a> &nbsp; | &nbsp;<a class="govuk-link" href="#">Delete</a>
+        </dd>
+      </div>
+    </dl>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Proposal details</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Project name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.proposalTitle or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/proposal/create-proposal/title">
+                Change<span class="govuk-visually-hidden"> project name</span>
+              </a>
+            </dd>
+          </div>
+          
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Risk management authority
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.selectedRmaLabel or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/proposal/create-proposal/rma-selection">
+                Change<span class="govuk-visually-hidden"> risk management authority</span>
+              </a>
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Project type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% set projectTypeLabel = '' %}
+              {% if data.projectType == 'DEF' %}
+                {% set projectTypeLabel = 'Create a new flood and coastal erosion risk management asset or change an existing approach to risk management in an area already with assets (this could include natural flood management measures, property flood resilience or sustainable drainage systems)' %}
+              {% elif data.projectType == 'REP' %}
+                {% set projectTypeLabel = 'Entirely replace an existing flood and coastal erosion risk management asset that is at the end of its life with another asset which sustains the standard of service and the design performance on an equivalent basis (this could include natural flood management measures, property flood resilience or sustainable drainage systems)' %}
+              {% elif data.projectType == 'REF' %}
+                {% set projectTypeLabel = 'Replace, or substantially renew, one or more asset elements or components in an existing flood and coastal erosion risk management asset (this could include natural flood management measures, property flood resilience or sustainable drainage systems)' %}
+              {% elif data.projectType == 'HCP' %}
+                {% set projectTypeLabel = 'Protect, compensate or restore habitats and natural functions, to support coastal risk management legal compliance and wider environmental outcomes (habitat restoration and compensation)' %}
+              {% elif data.projectType == 'STR' %}
+                {% set projectTypeLabel = 'Produce a strategy for complex flood or coastal erosion risk situations across several interconnected areas' %}
+              {% elif data.projectType == 'STU' %}
+                {% set projectTypeLabel = 'Produce a study to support the case that a project is needed resolve a flood or coastal erosion risk problem – helping to define the scope, purpose, and viability of any future project(s)' %}
+              {% elif data.projectType == 'ELO' %}
+                {% set projectTypeLabel = 'Implement measures to address impacts arising from existing or historic flood or coastal erosion risk management assets or actions to comply with specified environmental legislation - Sites of Special Scientific Interest (SSSIs) and Water Environment Regulations (WER)' %}
+              {% endif %}
+              {{ projectTypeLabel or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/proposal/create-proposal/project-type">
+                Change<span class="govuk-visually-hidden"> project type</span>
+              </a>
+            </dd>
+          </div>
+
+          {% if data.assetTypes %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Intervention types
+              </dt>
+              <dd class="govuk-summary-list__value">
+                <ul class="govuk-list govuk-list--bullet">
+                  {% for type in data.assetTypes %}
+                    <li>
+                      {% if type == 'nfm' %}Natural flood management measures
+                      {% elif type == 'sds' %}Sustainable drainage systems
+                      {% elif type == 'pfr' %}Property flood resilience
+                      {% elif type == 'others' %}Others
+                      {% else %}{{ type }}
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/project-type-assets">
+                  Change<span class="govuk-visually-hidden"> intervention types</span>
+                </a>
+              </dd>
+            </div>
+
+            {% set effectivePrimaryBenefit = data.primaryBenefit %}
+            {% if not effectivePrimaryBenefit and (data.assetTypes | length) == 1 %}
+              {% set effectivePrimaryBenefit = data.assetTypes[0] %}
+            {% endif %}
+
+            {% if effectivePrimaryBenefit %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  Primary benefit intervention
+                </dt>
+                <dd class="govuk-summary-list__value">
+                  {% if effectivePrimaryBenefit == 'nfm' %}Natural flood management measures
+                  {% elif effectivePrimaryBenefit == 'sds' %}Sustainable drainage systems
+                  {% elif effectivePrimaryBenefit == 'pfr' %}Property flood resilience
+                  {% elif effectivePrimaryBenefit == 'others' %}Others
+                  {% else %}{{ effectivePrimaryBenefit }}
+                  {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="/proposal/create-proposal/project-type-primary-benefit">
+                    Change<span class="govuk-visually-hidden"> primary benefit intervention</span>
+                  </a>
+                </dd>
+              </div>
+            {% endif %}
+          {% endif %}
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Financial year (start spending)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% set startYearLabel = data.financialYearLabel or data.financialYearAfterLabel %}
+              {{ startYearLabel or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/proposal/create-proposal/financial-year">
+                Change<span class="govuk-visually-hidden"> financial year (start spending)</span>
+              </a>
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Financial year (stop spending)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% set stopYearLabel = data.financialYearSpendingLabel or data.financialYearSpendingAfterLabel %}
+              {{ stopYearLabel or 'Not provided' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/proposal/create-proposal/financial-year-spending">
+                Change<span class="govuk-visually-hidden"> financial year (stop spending)</span>
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Location</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/location">
+              {% if data['grid-reference'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> location</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if data['grid-reference'] or data['benefit-area-file-uploaded'] %}
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">National Grid Reference</h3>
+              <p class="govuk-body govuk-!-margin-bottom-1">{{ data['grid-reference'] }}</p>
+              {% if locationMapUrl %}
+                <p class="govuk-body govuk-!-margin-bottom-4">
+                  <a class="govuk-link" href="{{ locationMapUrl }}" target="_blank" rel="noopener noreferrer">See this location on a map (opens in new tab)</a>
+                </p>
+              {% endif %}
+
+              <p class="govuk-body govuk-!-margin-bottom-1"><strong>Region:</strong> South West</p>
+              <p class="govuk-body govuk-!-margin-bottom-1"><strong>County:</strong></p>
+              <p class="govuk-body"><strong>Constituency:</strong> Bristol North West</p>
+            </div>
+
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Project benefit area</h3>
+              {% if data['benefit-area-file-uploaded'] %}
+                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                  <div style="flex-shrink: 0;">
+                    <svg width="60" height="80" viewBox="0 0 60 80" style="border: 2px solid #b1b4b6;">
+                      <rect width="60" height="80" fill="#f3f2f1"/>
+                      <rect x="5" y="5" width="50" height="10" fill="#d4d4d4"/>
+                      <rect x="5" y="20" width="35" height="6" fill="#d4d4d4"/>
+                      <rect x="5" y="30" width="40" height="6" fill="#d4d4d4"/>
+                      <rect x="5" y="40" width="30" height="6" fill="#d4d4d4"/>
+                      <text x="30" y="65" text-anchor="middle" font-size="12" fill="#505a5f" font-family="Arial">ZIP</text>
+                    </svg>
+                  </div>
+                  <div style="flex-grow: 1;">
+                    <p class="govuk-body govuk-!-margin-bottom-1">
+                      <a class="govuk-link" href="#">{{ data['benefit-area-file'] or 'magic_graphics1.zip' }}</a>
+                    </p>
+                    <p class="govuk-body govuk-body-s govuk-!-margin-bottom-1">Size 3.38 KB</p>
+                    <p class="govuk-body govuk-body-s">Uploaded {{ data['benefit-area-uploaded-date'] or '11 December 2025' }}</p>
+                  </div>
+                </div>
+              {% else %}
+                <p class="govuk-body">No benefit area file uploaded yet</p>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <p class="govuk-body">No location added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Important dates</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/important-dates/obc-start">
+              {% if data['important-dates-added'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> important dates</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if data['important-dates-added'] %}
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Outline business case start date</dt>
+              <dd class="govuk-summary-list__value">
+                {{ importantDates.obcStart or 'Not Provided' }}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Outline business case completion date</dt>
+              <dd class="govuk-summary-list__value">
+                {{ importantDates.obcCompletion or 'Not Provided' }}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Contract awarded</dt>
+              <dd class="govuk-summary-list__value">
+                {{ importantDates.contractAwarded or 'Not Provided' }}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Start construction</dt>
+              <dd class="govuk-summary-list__value">
+                {{ importantDates.startConstruction or 'Not Provided' }}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Ready for service</dt>
+              <dd class="govuk-summary-list__value">
+                {{ importantDates.readyForService or 'Not Provided' }}
+              </dd>
+            </div>
+          </dl>
+        {% else %}
+          <p class="govuk-body">No important dates added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Funding sources and spending</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/funding-sources">
+              {% if fundingSectionStarted %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> the funding sources and spending details</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if fundingSectionStarted %}
+          {% if fundingSummary.selectedSources and (fundingSummary.selectedSources | length) > 0 %}
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  Selected funding sources
+                </dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list govuk-list--bullet">
+                    {% for source in fundingSummary.selectedSources %}
+                      <li>{{ source.label }}</li>
+                    {% endfor %}
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          {% else %}
+            <p class="govuk-body">No funding sources selected yet</p>
+          {% endif %}
+        {% else %}
+          <p class="govuk-body">No funding sources and spending details added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-6">
+
+    <p class="govuk-body">By submitting this proposal you confirm that all information is accurate and complete.</p>
+
+    <form method="post" action="/proposal/create-proposal/check-answers" class="govuk-!-margin-top-2">
+      <button class="govuk-button" data-module="govuk-button">Submit proposal</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,14 +1,44 @@
-{% extends "layouts/admin-variant1.html" %}
+{% extends "layouts/main.html" %}
 
 {% set pageName="Users" %}
 
-{% set pendingCount = pendingUsers.length or 5 %}
-{% set activeCount = activeUsers.length or 6 %}
+{% set pendingCount = data.pendingUsers.length or 5 %}
+{% set activeCount = data.activeUsers.length or 6 %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    {% if data['userAddedNotification'] %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+          User has been added successfully
+        </h3>
+        <p class="govuk-body">{{ data['userAddedName'] }} has been added to the system.</p>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if data['userDeletedNotification'] %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">User deleted</h3>
+        <p class="govuk-body">{{ data['userDeletedName'] }} has been removed.</p>
+      </div>
+    </div>
+    {% endif %}
+
     <h1 class="govuk-heading-xl">
       Manage users
     </h1>
@@ -40,30 +70,29 @@
           Filter by area
         </label>
         <select class="govuk-select govuk-!-width-two-thirds" id="area-filter" name="area">
-              <option value="">All areas</option>
-              <optgroup label="EA Areas">
-                <option value="ea1">Wessex</option>
-                <option value="ea2">Thames</option>
-                <option value="ea3">Midlands</option>
-                <option value="ea4">South East</option>
-                <option value="ea5">North West</option>
-                <option value="ea6">Yorkshire</option>
-                <option value="ea7">North East</option>
-              </optgroup>
-              <optgroup label="PSO Areas">
-                <option value="pso1">PSO West of England</option>
-                <option value="pso2">PSO Dorset</option>
-                <option value="pso3">PSO Somerset</option>
-                <option value="pso19">PSO Greater Manchester</option>
-                <option value="pso20">PSO Merseyside</option>
-              </optgroup>
-              <optgroup label="RMA Areas">
-                <option value="rma1">Bristol City Council</option>
-                <option value="rma5">Dorset Council</option>
-                <option value="rma66">Liverpool City Council</option>
-                <option value="rma70">Lancashire County Council</option>
-              </optgroup>
-            </select>
+          <option value="">All areas</option>
+          <optgroup label="EA Areas">
+            {% for ea in data.areasData.ea_areas %}
+              <option value="{{ ea.id }}">{{ ea.name }}</option>
+            {% endfor %}
+          </optgroup>
+          <optgroup label="PSO Areas">
+            {% for ea in data.areasData.ea_areas %}
+              {% for pso in ea.pso_areas %}
+                <option value="{{ pso.id }}">{{ pso.name }}</option>
+              {% endfor %}
+            {% endfor %}
+          </optgroup>
+          <optgroup label="RMA Areas">
+            {% for ea in data.areasData.ea_areas %}
+              {% for pso in ea.pso_areas %}
+                {% for rma in pso.rma_areas %}
+                  <option value="{{ rma.id }}">{{ rma.name }}</option>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          </optgroup>
+        </select>
       </div>
 
       <div class="govuk-button-group">
@@ -76,71 +105,33 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <table class="govuk-table">
+    <table class="govuk-table app-table--responsive" data-module="govuk-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Name</th>
-          <th scope="col" class="govuk-table__header">Email</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Email</th>
           <th scope="col" class="govuk-table__header">Area</th>
-          <th scope="col" class="govuk-table__header">Admin</th>
-          <th scope="col" class="govuk-table__header">Last sign in</th>
-          <th scope="col" class="govuk-table__header">Action</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Admin</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-half-quarter">Last sign in</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Action</th>
         </tr>
       </thead>
       <tbody class="govuk-table__body">
+        {% for user in data.activeUsers or [] %}
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell">Emma Wilson</td>
-          <td class="govuk-table__cell">emma.wilson@environment-agency.gov.uk</td>
-          <td class="govuk-table__cell">Thames</td>
-          <td class="govuk-table__cell">Yes</td>
-          <td class="govuk-table__cell">20 Oct 2025</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
+          <td class="govuk-table__cell" data-label="Name">{{ user.firstName }} {{ user.lastName }}</td>
+          <td class="govuk-table__cell" data-label="Email">{{ user.email }}</td>
+          <td class="govuk-table__cell" data-label="Area">{{ '-' if user.isAdmin else user.mainAreaName }}</td>
+          <td class="govuk-table__cell" data-label="Admin">{{ 'Yes' if user.isAdmin else 'No' }}</td>
+          <td class="govuk-table__cell govuk-!-white-space-nowrap" data-label="Last sign in">{{ user.lastSignIn }}</td>
+          <td class="govuk-table__cell" data-label="Action"><a href="/admin/users/{{ user.id }}/view" class="govuk-link">View</a></td>
         </tr>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">David Taylor</td>
-          <td class="govuk-table__cell">d.taylor@bristol.gov.uk</td>
-          <td class="govuk-table__cell">Bristol City Council</td>
-          <td class="govuk-table__cell">No</td>
-          <td class="govuk-table__cell">19 Oct 2025</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
-        </tr>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">Lisa Anderson</td>
-          <td class="govuk-table__cell">l.anderson@environment-agency.gov.uk</td>
-          <td class="govuk-table__cell">PSO Greater Manchester</td>
-          <td class="govuk-table__cell">No</td>
-          <td class="govuk-table__cell">18 Oct 2025</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
-        </tr>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">Robert Johnson</td>
-          <td class="govuk-table__cell">r.johnson@environment-agency.gov.uk</td>
-          <td class="govuk-table__cell">Wessex</td>
-          <td class="govuk-table__cell">Yes</td>
-          <td class="govuk-table__cell">17 Oct 2025</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
-        </tr>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">Sophie Martin</td>
-          <td class="govuk-table__cell">s.martin@dorset.gov.uk</td>
-          <td class="govuk-table__cell">Dorset Council</td>
-          <td class="govuk-table__cell">No</td>
-          <td class="govuk-table__cell">Never</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
-        </tr>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">Thomas White</td>
-          <td class="govuk-table__cell">t.white@environment-agency.gov.uk</td>
-          <td class="govuk-table__cell">PSO Dorset</td>
-          <td class="govuk-table__cell">No</td>
-          <td class="govuk-table__cell">15 Oct 2025</td>
-          <td class="govuk-table__cell"><a href="#" class="govuk-link">View</a></td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
-      <p class="govuk-body" style="margin: 0;">Showing <strong>1 to 6</strong> of <strong>6</strong> users</p>
+      <p class="govuk-body" style="margin: 0;">Showing <strong>1 to {{ data.activeUsers.length }}</strong> of <strong>{{ data.activeUsers.length }}</strong> users</p>
       
       <nav class="govuk-pagination" role="navigation" aria-label="Pagination" style="margin: 0;">
         <div class="govuk-pagination__prev">
@@ -184,11 +175,24 @@
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-6">
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
-      <a href="#" class="govuk-link">Add new user</a>
+      <a href="/admin/add-user" class="govuk-link">Add new user</a>
       <a href="#" class="govuk-link">Download all users</a>
     </div>
 
   </div>
 </div>
 
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+  // Clear notification banner flag on page load so it doesn't persist on refresh
+  if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+    // This is a page refresh
+    fetch('/admin/clear-notification', { method: 'POST' })
+      .catch(function(error) {
+        console.log('Could not clear notification:', error);
+      });
+  }
+</script>
 {% endblock %}

@@ -1,0 +1,71 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="When do you expect to start the work?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if errorMessage or data['start-construction-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#start-construction-month">{{ errorMessage or data['start-construction-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <h1 class="govuk-heading-l">When do you expect to start the work?</h1>
+
+    <p class="govuk-body">This could be construction or creating a strategy.</p>
+
+    <form method="post" action="/proposal/create-proposal/important-dates/start-construction">
+      <div class="govuk-form-group {%- if errorMessage or data['start-construction-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" role="group" {% if errorMessage or data['start-construction-error'] %}aria-describedby="start-construction-error start-construction-hint"{% else %}aria-describedby="start-construction-hint"{% endif %}>
+          {% if errorMessage or data['start-construction-error'] %}
+            <p id="start-construction-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ errorMessage or data['start-construction-error'] }}
+            </p>
+          {% endif %}
+          <div id="start-construction-hint" class="govuk-hint">
+            For example, 3 2020
+          </div>
+          <div class="govuk-date-input" id="start-construction">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="start-construction-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2 {% if errorMessage or data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-month" name="start-construction-month" type="text" inputmode="numeric" value="{{ data['start-construction-month'] }}">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="start-construction-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4 {% if errorMessage or data['start-construction-error'] %}govuk-input--error{% endif %}" id="start-construction-year" name="start-construction-year" type="text" inputmode="numeric" value="{{ data['start-construction-year'] }}">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

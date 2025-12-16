@@ -1,0 +1,81 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What is the estimated spend for each financial year?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    {% if data and data['funding-values-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#funding-values-table">{{ data['funding-values-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/funding-values">
+      <div class="govuk-form-group {%- if data and data['funding-values-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the estimated spend for each financial year?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Spending estimates should be in pounds (e.g £ 50000) and estimated at current prices. Future maintenance costs aren't required.
+          </p>
+          {% if data and data['funding-values-error'] %}
+            <p id="funding-values-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['funding-values-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="scroll-horz govuk-body-s">
+            <table class="govuk-table" id="funding-values-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Financial year</th>
+                  {% for source in fundingSources %}
+                    <th scope="col" class="govuk-table__header">{{ source | replace("-"," ") | capitalize }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for year in fundingYears %}
+                  <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">April {{ year }} to March {{ year + 1 }}</th>
+                    {% for source in fundingSources %}
+                      {% set existing = (data['funding-values'] and data['funding-values'][year] and data['funding-values'][year][source]) or '' %}
+                      <td class="govuk-table__cell">
+                        <label class="govuk-visually-hidden" for="funding-value-{{ year }}-{{ source }}">
+                          Amount for {{ source }} in {{ year }}
+                        </label>
+                        <input class="govuk-input govuk-input--width-10" id="funding-value-{{ year }}-{{ source }}" name="funding-value-{{ year }}-{{ source }}" type="text" value="{{ existing }}">
+                      </td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

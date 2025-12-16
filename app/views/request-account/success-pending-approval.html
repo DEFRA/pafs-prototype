@@ -1,0 +1,29 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% set pageName="Request submitted" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukPanel({ titleText: "Request submitted", html: "Your account request is being reviewed" }) }}
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-7">What happens next</h2>
+    <p class="govuk-body">Your account request has been submitted for review by an administrator.</p>
+    <p class="govuk-body">Once your account has been approved, you will receive an email with a link to set your account password and start using the service.</p>
+
+    {{ govukInsetText({ text: "Account approval usually takes 1-2 working days. You will be notified by email once your account has been reviewed." }) }}
+
+    <h2 class="govuk-heading-m">What you need to do</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Wait for the approval email from the administrator</li>
+      <li>Check your spam folder if you do not receive an email within 2 working days</li>
+      <li>Once approved, use the link in the email to set your password</li>
+      <li>Sign in to the service</li>
+    </ul>
+
+    <p class="govuk-body govuk-!-margin-top-8"><a href="/login" class="govuk-link">Return to sign in</a></p>
+  </div>
+</div>
+{% endblock %}

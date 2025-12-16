@@ -4,13 +4,4 @@
 // 
 
 // Add extra styles here
-
-// Variant 2: Align user navigation to the right
-.govuk-service-navigation__container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.govuk-service-navigation__list--end {
-  margin-left: auto;
-}
+@import 'responsive-table';

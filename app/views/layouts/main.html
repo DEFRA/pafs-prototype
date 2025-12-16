@@ -1,23 +1,128 @@
-{#
-For guidance on how to use layouts see:
-https://prototype-kit.service.gov.uk/docs/how-to-use-layouts
-#}
+{% extends "govuk-prototype-kit/layouts/govuk-branded.html" %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
-{% extends "govuk-prototype-kit/layouts/govuk-branded.njk" %}
+{% block header %}
+  {% if data.journeyType and data.userType %}
+    {% if data.journeyType == "general" %}
+      {{ govukHeader({
+        homepageUrl: "/proposal/proposals",
+        serviceUrl: "/proposal/proposals",
+        menuButtonText: "Profile",
+        menuButtonLabel: "Show or hide Profile menu",
+        navigationClasses: "govuk-header__navigation--end",
+        navigationLabel: "Profile",
+        navigationId: "profile-nav",
+        navigation: [
+          {
+            text: "Signed in as: " + (data.profile.name or "User"),
+            menuButtonText: "Show user menu",
+            menuButtonLabel: "Show user menu for " + (data.profile.name or "User")
+          },
+          {
+            href: "/journey-selection",
+            text: data.userType == "admin" and "Switch to Admin journey" or "",
+            attributes: { id: "switch-journey" }
+          },
+          {
+            href: "/sign-out",
+            text: "Sign out",
+            attributes: { id: "sign-out" }
+          }
+        ]
+      }) }}
+      {{ govukServiceNavigation({
+        serviceName: config.serviceNames.general,
+        serviceUrl: "/proposal/proposals",
+        menuButtonText: "Menu",
+        menuButtonLabel: "Show or hide service navigation menu",
+        navigationId: "service-nav",
+        navigation: [
+          { href: "/proposal/proposals", text: "Your proposals", active: pageName == "Your proposals" },
+          { href: "#", text: "Download All" },
+          { href: "#", text: "Archive" }
+        ]
+      }) }}
+    {% elif data.journeyType == "admin" %}
+      {{ govukHeader({
+        homepageUrl: "/admin/user-management-active",
+        menuButtonText: "Profile",
+        menuButtonLabel: "Show or hide Profile menu",
+        navigationClasses: "govuk-header__navigation--end",
+        navigationLabel: "Profile",
+        navigationId: "profile-nav",
+        navigation: [
+          {
+            text: "Signed in as: " + (data.profile.name or "PAF Admin"),
+            menuButtonText: "Show user menu",
+            menuButtonLabel: "Show user menu for " + (data.profile.name or "PAF Admin")
+          },
+          {
+            href: "/journey-selection",
+            text: "Switch to User journey",
+            attributes: { id: "switch-journey" }
+          },
+          {
+            href: "/sign-out",
+            text: "Sign out",
+            attributes: { id: "sign-out" }
+          }
+        ]
+      }) }}
+      {{ govukServiceNavigation({
+        serviceName: config.serviceNames.admin,
+        serviceUrl: "/admin/user-management-active",
+        menuButtonText: "Menu",
+        menuButtonLabel: "Show or hide service navigation menu",
+        navigationId: "service-nav",
+        navigation: [
+          { href: "/admin/user-management-active", text: "Users", active: pageName == "Users" },
+          { href: "/admin/projects", text: "Projects", active: pageName == "Projects" },
+          { href: "#", text: "Submissions" },
+          { href: "/admin/organisations", text: "Organisations" },
+          { href: "#", text: "Download Projects" },
+          { href: "#", text: "Download RMA" }
+        ]
+      }) }}
+    {% endif %}
+  {% else %}
+    {{ govukHeader({ homepageUrl: "/" }) }}
+    {{ govukServiceNavigation({
+      serviceName: config.serviceNames.general,
+      serviceUrl: "/"
+    }) }}
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+      {{ govukPhaseBanner({
+        tag: {
+          text: "BETA"
+        },
+        html: 'This is a new service. Help us improve it and <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/PAFSGDS/">give your feedback (opens in new tab)</a>.'
+      }) }}
+        {{ super() }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
 {% block footer %}
   {{ govukFooter({
     meta: {
+      html: '<p class="govuk-body-s">Contact the Defra IT Service Desk on <a href="tel:0800 8766458" class="govuk-footer__link">0800 8766458</a> or email <a href="mailto:pafs-support@environment-agency.gov.uk" class="govuk-footer__link">pafs-support@environment-agency.gov.uk</a></p>',
       items: [
-        {
-          href: "https://prototype-kit.service.gov.uk/docs/how-to-use-layouts",
-          text: "Manage your prototype"
-        },
-        {
-          href: "/manage-prototype/clear-data",
-          text: "Clear data"
-        }
+        { href: "/pages/privacy-notice", text: "Privacy" },
+        { href: "/pages/cookies", text: "Cookies" },
+        { href: "/pages/accessibility", text: "Accessibility" }
       ]
     }
   }) }}
+{% endblock %}
+
+{% block bodyStart %}
+  {% include "partials/cookie-banner.html" %}
 {% endblock %}

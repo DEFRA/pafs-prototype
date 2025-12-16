@@ -1,0 +1,53 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Users" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+
+    <h1 class="govuk-heading-xl">
+      Change additional RMA areas
+    </h1>
+
+    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-rma-additional-areas" novalidate>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Additional RMA areas (optional)
+            </h2>
+          </legend>
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            {% for ea in data.areasData.ea_areas or [] %}
+              {% for pso in ea.pso_areas or [] %}
+                {% for rma in pso.rma_areas or [] %}
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="additional-rma-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ rma.id }}" {{ 'checked' if rma.id in (data.currentUser.additionalAreas or []) }}>
+                    <label class="govuk-label govuk-checkboxes__label" for="additional-rma-areas-{{ loop.index }}">
+                      {{ rma.name }}
+                    </label>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save and continue
+        </button>
+        <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

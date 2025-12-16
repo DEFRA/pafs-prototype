@@ -1,0 +1,69 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% set pageName = "Select Your Role" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukInsetText({
+      html: '<p class="govuk-body"><strong>Note:</strong> This page is for prototype demonstration only. Role selection functionality will not be included in the real application.</p>'
+    }) }}
+
+    <h1 class="govuk-heading-xl">Select your role</h1>
+
+    <p class="govuk-body">
+      Choose the user type that best describes your responsibilities in the PAFS system.
+    </p>
+
+    <form action="/role-selection" method="post" novalidate>
+      {{ govukRadios({
+        name: "role",
+        fieldset: {
+          legend: {
+            text: "What is your user type?",
+            isPageHeading: false,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "ea",
+            text: "Environment Agency – Area Programme Team",
+            hint: {
+              text: "Allows you to view all records created within the boundary of your Area."
+            }
+          },
+          {
+            value: "pso",
+            text: "Environment Agency – Partnership & Strategic Overview Team",
+            hint: {
+              text: "Allows you to view and edit all records created within the boundary of your Team"
+            }
+          },
+          {
+            value: "rma",
+            text: "Risk Management Authority (RMA)",
+            hint: {
+              text: "Allows you to create, edit, and view all records created within the boundary of your RMA."
+            }
+          },
+          {
+            value: "admin",
+            text: "Admin",
+            hint: {
+              text: "Allows you to manage everything in the system."
+            }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
+    </form>
+  </div>
+</div>
+
+{% endblock %}

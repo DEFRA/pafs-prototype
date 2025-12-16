@@ -8,17 +8,32 @@
           "id": "pso1",
           "name": "PSO West of England",
           "rma_areas": [
-            { "id": "rma1", "name": "Bristol City Council" },
-            { "id": "rma2", "name": "Bath and North East Somerset Council" },
-            { "id": "rma3", "name": "South Gloucestershire Council" },
-            { "id": "rma4", "name": "North Somerset Council" }
+            {
+              "id": "rma1",
+              "name": "Bristol City Council"
+            },
+            {
+              "id": "rma2",
+              "name": "Bath and North East Somerset Council"
+            },
+            {
+              "id": "rma3",
+              "name": "South Gloucestershire Council"
+            },
+            {
+              "id": "rma4",
+              "name": "North Somerset Council"
+            }
           ]
         },
         {
           "id": "pso2",
           "name": "PSO Dorset",
           "rma_areas": [
-            { "id": "rma5", "name": "Dorset Council" },
+            {
+              "id": "rma5",
+              "name": "Dorset Council"
+            },
             {
               "id": "rma6",
               "name": "Bournemouth, Christchurch and Poole Council"
@@ -29,17 +44,32 @@
           "id": "pso3",
           "name": "PSO Somerset",
           "rma_areas": [
-            { "id": "rma7", "name": "Somerset Council" },
-            { "id": "rma8", "name": "Sedgemoor District Council" },
-            { "id": "rma9", "name": "Mendip District Council" }
+            {
+              "id": "rma7",
+              "name": "Somerset Council"
+            },
+            {
+              "id": "rma8",
+              "name": "Sedgemoor District Council"
+            },
+            {
+              "id": "rma9",
+              "name": "Mendip District Council"
+            }
           ]
         },
         {
           "id": "pso4",
           "name": "PSO Wiltshire",
           "rma_areas": [
-            { "id": "rma10", "name": "Wiltshire Council" },
-            { "id": "rma11", "name": "Swindon Borough Council" }
+            {
+              "id": "rma10",
+              "name": "Wiltshire Council"
+            },
+            {
+              "id": "rma11",
+              "name": "Swindon Borough Council"
+            }
           ]
         }
       ]
@@ -52,43 +82,88 @@
           "id": "pso5",
           "name": "PSO Greater London",
           "rma_areas": [
-            { "id": "rma12", "name": "London Borough of Richmond upon Thames" },
-            { "id": "rma13", "name": "London Borough of Kingston upon Thames" },
-            { "id": "rma14", "name": "City of London Corporation" },
+            {
+              "id": "rma12",
+              "name": "London Borough of Richmond upon Thames"
+            },
+            {
+              "id": "rma13",
+              "name": "London Borough of Kingston upon Thames"
+            },
+            {
+              "id": "rma14",
+              "name": "City of London Corporation"
+            },
             {
               "id": "rma15",
               "name": "London Borough of Hammersmith and Fulham"
             },
-            { "id": "rma16", "name": "London Borough of Wandsworth" },
-            { "id": "rma17", "name": "London Borough of Lambeth" },
-            { "id": "rma18", "name": "London Borough of Southwark" }
+            {
+              "id": "rma16",
+              "name": "London Borough of Wandsworth"
+            },
+            {
+              "id": "rma17",
+              "name": "London Borough of Lambeth"
+            },
+            {
+              "id": "rma18",
+              "name": "London Borough of Southwark"
+            }
           ]
         },
         {
           "id": "pso6",
           "name": "PSO Berkshire",
           "rma_areas": [
-            { "id": "rma19", "name": "Reading Borough Council" },
-            { "id": "rma20", "name": "Windsor and Maidenhead Council" },
-            { "id": "rma21", "name": "Wokingham Borough Council" },
-            { "id": "rma22", "name": "Bracknell Forest Council" }
+            {
+              "id": "rma19",
+              "name": "Reading Borough Council"
+            },
+            {
+              "id": "rma20",
+              "name": "Windsor and Maidenhead Council"
+            },
+            {
+              "id": "rma21",
+              "name": "Wokingham Borough Council"
+            },
+            {
+              "id": "rma22",
+              "name": "Bracknell Forest Council"
+            }
           ]
         },
         {
           "id": "pso7",
           "name": "PSO Buckinghamshire",
           "rma_areas": [
-            { "id": "rma23", "name": "Buckinghamshire Council" },
-            { "id": "rma24", "name": "Milton Keynes Council" }
+            {
+              "id": "rma23",
+              "name": "Buckinghamshire Council"
+            },
+            {
+              "id": "rma24",
+              "name": "Milton Keynes Council"
+            }
           ]
         },
         {
           "id": "pso8",
           "name": "PSO Oxfordshire",
           "rma_areas": [
-            { "id": "rma25", "name": "Oxfordshire County Council" },
-            { "id": "rma26", "name": "Oxford City Council" },
-            { "id": "rma27", "name": "Vale of White Horse District Council" }
+            {
+              "id": "rma25",
+              "name": "Oxfordshire County Council"
+            },
+            {
+              "id": "rma26",
+              "name": "Oxford City Council"
+            },
+            {
+              "id": "rma27",
+              "name": "Vale of White Horse District Council"
+            }
           ]
         }
       ]
@@ -101,9 +176,18 @@
           "id": "pso9",
           "name": "PSO Norfolk",
           "rma_areas": [
-            { "id": "rma28", "name": "Norfolk County Council" },
-            { "id": "rma29", "name": "Norwich City Council" },
-            { "id": "rma30", "name": "Great Yarmouth Borough Council" },
+            {
+              "id": "rma28",
+              "name": "Norfolk County Council"
+            },
+            {
+              "id": "rma29",
+              "name": "Norwich City Council"
+            },
+            {
+              "id": "rma30",
+              "name": "Great Yarmouth Borough Council"
+            },
             {
               "id": "rma31",
               "name": "King's Lynn and West Norfolk Borough Council"
@@ -114,39 +198,84 @@
           "id": "pso10",
           "name": "PSO Cambridgeshire",
           "rma_areas": [
-            { "id": "rma32", "name": "Cambridgeshire County Council" },
-            { "id": "rma33", "name": "Peterborough City Council" },
-            { "id": "rma34", "name": "Cambridge City Council" }
+            {
+              "id": "rma32",
+              "name": "Cambridgeshire County Council"
+            },
+            {
+              "id": "rma33",
+              "name": "Peterborough City Council"
+            },
+            {
+              "id": "rma34",
+              "name": "Cambridge City Council"
+            }
           ]
         },
         {
           "id": "pso11",
           "name": "PSO Suffolk",
           "rma_areas": [
-            { "id": "rma35", "name": "Suffolk County Council" },
-            { "id": "rma36", "name": "Ipswich Borough Council" },
-            { "id": "rma37", "name": "East Suffolk Council" },
-            { "id": "rma38", "name": "West Suffolk Council" }
+            {
+              "id": "rma35",
+              "name": "Suffolk County Council"
+            },
+            {
+              "id": "rma36",
+              "name": "Ipswich Borough Council"
+            },
+            {
+              "id": "rma37",
+              "name": "East Suffolk Council"
+            },
+            {
+              "id": "rma38",
+              "name": "West Suffolk Council"
+            }
           ]
         },
         {
           "id": "pso12",
           "name": "PSO Essex",
           "rma_areas": [
-            { "id": "rma39", "name": "Essex County Council" },
-            { "id": "rma40", "name": "Southend-on-Sea City Council" },
-            { "id": "rma41", "name": "Thurrock Council" },
-            { "id": "rma42", "name": "Colchester City Council" }
+            {
+              "id": "rma39",
+              "name": "Essex County Council"
+            },
+            {
+              "id": "rma40",
+              "name": "Southend-on-Sea City Council"
+            },
+            {
+              "id": "rma41",
+              "name": "Thurrock Council"
+            },
+            {
+              "id": "rma42",
+              "name": "Colchester City Council"
+            }
           ]
         },
         {
           "id": "pso13",
           "name": "PSO Lincolnshire",
           "rma_areas": [
-            { "id": "rma43", "name": "Lincolnshire County Council" },
-            { "id": "rma44", "name": "North Lincolnshire Council" },
-            { "id": "rma45", "name": "North East Lincolnshire Council" },
-            { "id": "rma46", "name": "Boston Borough Council" }
+            {
+              "id": "rma43",
+              "name": "Lincolnshire County Council"
+            },
+            {
+              "id": "rma44",
+              "name": "North Lincolnshire Council"
+            },
+            {
+              "id": "rma45",
+              "name": "North East Lincolnshire Council"
+            },
+            {
+              "id": "rma46",
+              "name": "Boston Borough Council"
+            }
           ]
         }
       ]
@@ -159,38 +288,80 @@
           "id": "pso14",
           "name": "PSO Birmingham and Black Country",
           "rma_areas": [
-            { "id": "rma47", "name": "Birmingham City Council" },
-            { "id": "rma48", "name": "Sandwell Metropolitan Borough Council" },
-            { "id": "rma49", "name": "Dudley Metropolitan Borough Council" },
-            { "id": "rma50", "name": "Walsall Council" },
-            { "id": "rma51", "name": "Wolverhampton City Council" }
+            {
+              "id": "rma47",
+              "name": "Birmingham City Council"
+            },
+            {
+              "id": "rma48",
+              "name": "Sandwell Metropolitan Borough Council"
+            },
+            {
+              "id": "rma49",
+              "name": "Dudley Metropolitan Borough Council"
+            },
+            {
+              "id": "rma50",
+              "name": "Walsall Council"
+            },
+            {
+              "id": "rma51",
+              "name": "Wolverhampton City Council"
+            }
           ]
         },
         {
           "id": "pso15",
           "name": "PSO Staffordshire",
           "rma_areas": [
-            { "id": "rma52", "name": "Staffordshire County Council" },
-            { "id": "rma53", "name": "Stoke-on-Trent City Council" },
-            { "id": "rma54", "name": "Stafford Borough Council" }
+            {
+              "id": "rma52",
+              "name": "Staffordshire County Council"
+            },
+            {
+              "id": "rma53",
+              "name": "Stoke-on-Trent City Council"
+            },
+            {
+              "id": "rma54",
+              "name": "Stafford Borough Council"
+            }
           ]
         },
         {
           "id": "pso16",
           "name": "PSO Nottinghamshire",
           "rma_areas": [
-            { "id": "rma55", "name": "Nottinghamshire County Council" },
-            { "id": "rma56", "name": "Nottingham City Council" },
-            { "id": "rma57", "name": "Newark and Sherwood District Council" }
+            {
+              "id": "rma55",
+              "name": "Nottinghamshire County Council"
+            },
+            {
+              "id": "rma56",
+              "name": "Nottingham City Council"
+            },
+            {
+              "id": "rma57",
+              "name": "Newark and Sherwood District Council"
+            }
           ]
         },
         {
           "id": "pso17",
           "name": "PSO Leicestershire",
           "rma_areas": [
-            { "id": "rma58", "name": "Leicestershire County Council" },
-            { "id": "rma59", "name": "Leicester City Council" },
-            { "id": "rma60", "name": "Rutland County Council" }
+            {
+              "id": "rma58",
+              "name": "Leicestershire County Council"
+            },
+            {
+              "id": "rma59",
+              "name": "Leicester City Council"
+            },
+            {
+              "id": "rma60",
+              "name": "Rutland County Council"
+            }
           ]
         }
       ]
@@ -203,118 +374,44 @@
           "id": "pso18",
           "name": "PSO Greater Manchester",
           "rma_areas": [
-            { "id": "rma61", "name": "Manchester City Council" },
-            { "id": "rma62", "name": "Salford City Council" },
-            { "id": "rma63", "name": "Bolton Council" },
-            { "id": "rma64", "name": "Bury Council" },
-            { "id": "rma65", "name": "Rochdale Borough Council" }
+            {
+              "id": "rma61",
+              "name": "Greater Manchester Combined Authority"
+            },
+            {
+              "id": "rma62",
+              "name": "Manchester City Council"
+            },
+            {
+              "id": "rma63",
+              "name": "Salford City Council"
+            },
+            {
+              "id": "rma64",
+              "name": "Bolton Council"
+            }
           ]
         },
         {
           "id": "pso19",
           "name": "PSO Merseyside",
           "rma_areas": [
-            { "id": "rma66", "name": "Liverpool City Council" },
-            { "id": "rma67", "name": "Wirral Council" },
-            { "id": "rma68", "name": "Sefton Council" },
-            { "id": "rma69", "name": "Knowsley Council" }
-          ]
-        },
-        {
-          "id": "pso20",
-          "name": "PSO Lancashire",
-          "rma_areas": [
-            { "id": "rma70", "name": "Lancashire County Council" },
-            { "id": "rma71", "name": "Blackpool Council" },
-            { "id": "rma72", "name": "Blackburn with Darwen Borough Council" },
-            { "id": "rma73", "name": "Preston City Council" }
-          ]
-        },
-        {
-          "id": "pso21",
-          "name": "PSO Cumbria",
-          "rma_areas": [
-            { "id": "rma74", "name": "Cumberland Council" },
-            { "id": "rma75", "name": "Westmorland and Furness Council" },
-            { "id": "rma76", "name": "Carlisle City Council" }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ea6",
-      "name": "Yorkshire",
-      "pso_areas": [
-        {
-          "id": "pso22",
-          "name": "PSO West Yorkshire",
-          "rma_areas": [
-            { "id": "rma77", "name": "Leeds City Council" },
-            { "id": "rma78", "name": "Bradford Council" },
-            { "id": "rma79", "name": "Wakefield Council" },
-            { "id": "rma80", "name": "Kirklees Council" },
-            { "id": "rma81", "name": "Calderdale Council" }
-          ]
-        },
-        {
-          "id": "pso23",
-          "name": "PSO South Yorkshire",
-          "rma_areas": [
-            { "id": "rma82", "name": "Sheffield City Council" },
-            { "id": "rma83", "name": "Doncaster Council" },
-            { "id": "rma84", "name": "Rotherham Metropolitan Borough Council" },
-            { "id": "rma85", "name": "Barnsley Metropolitan Borough Council" }
-          ]
-        },
-        {
-          "id": "pso24",
-          "name": "PSO North Yorkshire",
-          "rma_areas": [
-            { "id": "rma86", "name": "North Yorkshire Council" },
-            { "id": "rma87", "name": "York City Council" },
-            { "id": "rma88", "name": "Scarborough Borough Council" }
-          ]
-        },
-        {
-          "id": "pso25",
-          "name": "PSO East Riding",
-          "rma_areas": [
-            { "id": "rma89", "name": "East Riding of Yorkshire Council" },
-            { "id": "rma90", "name": "Kingston upon Hull City Council" }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ea7",
-      "name": "North East",
-      "pso_areas": [
-        {
-          "id": "pso26",
-          "name": "PSO Tyne and Wear",
-          "rma_areas": [
-            { "id": "rma91", "name": "Newcastle upon Tyne City Council" },
-            { "id": "rma92", "name": "Gateshead Council" },
-            { "id": "rma93", "name": "Sunderland City Council" },
-            { "id": "rma94", "name": "North Tyneside Council" },
-            { "id": "rma95", "name": "South Tyneside Council" }
-          ]
-        },
-        {
-          "id": "pso27",
-          "name": "PSO Durham and Tees Valley",
-          "rma_areas": [
-            { "id": "rma96", "name": "Durham County Council" },
-            { "id": "rma97", "name": "Darlington Borough Council" },
-            { "id": "rma98", "name": "Middlesbrough Council" },
-            { "id": "rma99", "name": "Stockton-on-Tees Borough Council" }
-          ]
-        },
-        {
-          "id": "pso28",
-          "name": "PSO Northumberland",
-          "rma_areas": [
-            { "id": "rma100", "name": "Northumberland County Council" }
+            {
+              "id": "rma65",
+              "name": "Liverpool City Council"
+            },
+            {
+              "id": "rma66",
+              "name": "Wirral Borough Council"
+            },
+            {
+              "id": "rma67",
+              "name": "Sefton Council"
+            },
+            {
+              "id": "rma68",
+              "name": "St Helens Borough Council"
+            }
           ]
         }
       ]

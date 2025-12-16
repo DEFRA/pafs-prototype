@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Adur District Council",
+    "type": "RMA",
+    "identifierCode": "ADR001",
+    "authorityCode": "AC001",
+    "associatedPso": "PSO Greater Manchester",
+    "endDate": null
+  },
+  {
+    "id": 2,
+    "name": "Liverpool City Council",
+    "type": "RMA",
+    "identifierCode": "LIV001",
+    "authorityCode": "AC002",
+    "associatedPso": "PSO Greater Manchester",
+    "endDate": null
+  },
+  {
+    "id": 3,
+    "name": "PSO Greater Manchester",
+    "type": "PSO",
+    "identifierCode": "PSO001",
+    "associatedEaArea": "Environment Agency - North West",
+    "rfccCode": "RFCC001",
+    "endDate": null
+  },
+  {
+    "id": 4,
+    "name": "Environment Agency - Thames",
+    "type": "Authority",
+    "identifierCode": "EA001",
+    "authorityCode": "EAT001",
+    "authorityType": "Area",
+    "endDate": null
+  },
+  {
+    "id": 5,
+    "name": "Environment Agency - North West",
+    "type": "Authority",
+    "identifierCode": "EA002",
+    "authorityCode": "EANW001",
+    "authorityType": "Area",
+    "endDate": null
+  },
+  {
+    "id": 6,
+    "name": "Arun District Council",
+    "type": "RMA",
+    "identifierCode": "ARN001",
+    "authorityCode": "AC003",
+    "associatedPso": "PSO Greater Manchester",
+    "endDate": null
+  }
+]

@@ -1,108 +1,98 @@
-{% extends "layouts/admin-variant1.html" %} {% set pageName="Add a RMA" %} {%
-block content %} {% from "govuk/components/error-summary/macro.njk" import
-govukErrorSummary %} {% if error %} {{ govukErrorSummary({ titleText: "There is
-a problem", errorList: [ { text: "Name of organisation can't be blank", href:
-"#organisation-name" } if error == 'organisation-name-empty', { text:
-"Identifier code can't be blank", href: "#identifier-code" } if error ==
-'identifier-code-empty', { text: "Authority code can't be blank", href:
-"#authority-code" } if error == 'authority-code-empty', { text: "Associated PSO
-can't be blank", href: "#associated-pso" } if error == 'associated-pso-empty' ]
-}) }} {% endif %}
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-<h1 class="govuk-heading-xl">Add a RMA</h1>
+{% set pageName="Add a RMA" %}
 
-<form method="post" action="/admin/organisations/add-rma" class="govuk-form">
-  <div
-    class="govuk-form-group {% if error == 'organisation-name-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="organisation-name"
-      >Name of organisation</label
-    >
-    {% if error == 'organisation-name-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Name of organisation
-      can't be blank
-    </p>
-    {% endif %}
-    <input
-      class="govuk-input govuk-!-width-two-thirds {% if error == 'organisation-name-empty' %}govuk-input--error{% endif %}"
-      id="organisation-name"
-      name="organisation-name"
-      type="text"
-    />
+{% block beforeContent %}
+  <a href="/admin/organisations/add" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+  {% set errorArray = error.split(',') %}
+  {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: [
+      { text: "Enter the name of organisation", href: "#organisation-name" } if "organisation-name-empty" in errorArray,
+      { text: "Enter the identifier code", href: "#identifier-code" } if "identifier-code-empty" in errorArray,
+      { text: "Select an authority code", href: "#authority-code" } if "authority-code-empty" in errorArray,
+      { text: "Select an associated PSO", href: "#associated-pso" } if "associated-pso-empty" in errorArray
+    ] | reject("equalto", false) | list
+  }) }}
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Add a RMA</h1>
+
+    <form method="post" action="/admin/organisations/add-rma" novalidate>
+      {% if error %}
+        {% set errorArray = error.split(',') %}
+      {% endif %}
+
+      <div class="govuk-form-group {% if error and 'organisation-name-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="organisation-name">Name of organisation</label>
+        {% if error and 'organisation-name-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter the name of organisation
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'organisation-name-empty' in errorArray %}govuk-input--error{% endif %}" id="organisation-name" name="organisation-name" type="text" value="{{ data['organisation-name'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and 'identifier-code-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="identifier-code">Identifier code</label>
+        {% if error and 'identifier-code-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter the identifier code
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'identifier-code-empty' in errorArray %}govuk-input--error{% endif %}" id="identifier-code" name="identifier-code" type="text" value="{{ data['identifier-code'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and 'authority-code-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="authority-code">Authority code</label>
+        {% if error and 'authority-code-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Select an authority code
+          </p>
+        {% endif %}
+        <select class="govuk-select govuk-!-width-two-thirds {% if error and 'authority-code-empty' in errorArray %}govuk-select--error{% endif %}" id="authority-code" name="authority-code">
+          <option value="">Select an authority code</option>
+          <option value="AC001" {% if data['authority-code'] == 'AC001' %}selected{% endif %}>AC001</option>
+          <option value="AC002" {% if data['authority-code'] == 'AC002' %}selected{% endif %}>AC002</option>
+          <option value="AC003" {% if data['authority-code'] == 'AC003' %}selected{% endif %}>AC003</option>
+        </select>
+      </div>
+
+      <div class="govuk-form-group {% if error and 'associated-pso-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="associated-pso">Associated PSO</label>
+        {% if error and 'associated-pso-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Select an associated PSO
+          </p>
+        {% endif %}
+        <select class="govuk-select govuk-!-width-two-thirds {% if error and 'associated-pso-empty' in errorArray %}govuk-select--error{% endif %}" id="associated-pso" name="associated-pso">
+          <option value="">Select an associated PSO</option>
+          <option value="PSO Greater Manchester" {% if data['associated-pso'] == 'PSO Greater Manchester' %}selected{% endif %}>PSO Greater Manchester</option>
+          <option value="PSO South East" {% if data['associated-pso'] == 'PSO South East' %}selected{% endif %}>PSO South East</option>
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="end-date">
+          End date if available
+          <span class="govuk-hint">Optional</span>
+        </label>
+        <input class="govuk-input govuk-input--width-10" id="end-date" name="end-date" type="date" value="{{ data['end-date'] }}">
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+    </form>
   </div>
-
-  <div
-    class="govuk-form-group {% if error == 'identifier-code-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="identifier-code">Identifier code</label>
-    {% if error == 'identifier-code-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Identifier code can't be
-      blank
-    </p>
-    {% endif %}
-    <input
-      class="govuk-input govuk-!-width-two-thirds {% if error == 'identifier-code-empty' %}govuk-input--error{% endif %}"
-      id="identifier-code"
-      name="identifier-code"
-      type="text"
-    />
-  </div>
-
-  <div
-    class="govuk-form-group {% if error == 'authority-code-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="authority-code">Authority code</label>
-    {% if error == 'authority-code-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Authority code can't be
-      blank
-    </p>
-    {% endif %}
-    <select
-      class="govuk-select govuk-!-width-two-thirds {% if error == 'authority-code-empty' %}govuk-input--error{% endif %}"
-      id="authority-code"
-      name="authority-code"
-    >
-      <option value="">Select an authority code</option>
-      <option value="code1">Code 1</option>
-      <option value="code2">Code 2</option>
-    </select>
-  </div>
-
-  <div
-    class="govuk-form-group {% if error == 'associated-pso-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="associated-pso">Associated PSO</label>
-    {% if error == 'associated-pso-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Associated PSO can't be
-      blank
-    </p>
-    {% endif %}
-    <select
-      class="govuk-select govuk-!-width-two-thirds {% if error == 'associated-pso-empty' %}govuk-input--error{% endif %}"
-      id="associated-pso"
-      name="associated-pso"
-    >
-      <option value="">Select an associated PSO</option>
-      <option value="pso1">PSO 1</option>
-      <option value="pso2">PSO 2</option>
-    </select>
-  </div>
-
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="end-date">End date if available</label>
-    <input
-      class="govuk-input govuk-input--width-10"
-      id="end-date"
-      name="end-date"
-      type="date"
-    />
-  </div>
-
-  <button class="govuk-button" type="submit">Continue</button>
-</form>
+</div>
 
 {% endblock %}

@@ -1,0 +1,327 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Users" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+
+    <h1 class="govuk-heading-xl">
+      Change areas
+    </h1>
+
+    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-areas" novalidate>
+
+      {# Areas based on responsibility #}
+      {% if data.currentUser.responsibility == 'ea' %}
+        {# EA User: Select main EA area and additional EA areas #}
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="main-ea-area">
+            Main EA area
+          </label>
+          <select class="govuk-select" id="main-ea-area" name="mainArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.eaAreas or [] %}
+              <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          {% if data.currentUser.responsibility == 'ea' %}
+            <h2 class="govuk-heading-m">EA responsibility</h2>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="main-ea-area">
+                Main EA area
+              </label>
+              <select class="govuk-select" id="main-ea-area" name="mainArea">
+                <option value="">Select an area</option>
+                {% for area in data.areasData.eaAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                  <h2 class="govuk-fieldset__heading">
+                    Additional EA areas (optional)
+                  </h2>
+                </legend>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  {% for area in data.areasData.eaAreas or [] %}
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="additional-ea-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.additionalAreas or []) }}>
+                      <label class="govuk-label govuk-checkboxes__label" for="additional-ea-areas-{{ loop.index }}">
+                        {{ area.name }}
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
+
+          {% elif data.currentUser.responsibility == 'pso' %}
+            <h2 class="govuk-heading-m">PSO responsibility</h2>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="ea-area">
+                EA area
+              </label>
+              <select class="govuk-select" id="ea-area" name="eaArea">
+                <option value="">Select an area</option>
+                {% for area in data.areasData.eaAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.eaArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="main-psp-area">
+                Main PSO area
+              </label>
+              <select class="govuk-select" id="main-psp-area" name="mainArea">
+                <option value="">Select an area</option>
+                {% for area in data.areasData.psoAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                  <h2 class="govuk-fieldset__heading">
+                    Additional PSO areas (optional)
+                  </h2>
+                </legend>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  {% for area in data.areasData.psoAreas or [] %}
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="additional-pso-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.additionalAreas or []) }}>
+                      <label class="govuk-label govuk-checkboxes__label" for="additional-pso-areas-{{ loop.index }}">
+                        {{ area.name }}
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
+
+          {% elif data.currentUser.responsibility == 'rma' %}
+            <h2 class="govuk-heading-m">RMA responsibility</h2>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="ea-area-rma">
+                EA area
+              </label>
+              <select class="govuk-select" id="ea-area-rma" name="eaArea">
+                <option value="">Select an area</option>
+                {% for area in data.areasData.eaAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.eaArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="pso-area-rma">
+                PSO area
+              </label>
+              <select class="govuk-select" id="pso-area-rma" name="psoArea">
+                <option value="">Select an area</option>
+                {% for area in data.areasData.psoAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.psoArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-label--m" for="rma-area">
+                Main RMA
+              </label>
+              <select class="govuk-select" id="rma-area" name="mainArea">
+                <option value="">Select an RMA</option>
+                {% for area in data.areasData.rmaAreas or [] %}
+                  <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                  <h2 class="govuk-fieldset__heading">
+                    Additional RMA areas (optional)
+                  </h2>
+                </legend>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  {% for area in data.areasData.rmaAreas or [] %}
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="additional-rma-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.additionalAreas or []) }}>
+                      <label class="govuk-label govuk-checkboxes__label" for="additional-rma-areas-{{ loop.index }}">
+                        {{ area.name }}
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
+
+          {% endif %}
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
+        {# EA User: Select main EA area and additional EA areas #}
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="main-ea-area">
+            Main EA area
+          </label>
+          <select class="govuk-select" id="main-ea-area" name="mainArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.eaAreas or [] %}
+              <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h2 class="govuk-fieldset__heading">
+                Additional EA areas (optional)
+              </h2>
+            </legend>
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+              {% for area in data.areasData.eaAreas or [] %}
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="additional-ea-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.additionalAreas or []) }}>
+                  <label class="govuk-label govuk-checkboxes__label" for="additional-ea-areas-{{ loop.index }}">
+                    {{ area.name }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
+
+      {% elif data.currentUser.responsibility == 'pso' %}
+        {# PSO User: Select EA area, main PSO area, additional PSO areas #}
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="ea-area">
+            EA area
+          </label>
+          <select class="govuk-select" id="ea-area" name="eaArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.eaAreas or [] %}
+              <option value="{{ area.id }}" {{ 'selected' if data.currentUser.eaArea == area.id }}>{{ area.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="main-pso-area">
+            Main PSO area
+          </label>
+          <select class="govuk-select" id="main-pso-area" name="mainArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.psoAreas or [] %}
+              {% if not data.currentUser.eaArea or area.eaAreaId == data.currentUser.eaArea %}
+                <option value="{{ area.id }}" {{ 'selected' if data.currentUser.mainArea == area.id }}>{{ area.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h2 class="govuk-fieldset__heading">
+                Additional PSO areas (optional)
+              </h2>
+            </legend>
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+              {% for area in data.areasData.psoAreas or [] %}
+                {% if not data.currentUser.eaArea or area.eaAreaId == data.currentUser.eaArea %}
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="additional-pso-areas-{{ loop.index }}" name="additionalAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.additionalAreas or []) }}>
+                    <label class="govuk-label govuk-checkboxes__label" for="additional-pso-areas-{{ loop.index }}">
+                      {{ area.name }}
+                    </label>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
+
+      {% elif data.currentUser.responsibility == 'rma' %}
+        {# RMA User: Select EA area, PSO area, RMA #}
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="ea-area-rma">
+            EA area
+          </label>
+          <select class="govuk-select" id="ea-area-rma" name="eaArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.eaAreas or [] %}
+              <option value="{{ area.id }}" {{ 'selected' if data.currentUser.eaArea == area.id }}>{{ area.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="pso-area">
+            PSO area
+          </label>
+          <select class="govuk-select" id="pso-area" name="psoArea">
+            <option value="">Select an area</option>
+            {% for area in data.areasData.psoAreas or [] %}
+              {% if not data.currentUser.eaArea or area.eaAreaId == data.currentUser.eaArea %}
+                <option value="{{ area.id }}" {{ 'selected' if data.currentUser.psoArea == area.id }}>{{ area.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--m" for="rma">
+            RMA
+          </label>
+          <select class="govuk-select" id="rma" name="mainArea">
+            <option value="">Select an RMA</option>
+            {% for org in data.organisationsData or [] %}
+              {% if org.type == 'RMA' %}
+                {% if not data.currentUser.psoArea or org.psoAreaId == data.currentUser.psoArea %}
+                  <option value="{{ org.id }}" {{ 'selected' if data.currentUser.mainArea == org.id }}>{{ org.name }}</option>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+      {% endif %}
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save and continue
+        </button>
+        <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

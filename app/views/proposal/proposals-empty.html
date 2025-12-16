@@ -1,0 +1,52 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Your proposals" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      Your proposals
+    </h1>
+
+    <div class="govuk-inset-text">
+      For submission deadlines please contact your local partnership and strategic overview officer.
+    </div>
+
+    <form method="get" action="/general/proposals" class="govuk-!-margin-bottom-6">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="project-search">
+          Search your proposals
+        </label>
+        <div class="govuk-grid-row govuk-!-margin-top-1">
+          <div class="govuk-grid-column-two-thirds">
+            <input class="govuk-input" id="project-search" name="q" type="text" placeholder="Enter a project number or name">
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <button class="govuk-button govuk-!-margin-top-0" data-module="govuk-button" type="submit">
+              Search
+            </button>
+          </div>
+        </div>
+        <input type="hidden" name="variant" value="4">
+      </div>
+    </form>
+
+    {{ govukButton({
+      text: "Create a new proposal",
+      href: "/general/create-proposal"
+    }) }}
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h2 class="govuk-heading-m">
+      No projects found
+    </h2>
+    <p class="govuk-body">
+      You do not have any proposals yet.
+    </p>
+
+    <p class="govuk-body">

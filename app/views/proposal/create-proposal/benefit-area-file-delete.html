@@ -1,0 +1,49 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Delete shapefile" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <p class="govuk-body">
+      <a href="/proposal/create-proposal/benefit-area-file-uploaded" class="govuk-link">Back</a>
+    </p>
+
+    <h1 class="govuk-heading-l">Are you sure you want to delete this shapefile?</h1>
+
+    <p class="govuk-body">{{ data['benefit-area-file'] or 'magic_graphics1.zip' }}</p>
+
+    <form method="post" action="/proposal/create-proposal/benefit-area-file-delete">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            Choose an option
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="confirmDelete-yes" name="confirmDelete" type="radio" value="yes">
+              <label class="govuk-label govuk-radios__label" for="confirmDelete-yes">
+                Yes, delete this file
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="confirmDelete-no" name="confirmDelete" type="radio" value="no">
+              <label class="govuk-label govuk-radios__label" for="confirmDelete-no">
+                No, keep this file
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

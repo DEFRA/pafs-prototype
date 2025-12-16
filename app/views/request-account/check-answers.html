@@ -1,0 +1,207 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Check your details - Request an account" %}
+
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set responsibility = data['responsibility'] %}
+
+{% macro getAreaName(areaId, areaType) %}
+  {% if areaType == 'ea' %}
+    {% for ea in eaAreas %}
+      {% if ea.id == areaId %}{{ ea.name }}{% endif %}
+    {% endfor %}
+  {% elif areaType == 'pso' %}
+    {% for ea in eaAreas %}
+      {% for pso in ea.pso_areas %}
+        {% if pso.id == areaId %}{{ pso.name }}{% endif %}
+      {% endfor %}
+    {% endfor %}
+  {% elif areaType == 'rma' %}
+    {% for ea in eaAreas %}
+      {% for pso in ea.pso_areas %}
+        {% for rma in pso.rma_areas %}
+          {% if rma.id == areaId %}{{ rma.name }}{% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% block beforeContent %}
+  {% if responsibility == 'ea' %}
+    <a href="/request-account/ea-additional-areas" class="govuk-back-link">Back</a>
+  {% elif responsibility == 'pso' %}
+    <a href="/request-account/pso-additional-areas" class="govuk-back-link">Back</a>
+  {% elif responsibility == 'rma' %}
+    <a href="/request-account/rma-additional-areas" class="govuk-back-link">Back</a>
+  {% else %}
+    <a href="/request-account/details" class="govuk-back-link">Back</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Check your details</h1>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Personal details</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/request-account/details">
+              Change<span class="govuk-visually-hidden"> personal details</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">First name</dt>
+            <dd class="govuk-summary-list__value">{{ data['firstName'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Last name</dt>
+            <dd class="govuk-summary-list__value">{{ data['lastName'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Email address</dt>
+            <dd class="govuk-summary-list__value">{{ data['email'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Telephone number</dt>
+            <dd class="govuk-summary-list__value">{{ data['telephone'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Organisation</dt>
+            <dd class="govuk-summary-list__value">{{ data['organisation'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Job title</dt>
+            <dd class="govuk-summary-list__value">{{ data['jobTitle'] or 'Not provided' }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Responsibility</dt>
+            <dd class="govuk-summary-list__value">
+              {% if responsibility == 'ea' %}
+                Environment Agency – Area Programme Team
+              {% elif responsibility == 'pso' %}
+                Environment Agency – Partnership &amp; Strategic Overview Team
+              {% elif responsibility == 'rma' %}
+                Risk Management Authority (RMA)
+              {% else %}
+                Not provided
+              {% endif %}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    {% if responsibility %}
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Area selection</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          {% if responsibility == 'ea' %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Main EA area</dt>
+              <dd class="govuk-summary-list__value">{{ data['mainAreaName'] or getAreaName(data['mainArea'], 'ea') or 'Not selected' }}</dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/ea-main-area">Change<span class="govuk-visually-hidden"> main EA area</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Additional EA areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['additionalAreasNames'] and data['additionalAreasNames'].length > 0 %}
+                  {{ data['additionalAreasNames'] | join('<br>') | safe }}
+                {% elif data['additionalAreas'] and data['additionalAreas'].length > 0 %}
+                  {% for areaId in data['additionalAreas'] %}{{ getAreaName(areaId, 'ea') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}None selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/ea-additional-areas">Change<span class="govuk-visually-hidden"> additional EA areas</span></a></dd>
+            </div>
+          {% elif responsibility == 'pso' %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">EA areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['psoEaAreasNames'] and data['psoEaAreasNames'].length > 0 %}
+                  {{ data['psoEaAreasNames'] | join(',<br>') | safe }}
+                {% elif data['psoEaAreas'] and data['psoEaAreas'].length > 0 %}
+                  {% for areaId in data['psoEaAreas'] %}{{ getAreaName(areaId, 'ea') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}Not selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/pso-ea-areas">Change<span class="govuk-visually-hidden"> EA areas</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Main PSO area</dt>
+              <dd class="govuk-summary-list__value">{{ data['mainAreaName'] or getAreaName(data['mainArea'], 'pso') or 'Not selected' }}</dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/pso-main-area">Change<span class="govuk-visually-hidden"> main PSO area</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Additional PSO areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['additionalAreasNames'] and data['additionalAreasNames'].length > 0 %}
+                  {{ data['additionalAreasNames'] | join('<br>') | safe }}
+                {% elif data['additionalAreas'] and data['additionalAreas'].length > 0 %}
+                  {% for areaId in data['additionalAreas'] %}{{ getAreaName(areaId, 'pso') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}None selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/pso-additional-areas">Change<span class="govuk-visually-hidden"> additional PSO areas</span></a></dd>
+            </div>
+          {% elif responsibility == 'rma' %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">EA areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['rmaEaAreasNames'] and data['rmaEaAreasNames'].length > 0 %}
+                  {{ data['rmaEaAreasNames'] | join(',<br>') | safe }}
+                {% elif data['rmaEaAreas'] and data['rmaEaAreas'].length > 0 %}
+                  {% for areaId in data['rmaEaAreas'] %}{{ getAreaName(areaId, 'ea') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}Not selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/rma-ea-areas">Change<span class="govuk-visually-hidden"> EA areas</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">PSO areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['rmaPsoAreasNames'] and data['rmaPsoAreasNames'].length > 0 %}
+                  {{ data['rmaPsoAreasNames'] | join(',<br>') | safe }}
+                {% elif data['rmaPsoAreas'] and data['rmaPsoAreas'].length > 0 %}
+                  {% for areaId in data['rmaPsoAreas'] %}{{ getAreaName(areaId, 'pso') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}Not selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/rma-pso-areas">Change<span class="govuk-visually-hidden"> PSO areas</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Main RMA area</dt>
+              <dd class="govuk-summary-list__value">{{ data['mainAreaName'] or getAreaName(data['mainArea'], 'rma') or 'Not selected' }}</dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/rma-main-area">Change<span class="govuk-visually-hidden"> main RMA area</span></a></dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Additional RMA areas</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['additionalAreasNames'] and data['additionalAreasNames'].length > 0 %}
+                  {{ data['additionalAreasNames'] | join(',<br>') | safe }}
+                {% elif data['additionalAreas'] and data['additionalAreas'].length > 0 %}
+                  {% for areaId in data['additionalAreas'] %}{{ getAreaName(areaId, 'rma') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                {% else %}None selected{% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/request-account/rma-additional-areas">Change<span class="govuk-visually-hidden"> additional RMA areas</span></a></dd>
+            </div>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+    {% endif %}
+
+    <p class="govuk-body">By submitting this request you are confirming that, to the best of your knowledge, the details you are providing are correct.</p>
+
+    <form action="/request-account/check-answers" method="post">
+      <button type="submit" class="govuk-button" data-module="govuk-button">Confirm and send</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Users" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+
+    <h1 class="govuk-heading-xl">
+      Change PSO areas
+    </h1>
+
+    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-rma-pso-areas" novalidate>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              PSO areas
+            </h2>
+          </legend>
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            {% for ea in data.areasData.ea_areas or [] %}
+              {% for pso in ea.pso_areas or [] %}
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="rma-pso-areas-{{ loop.index }}" name="rmaPsoAreas" type="checkbox" value="{{ pso.id }}" {{ 'checked' if pso.id in (data.currentUser.rmaPsoAreas or []) }}>
+                  <label class="govuk-label govuk-checkboxes__label" for="rma-pso-areas-{{ loop.index }}">
+                    {{ pso.name }}
+                  </label>
+                </div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save and continue
+        </button>
+        <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% if not data.cookiesAccepted %}
+<div class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on PAFS">
+  <div class="govuk-cookie-banner__message govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Project Application and Funding Service</h2>
+        <div class="govuk-cookie-banner__content">
+          <p class="govuk-body">We use some essential cookies to make this service work.</p>
+          <p class="govuk-body">We'd also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+        </div>
+      </div>
+    </div>
+    <div class="govuk-button-group">
+      <button type="button" class="govuk-button" data-accept-cookies="true">
+        Accept analytics cookies
+      </button>
+      <button type="button" class="govuk-button govuk-button--secondary" data-accept-cookies="false">
+        Reject analytics cookies
+      </button>
+      <a class="govuk-link" href="/pages/cookies">View cookies</a>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if cookies_preferences_set cookie exists - if so, hide banner immediately
+    const cookiePreferencesSet = document.cookie.includes('cookies_preferences_set=yes');
+    if (cookiePreferencesSet) {
+      const banner = document.querySelector('.govuk-cookie-banner');
+      if (banner) {
+        banner.style.display = 'none';
+      }
+      return;
+    }
+
+    const acceptButtons = document.querySelectorAll('[data-accept-cookies]');
+    acceptButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const accepted = this.getAttribute('data-accept-cookies') === 'true';
+        // Set cookie preference
+        const cookieValue = accepted ? 'accepted' : 'rejected';
+        document.cookie = 'cookies_policy=' + cookieValue + '; Path=/; Max-Age=31536000; SameSite=Lax';
+        document.cookie = 'cookies_preferences_set=yes; Path=/; Max-Age=31536000; SameSite=Lax';
+        
+        // Mark as accepted in session
+        fetch('/set-cookie-preference', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ accepted: accepted })
+        }).then(() => {
+          // Hide banner and show confirmation
+          const banner = document.querySelector('.govuk-cookie-banner');
+          const confirmationDiv = document.createElement('div');
+          confirmationDiv.className = 'govuk-cookie-banner govuk-cookie-banner__confirmation';
+          confirmationDiv.setAttribute('role', 'alert');
+          confirmationDiv.setAttribute('data-nosnippet', '');
+          confirmationDiv.innerHTML = `
+            <div class="govuk-cookie-banner__message govuk-width-container">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                  <div class="govuk-cookie-banner__content">
+                    <p class="govuk-body">You've set your cookie preferences. You can <a href="/pages/cookies/edit" class="govuk-link">change your cookie settings</a> at any time.</p>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="govuk-cookie-banner__hide-button" aria-label="Hide cookies message">Hide this message</button>
+            </div>
+          `;
+          
+          banner.replaceWith(confirmationDiv);
+          
+          document.querySelector('.govuk-cookie-banner__hide-button').addEventListener('click', function() {
+            confirmationDiv.remove();
+          });
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .govuk-cookie-banner {
+    background-color: #f3f2f1;
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
+
+  .govuk-cookie-banner__confirmation {
+    background-color: #f3f2f1;
+  }
+
+  .govuk-cookie-banner__message {
+    padding: 20px;
+  }
+
+  .govuk-cookie-banner__heading {
+    margin-top: 0;
+  }
+
+  .govuk-cookie-banner__content {
+    margin-bottom: 20px;
+  }
+
+  .govuk-button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .govuk-cookie-banner__hide-button {
+    background: none;
+    border: none;
+    color: #0087dc;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+  }
+
+  .govuk-cookie-banner__hide-button:hover {
+    color: #0066b8;
+  }
+</style>
+{% endif %}

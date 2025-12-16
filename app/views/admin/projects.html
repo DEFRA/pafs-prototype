@@ -1,18 +1,133 @@
-{% extends "layouts/admin-variant1.html" %}
+{% extends "layouts/main.html" %}
 
 {% set pageName="Projects" %}
+
+{% set totalProjects = (data.projectsData or []).length or 10 %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+
+    {% if data['projectRmaUpdatedNotification'] %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+          Project RMA has been updated successfully
+        </h3>
+        <p class="govuk-body">{{ data['projectRmaUpdatedName'] }} RMA has been changed.</p>
+      </div>
+    </div>
+    {% endif %}
+
     <h1 class="govuk-heading-xl">
-      Projects
+      All projects
     </h1>
 
-    <p class="govuk-body">
-      View and manage flood risk management projects.
-    </p>
+    {# Search and Filter section #}
+    <form method="get" action="/admin/projects" class="govuk-!-margin-bottom-6">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="search">
+          Enter a project number, name or RMA
+        </label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="search" name="search" type="text" value="{{ data['search'] }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="rma-filter">
+          Filter by RMA
+        </label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="rma-filter" name="rma">
+          <option value="">All RMAs</option>
+          <optgroup label="RMAs">
+            {% for org in data.organisationsData or [] %}
+              {% if org.type == "RMA" %}
+                <option value="{{ org.name }}" {% if data['rma'] == org.name %}selected{% endif %}>{{ org.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Filter
+        </button>
+        <a href="/admin/projects" class="govuk-link">Clear filters</a>
+      </div>
+    </form>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <table class="govuk-table app-table--responsive" data-module="govuk-table" style="font-size: 14px;">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-sixth">Project number</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Project name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Status</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-eighth">Last updated</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-sixth">Assingned RMA</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-twelfth">Action</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for project in data.projectsData or [] %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell" data-label="Project number"><strong>{{ project.projectNumber }}</strong></td>
+          <td class="govuk-table__cell" data-label="Project name">{{ project.projectName }}</td>
+          <td class="govuk-table__cell" data-label="Status">{{ project.status }}</td>
+          <td class="govuk-table__cell" data-label="Last updated">{{ project.lastUpdated }}</td>
+          <td class="govuk-table__cell" data-label="RMA">{{ project.assignedRMA }}</td>
+          <td class="govuk-table__cell" data-label="Edit"><a href="/admin/projects/{{ project.id }}/change-rma" class="govuk-link">Edit</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+      <p class="govuk-body" style="margin: 0;">Showing <strong>1 to {{ (data.projectsData or []).length }}</strong> of <strong>{{ totalProjects }}</strong> projects</p>
+      
+      <nav class="govuk-pagination" role="navigation" aria-label="Pagination" style="margin: 0;">
+        <div class="govuk-pagination__prev">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="prev">
+            <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+            </svg>
+            <span class="govuk-pagination__link-title">
+              Previous<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+        <ul class="govuk-pagination__list">
+          <li class="govuk-pagination__item govuk-pagination__item--current">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 1" aria-current="page">1</a>
+          </li>
+          <li class="govuk-pagination__item">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 2">2</a>
+          </li>
+          <li class="govuk-pagination__item">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 3">3</a>
+          </li>
+          <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+          <li class="govuk-pagination__item">
+            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 7">7</a>
+          </li>
+        </ul>
+        <div class="govuk-pagination__next">
+          <a class="govuk-link govuk-pagination__link" href="#" rel="next">
+            <span class="govuk-pagination__link-title">
+              Next<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+      </nav>
+    </div>
+
   </div>
 </div>
 

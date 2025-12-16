@@ -1,0 +1,63 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% if data.journeyType == "general" %}
+  {% set pageName = "Your proposals" %}
+{% elif data.journeyType == "admin" %}
+  {% set pageName = "PAFS Admin" %}
+{% else %}
+  {% set pageName = "Dashboard" %}
+{% endif %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    {% if data.journeyType == "general" %}
+      <h1 class="govuk-heading-xl">Your proposals</h1>
+      <p class="govuk-body">You currently have no proposals.</p>
+      <p class="govuk-body">
+        {{ govukButton({ text: "Create new proposal" }) }}
+      </p>
+    {% elif data.journeyType == "admin" %}
+      <h1 class="govuk-heading-xl">PAFS Admin</h1>
+      <p class="govuk-body-l">Manage users, proposals, and organisations.</p>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">
+            <a href="#" class="govuk-link">Users</a>
+          </h2>
+          <p class="govuk-body">View and manage user accounts</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">
+            <a href="#" class="govuk-link">Projects</a>
+          </h2>
+          <p class="govuk-body">View and manage all projects</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">
+            <a href="#" class="govuk-link">Organisations</a>
+          </h2>
+          <p class="govuk-body">View and manage organisations</p>
+        </div>
+      </div>
+    {% else %}
+      <h1 class="govuk-heading-xl">Welcome</h1>
+      <p class="govuk-body-l">You are now signed in to the PAFS system.</p>
+    {% endif %}
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+    <h2 class="govuk-heading-m">View prototype screens</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        <a href="/catalogue" class="govuk-link">Screens and Messages Catalogue</a>
+      </li>
+      <li><a href="/login" class="govuk-link">Login page</a></li>
+      <li><a href="/role-selection" class="govuk-link">Role selection</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

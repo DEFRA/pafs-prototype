@@ -1,0 +1,46 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Select EA areas - " ~ ("Add new user" if isAdmin else "Request an account") %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+
+{% block beforeContent %}
+  <a href="{{ backLink or '/request-account/details' }}" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if error == 'regions-not-selected' %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [ { text: "Select at least one EA region", href: "#rmaEaAreas" } ]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-l">Select EA areas</h1>
+    <p class="govuk-body">Select the Environment Agency areas you work with.</p>
+
+    <form action="{{ ('/admin/add-user-rma-ea-areas' if isAdmin else '/request-account/rma-ea-areas') }}" method="post" novalidate>
+      <div class="govuk-form-group {% if error == 'regions-not-selected' %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend">EA areas</legend>
+          {% if error == 'regions-not-selected' %}
+            <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select at least one EA region</p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            {% for ea in eaAreas %}
+              <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="rmaEaAreas-{{ ea.id }}" name="rmaEaAreas" type="checkbox" value="{{ ea.id }}" {% if data['rmaEaAreas'] and ea.id in data['rmaEaAreas'] %}checked{% endif %}>
+                <label class="govuk-label govuk-checkboxes__label" for="rmaEaAreas-{{ ea.id }}">{{ ea.name }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+      <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

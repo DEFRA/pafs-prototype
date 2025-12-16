@@ -1,0 +1,67 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Users" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+
+    <h1 class="govuk-heading-xl">
+      Change responsibility
+    </h1>
+
+    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-responsibility" novalidate>
+      
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              What is the user's main responsibility?
+            </h2>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility" name="responsibility" type="radio" value="ea" {{ 'checked' if data.currentUser.responsibility == 'ea' }}>
+              <label class="govuk-label govuk-radios__label" for="responsibility">
+                Environment Agency
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility-2" name="responsibility" type="radio" value="pso" {{ 'checked' if data.currentUser.responsibility == 'pso' }}>
+              <label class="govuk-label govuk-radios__label" for="responsibility-2">
+                PSO
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility-3" name="responsibility" type="radio" value="rma" {{ 'checked' if data.currentUser.responsibility == 'rma' }}>
+              <label class="govuk-label govuk-radios__label" for="responsibility-3">
+                RMA
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+          <span class="govuk-visually-hidden">Warning</span>
+          Changing the responsibility will require updating all area selections in the next step.
+        </strong>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Continue
+        </button>
+        <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

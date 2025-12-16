@@ -1,5 +1,5 @@
-// Session manager middleware to support separate sessions for different journeys
-// This allows running General and Admin journeys in separate tabs
+// Session manager middleware to track login sessions and form data
+// This allows managing separate sessions for different user journeys
 
 function sessionManager(req, res, next) {
   // Initialize session data structure if it doesn't exist
@@ -7,42 +7,83 @@ function sessionManager(req, res, next) {
     req.session.data = {}
   }
 
-  // Create separate session stores for each journey
-  if (!req.session.data.journeys) {
-    req.session.data.journeys = {
-      general: {},
-      admin: {}
+  // Initialize login session tracking
+  if (!req.session.data.loginSession) {
+    req.session.data.loginSession = {
+      isAuthenticated: false,
+      user: null,
+      failedAttempts: 0,
+      isAccountLocked: false,
+      lockedAt: null,
+      sessionExpired: false
     }
   }
 
-  // Determine which journey we're in based on the URL
-  let currentJourney = null
-  if (req.path.startsWith('/general')) {
-    currentJourney = 'general'
-  } else if (req.path.startsWith('/admin')) {
-    currentJourney = 'admin'
-  }
-
-  // Store the current journey in the request for easy access
-  req.currentJourney = currentJourney
-
-  // If we're in a specific journey, make that journey's data available
-  // as req.journeyData for easy access in routes
-  if (currentJourney) {
-    req.journeyData = req.session.data.journeys[currentJourney]
-  }
-
-  // Helper function to save journey-specific data
-  req.saveJourneyData = function (data) {
-    if (currentJourney) {
-      Object.assign(req.session.data.journeys[currentJourney], data)
+  // Initialize form data for current journey
+  if (!req.session.data.formData) {
+    req.session.data.formData = {
+      email: '',
+      password: '',
+      errors: {}
     }
   }
 
-  // Helper function to clear journey-specific data
-  req.clearJourneyData = function () {
-    if (currentJourney) {
-      req.session.data.journeys[currentJourney] = {}
+  // Check for cookie preferences from browser cookies
+  // If cookies_preferences_set cookie exists, don't show banner
+  if (!req.session.data.cookiesAccepted) {
+    const cookiePreferencesSet = req.cookies.cookies_preferences_set === 'yes'
+    if (cookiePreferencesSet) {
+      req.session.data.cookiesAccepted = true
+      const cookiePolicy = req.cookies.cookies_policy
+      req.session.data.analyticsConsent = cookiePolicy === 'accepted'
+    }
+  }
+
+  // Helper function to record failed login attempt
+  req.recordFailedAttempt = function () {
+    req.session.data.loginSession.failedAttempts =
+      (req.session.data.loginSession.failedAttempts || 0) + 1
+
+    // Lock account after 5 failed attempts
+    if (req.session.data.loginSession.failedAttempts >= 5) {
+      req.session.data.loginSession.isAccountLocked = true
+      req.session.data.loginSession.lockedAt = new Date().toISOString()
+    }
+  }
+
+  // Helper function to reset failed attempts
+  req.resetFailedAttempts = function () {
+    req.session.data.loginSession.failedAttempts = 0
+  }
+
+  // Helper function to unlock account
+  req.unlockAccount = function () {
+    req.session.data.loginSession.isAccountLocked = false
+    req.session.data.loginSession.failedAttempts = 0
+    req.session.data.loginSession.lockedAt = null
+  }
+
+  // Helper function to set user as authenticated
+  req.setAuthenticated = function (user) {
+    req.session.data.loginSession.isAuthenticated = true
+    req.session.data.loginSession.user = user
+    req.session.data.loginSession.failedAttempts = 0
+  }
+
+  // Helper function to clear all session data
+  req.clearSession = function () {
+    req.session.data.loginSession = {
+      isAuthenticated: false,
+      user: null,
+      failedAttempts: 0,
+      isAccountLocked: false,
+      lockedAt: null,
+      sessionExpired: false
+    }
+    req.session.data.formData = {
+      email: '',
+      password: '',
+      errors: {}
     }
   }
 

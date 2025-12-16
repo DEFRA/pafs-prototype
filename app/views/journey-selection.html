@@ -1,66 +1,50 @@
 {% extends "layouts/main.html" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageName="Select your journey" %}
+{% set pageName = "Select Your Journey" %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <form method="post" novalidate>
-      <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-            <h1 class="govuk-fieldset__heading">
-              Select your journey
-            </h1>
-          </legend>
-          <p class="govuk-body">
-            Choose the type of user you want to access the prototype as.
-          </p>
-          <div class="govuk-radios" data-module="govuk-radios">
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="journey-general" name="journey" type="radio" value="general">
-              <label class="govuk-label govuk-radios__label" for="journey-general">
-                <strong>General User</strong>
-              </label>
-              <div id="journey-general-hint" class="govuk-hint govuk-radios__hint">
-                Access the system as a Regional Management Authority (RMA), Partnership & Strategic Overview (PSO), or Environment Agency (EA) user.
-              </div>
-            </div>
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="journey-admin" name="journey" type="radio" value="admin">
-              <label class="govuk-label govuk-radios__label" for="journey-admin">
-                <strong>Admin User</strong>
-              </label>
-              <div id="journey-admin-hint" class="govuk-hint govuk-radios__hint">
-                Access the system as an administrator to manage users and system settings.
-              </div>
-            </div>
-          </div>
-        </fieldset>
-      </div>
+    <h1 class="govuk-heading-xl">Which journey would you like to access?</h1>
 
-      <button type="submit" class="govuk-button" data-module="govuk-button">
-        Continue
-      </button>
+    <p class="govuk-body">
+      As an administrator, you can explore both the general user journey and the admin journey.
+    </p>
+
+    <form action="/journey-selection" method="post" novalidate>
+      {{ govukRadios({
+        name: "journey",
+        fieldset: {
+          legend: {
+            text: "Select journey",
+            isPageHeading: false,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "admin",
+            text: "Admin journey",
+            hint: {
+              text: "Explore the admin portal for managing users, proposals, and organisations"
+            },
+            checked: true
+          },
+          {
+            value: "general",
+            text: "General user journey",
+            hint: {
+              text: "Explore the user portal as an RMA, PSO or Area user"
+            }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
     </form>
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    <h2 class="govuk-heading-m">View catalogues</h2>
-    <p class="govuk-body">Browse the available page layouts, components, and email templates.</p>
-    
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        <a href="/general/catalogue" class="govuk-link">General User catalogue</a> - View layouts for RMA, PSO, and EA users
-      </li>
-      <li>
-        <a href="/admin/catalogue" class="govuk-link">Admin catalogue</a> - View layouts for administrator users
-      </li>
-      <li>
-        <a href="/email-templates/catalogue" class="govuk-link">Email Templates catalogue</a> - View GOV.UK Notify email templates
-      </li>
-    </ul>
   </div>
 </div>
 

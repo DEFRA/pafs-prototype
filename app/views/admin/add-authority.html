@@ -1,65 +1,67 @@
-{% extends "layouts/admin-variant1.html" %} {% set pageName="Add an Authority
-Code" %} {% block content %} {% from "govuk/components/error-summary/macro.njk"
-import govukErrorSummary %} {% if error %} {{ govukErrorSummary({ titleText:
-"There is a problem", errorList: [ { text: "Authority code can't be blank",
-href: "#authority-code" } if error == 'authority-code-empty', { text: "Authority
-type can't be blank", href: "#authority-type" } if error ==
-'authority-type-empty' ] }) }} {% endif %}
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-<h1 class="govuk-heading-xl">Add an Authority Code</h1>
+{% set pageName="Add an Authority Code" %}
 
-<form
-  method="post"
-  action="/admin/organisations/add-authority"
-  class="govuk-form"
->
-  <div
-    class="govuk-form-group {% if error == 'authority-code-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="authority-code">Authority code</label>
-    {% if error == 'authority-code-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Authority code can't be
-      blank
-    </p>
-    {% endif %}
-    <input
-      class="govuk-input govuk-!-width-two-thirds {% if error == 'authority-code-empty' %}govuk-input--error{% endif %}"
-      id="authority-code"
-      name="authority-code"
-      type="text"
-    />
+{% block beforeContent %}
+  <a href="/admin/organisations/add" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+  {% set errorArray = error.split(',') %}
+  {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: [
+      { text: "Enter the authority code", href: "#authority-code" } if "authority-code-empty" in errorArray,
+      { text: "Enter the authority type", href: "#authority-type" } if "authority-type-empty" in errorArray
+    ] | reject("equalto", false) | list
+  }) }}
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Add an Authority Code</h1>
+
+    <form method="post" action="/admin/organisations/add-authority" novalidate>
+      {% if error %}
+        {% set errorArray = error.split(',') %}
+      {% endif %}
+
+      <div class="govuk-form-group {% if error and 'authority-code-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="authority-code">Authority code</label>
+        {% if error and 'authority-code-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter the authority code
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'authority-code-empty' in errorArray %}govuk-input--error{% endif %}" id="authority-code" name="authority-code" type="text" value="{{ data['authority-code'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and 'authority-type-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="authority-type">Authority type</label>
+        {% if error and 'authority-type-empty' in errorArray %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Enter the authority type
+          </p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'authority-type-empty' in errorArray %}govuk-input--error{% endif %}" id="authority-type" name="authority-type" type="text" value="{{ data['authority-type'] }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="end-date">
+          End date if available
+          <span class="govuk-hint">Optional</span>
+        </label>
+        <input class="govuk-input govuk-input--width-10" id="end-date" name="end-date" type="date" value="{{ data['end-date'] }}">
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+    </form>
   </div>
-
-  <div
-    class="govuk-form-group {% if error == 'authority-type-empty' %}govuk-form-group--error{% endif %}"
-  >
-    <label class="govuk-label" for="authority-type">Authority type</label>
-    {% if error == 'authority-type-empty' %}
-    <p class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> Authority type can't be
-      blank
-    </p>
-    {% endif %}
-    <input
-      class="govuk-input govuk-!-width-two-thirds {% if error == 'authority-type-empty' %}govuk-input--error{% endif %}"
-      id="authority-type"
-      name="authority-type"
-      type="text"
-    />
-  </div>
-
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="end-date">End date if available</label>
-    <input
-      class="govuk-input govuk-input--width-10"
-      id="end-date"
-      name="end-date"
-      type="date"
-    />
-  </div>
-
-  <button class="govuk-button" type="submit">Continue</button>
-</form>
+</div>
 
 {% endblock %}

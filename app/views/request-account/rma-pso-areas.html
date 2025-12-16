@@ -1,0 +1,51 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Select PSO areas - " ~ ("Add new user" if isAdmin else "Request an account") %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedEaAreas = data['rmaEaAreas'] or [] %}
+
+{% block beforeContent %}
+  <a href="{{ backLink or '/request-account/rma-ea-areas' }}" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if error == 'regions-not-selected' %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [ { text: "Select at least one PSO region", href: "#rmaPsoAreas" } ]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-l">Select PSO areas</h1>
+    <p class="govuk-body">Select the PSO areas within your selected EA areas.</p>
+
+    <form action="{{ ('/admin/add-user-rma-pso-areas' if isAdmin else '/request-account/rma-pso-areas') }}" method="post" novalidate>
+      {% for ea in eaAreas %}
+        {% if ea.id in selectedEaAreas %}
+          <div class="govuk-form-group govuk-!-margin-bottom-8 {% if error == 'regions-not-selected' %}govuk-form-group--error{% endif %}">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend"><strong>{{ ea.name }} - PSO areas</strong></legend>
+              {% if error == 'regions-not-selected' and loop.first %}
+                <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select at least one PSO region</p>
+              {% endif %}
+              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                {% for pso in ea.pso_areas %}
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="rmaPsoAreas-{{ pso.id }}" name="rmaPsoAreas" type="checkbox" value="{{ pso.id }}" {% if data['rmaPsoAreas'] and pso.id in data['rmaPsoAreas'] %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="rmaPsoAreas-{{ pso.id }}">{{ pso.name }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </fieldset>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

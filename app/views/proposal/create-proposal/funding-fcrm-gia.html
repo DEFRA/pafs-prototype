@@ -1,0 +1,96 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What are the expected additional FCRM Grant in Aid funding sources?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if data and data['funding-fcrm-gia-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#gia-funding-sources">{{ data['funding-fcrm-gia-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/funding-fcrm-gia">
+      <div class="govuk-form-group {%- if data and data['funding-fcrm-gia-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data and data['funding-fcrm-gia-error'] %}aria-describedby="gia-funding-sources-error gia-funding-sources-hint"{% else %}aria-describedby="gia-funding-sources-hint"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What are the expected additional FCRM Grant in Aid funding sources?
+            </h1>
+          </legend>
+          <div id="gia-funding-sources-hint" class="govuk-hint">
+            Select all that apply.
+          </div>
+          {% if data and data['funding-fcrm-gia-error'] %}
+            <p id="gia-funding-sources-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['funding-fcrm-gia-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="gia-funding-sources">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-asset-replacement-allowance" name="gia-funding-sources" type="checkbox" value="asset-replacement-allowance" {% if data and data['gia-funding-sources'] and 'asset-replacement-allowance' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-asset-replacement-allowance">
+                Asset replacement allowance
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-environment-statutory-funding" name="gia-funding-sources" type="checkbox" value="environment-statutory-funding" {% if data and data['gia-funding-sources'] and 'environment-statutory-funding' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-environment-statutory-funding">
+                Environment statutory funding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-frequently-flooded-communities" name="gia-funding-sources" type="checkbox" value="frequently-flooded-communities" {% if data and data['gia-funding-sources'] and 'frequently-flooded-communities' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-frequently-flooded-communities">
+                Frequently flooded communities
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-other-additional-grant-in-aid" name="gia-funding-sources" type="checkbox" value="other-additional-grant-in-aid" {% if data and data['gia-funding-sources'] and 'other-additional-grant-in-aid' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-other-additional-grant-in-aid">
+                Other additional grant in aid
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-other-government-department" name="gia-funding-sources" type="checkbox" value="other-government-department" {% if data and data['gia-funding-sources'] and 'other-government-department' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-other-government-department">
+                Other Government department
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-recovery" name="gia-funding-sources" type="checkbox" value="recovery" {% if data and data['gia-funding-sources'] and 'recovery' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-recovery">
+                Recovery
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="gia-summer-economic-fund" name="gia-funding-sources" type="checkbox" value="summer-economic-fund" {% if data and data['gia-funding-sources'] and 'summer-economic-fund' in data['gia-funding-sources'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="gia-summer-economic-fund">
+                Summer economic fund
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

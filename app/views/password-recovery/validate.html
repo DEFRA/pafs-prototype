@@ -1,0 +1,236 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageName = "Validation scenarios" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Password recovery validation scenarios</h1>
+
+    <p class="govuk-body">
+      Click any of the links below to view different validation error states in the password recovery journey.
+    </p>
+
+    <h2 class="govuk-heading-m">Forgot password validation</h2>
+
+    {% set forgotPasswordRows = [
+      {
+        cells: [
+          { html: '<a href="/forgot-password?error=email-empty">email-empty</a>' },
+          { text: "Email address field is empty" },
+          { text: "Show inline error below email field" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/forgot-password?error=email-invalid">email-invalid</a>' },
+          { text: "Email address format is invalid" },
+          { text: "Show inline error below email field" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/forgot-password">default</a>' },
+          { text: "Successful submission" },
+          { text: "Render confirmation page" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: forgotPasswordRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+    <h2 class="govuk-heading-m">Reset password - Token/Account errors</h2>
+
+    {% set resetTokenRows = [
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=token-expired">token-expired</a>' },
+          { text: "Reset token has expired" },
+          { text: "Show alert banner, hide form" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=token-used">token-used</a>' },
+          { text: "Reset token has already been used" },
+          { text: "Show alert banner, hide form" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=account-disabled">account-disabled</a>' },
+          { text: "User account is disabled" },
+          { text: "Show alert banner, hide form" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: resetTokenRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+    <h2 class="govuk-heading-m">Reset password - Password field validation</h2>
+
+    {% set resetPasswordRows = [
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-empty">password-empty</a>' },
+          { text: "Password field is empty" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-too-short">password-too-short</a>' },
+          { text: "Password is less than 12 characters" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-no-uppercase">password-no-uppercase</a>' },
+          { text: "Password missing uppercase letter" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-no-lowercase">password-no-lowercase</a>' },
+          { text: "Password missing lowercase letter" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-no-number">password-no-number</a>' },
+          { text: "Password missing number character" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=password-no-special">password-no-special</a>' },
+          { text: "Password missing special character" },
+          { text: "Show inline error" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: resetPasswordRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+    <h2 class="govuk-heading-m">Reset password - Confirm password field validation</h2>
+
+    {% set resetConfirmRows = [
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=confirm-empty">confirm-empty</a>' },
+          { text: "Confirm password field is empty" },
+          { text: "Show inline error" }
+        ]
+      },
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=passwords-dont-match">passwords-dont-match</a>' },
+          { text: "Password and confirm password do not match" },
+          { text: "Show inline error" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: resetConfirmRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+    <h2 class="govuk-heading-m">Reset password - Error summary variant</h2>
+
+    <p class="govuk-body">
+      View all validation errors in an error summary banner at the top of the form instead of inline errors.
+    </p>
+
+    {% set errorSummaryRows = [
+      {
+        cells: [
+          { html: '<a href="/reset-password?error=validation-error&variant=summary">validation-error with variant=summary</a>' },
+          { text: "Multiple validation errors" },
+          { text: "Show error summary with all 5 errors listed, hide inline errors" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: errorSummaryRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+    <h2 class="govuk-heading-m">Password recovery success</h2>
+
+    {% set successRows = [
+      {
+        cells: [
+          { html: '<a href="/password-recovery/confirmation">confirmation</a>' },
+          { text: "Password reset successful" },
+          { text: "Show success panel, next steps, sign in button" }
+        ]
+      }
+    ] %}
+
+    {{ govukTable({
+      head: [
+        { text: "Scenario" },
+        { text: "Description" },
+        { text: "Expected behavior" }
+      ],
+      rows: successRows,
+      captionText: "Click scenario link to view",
+      captionClasses: "govuk-table__caption--m"
+    }) }}
+
+  </div>
+</div>
+
+{% endblock %}

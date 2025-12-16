@@ -1,0 +1,132 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="User details - Add new user" %}
+{% set isAdminContext = data['isAdminContext'] == 'true' %}
+
+{% block beforeContent %}
+  <a href="/admin/add-user-admin-question" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    {% if error %}
+      {% set errorArray = error.split(',') %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Enter the user's first name", href: "#first-name" } if "first-name-empty" in errorArray,
+          { text: "Enter the user's last name", href: "#last-name" } if "last-name-empty" in errorArray,
+          { text: "Enter the user's email address", href: "#email" } if "email-empty" in errorArray,
+          { text: "Enter an email address in the correct format, like name@example.com", href: "#email" } if "email-invalid" in errorArray,
+          { text: "This email address is already registered", href: "#email" } if "email-duplicate" in errorArray,
+          { text: "Enter the user's telephone number", href: "#telephone" } if "telephone-empty" in errorArray,
+          { text: "Enter a telephone number in the correct format", href: "#telephone" } if "telephone-invalid" in errorArray,
+          { text: "Select the user's responsibility area", href: "#responsibility-ea" } if "responsibility-empty" in errorArray
+        ] | reject("equalto", false) | list
+      }) }}
+    {% endif %}
+    
+    <h1 class="govuk-heading-xl">Add new user</h1>
+
+    <p class="govuk-body">
+      Enter the details of the new user account.
+    </p>
+
+    <form action="/admin/add-user-details" method="post" novalidate>
+      {% if error %}
+        {% set errorArray = error.split(',') %}
+      {% endif %}
+      
+      <div class="govuk-form-group {% if error and 'first-name-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="first-name">First name</label>
+        {% if error and 'first-name-empty' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter the user's first name</p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'first-name-empty' in errorArray %}govuk-input--error{% endif %}" id="first-name" name="firstName" type="text" autocomplete="given-name" value="{{ data['firstName'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and 'last-name-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="last-name">Last name</label>
+        {% if error and 'last-name-empty' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter the user's last name</p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and 'last-name-empty' in errorArray %}govuk-input--error{% endif %}" id="last-name" name="lastName" type="text" autocomplete="family-name" value="{{ data['lastName'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and ('email-empty' in errorArray or 'email-invalid' in errorArray or 'email-duplicate' in errorArray) %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="email">Email address</label>
+        {% if error and 'email-empty' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter the user's email address</p>
+        {% elif error and 'email-invalid' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter an email address in the correct format, like name@example.com</p>
+        {% elif error and 'email-duplicate' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> This email address is already registered</p>
+        {% endif %}
+        <input class="govuk-input govuk-!-width-two-thirds {% if error and ('email-empty' in errorArray or 'email-invalid' in errorArray or 'email-duplicate' in errorArray) %}govuk-input--error{% endif %}" id="email" name="email" type="email" spellcheck="false" autocomplete="email" value="{{ data['email'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and ('telephone-empty' in errorArray or 'telephone-invalid' in errorArray) %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="telephone">Telephone number</label>
+        <div class="govuk-hint">Optional</div>
+        {% if error and 'telephone-empty' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter the user's telephone number</p>
+        {% elif error and 'telephone-invalid' in errorArray %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Enter a telephone number in the correct format</p>
+        {% endif %}
+        <input class="govuk-input govuk-input--width-20 {% if error and ('telephone-empty' in errorArray or 'telephone-invalid' in errorArray) %}govuk-input--error{% endif %}" id="telephone" name="telephone" type="tel" autocomplete="tel" value="{{ data['telephone'] }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="organisation">Organisation</label>
+        <div class="govuk-hint">Optional</div>
+        <input class="govuk-input govuk-!-width-two-thirds" id="organisation" name="organisation" type="text" autocomplete="organization" value="{{ data['organisation'] }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="job-title">Job title</label>
+        <div class="govuk-hint">Optional</div>
+        <input class="govuk-input govuk-!-width-two-thirds" id="job-title" name="jobTitle" type="text" autocomplete="organization-title" value="{{ data['jobTitle'] }}">
+      </div>
+
+      <div class="govuk-form-group {% if error and 'responsibility-empty' in errorArray %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend">What is the user's responsibility?</legend>
+          {% if error and 'responsibility-empty' in errorArray %}
+            <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select the user's responsibility area</p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility-ea" name="responsibility" type="radio" value="ea" {% if data['responsibility'] == 'ea' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="responsibility-ea">
+                Environment Agency – Area Programme Team
+                <div class="govuk-hint">Allows the user to view all records created within the boundary of their Area.</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility-pso" name="responsibility" type="radio" value="pso" {% if data['responsibility'] == 'pso' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="responsibility-pso">
+                Environment Agency – Partnership &amp; Strategic Overview Team
+                <div class="govuk-hint">Allows the user to view and edit all records created within the boundary of their Team</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="responsibility-rma" name="responsibility" type="radio" value="rma" {% if data['responsibility'] == 'rma' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="responsibility-rma">
+                Risk Management Authority (RMA)
+                <div class="govuk-hint">Allows the user to create, edit, and view all records created within the boundary of their RMA.</div>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

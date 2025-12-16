@@ -1,0 +1,59 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="NFM screening team - Add new user" %}
+
+{% block beforeContent %}
+  <a href="/admin/add-user-details" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    {% if error %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: "Select whether the user is part of the NFM screening team", href: "#nfm-screening-team" }
+        ]
+      }) }}
+    {% endif %}
+    
+    <form action="/admin/add-user-nfm-screening" method="post" novalidate>
+      <div class="govuk-form-group {% if error %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Is this user part of the NFM screening team?
+            </h1>
+          </legend>
+          {% if error %}
+            <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select whether the user is part of the NFM screening team</p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="nfm-screening-team" name="nfmScreeningTeam" type="radio" value="yes" {% if data['nfmScreeningTeam'] == 'yes' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="nfm-screening-team">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="nfm-screening-team-2" name="nfmScreeningTeam" type="radio" value="no" {% if data['nfmScreeningTeam'] == 'no' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="nfm-screening-team-2">
+                No
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

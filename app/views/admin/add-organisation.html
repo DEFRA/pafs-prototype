@@ -1,44 +1,48 @@
-{% extends "layouts/admin-variant1.html" %} {% set pageName="Add a new
-organisation" %} {% block content %} {% from
-"govuk/components/error-summary/macro.njk" import govukErrorSummary %} {% if
-error %} {{ govukErrorSummary({ titleText: "There is a problem", errorList: [ {
-text: "Please select an organisation type", href: "#organisation-type" } if
-error == 'organisation-type' ] }) }} {% endif %}
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Add a new organisation" %}
+
+{% block beforeContent %}
+  <a href="/admin/organisations" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+  {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: [
+      { text: "Select an organisation type", href: "#organisation-type" }
+    ]
+  }) }}
+{% endif %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Add a new organisation</h1>
-  </div>
-</div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <form method="post" action="/admin/organisations/add" class="govuk-form">
-      <div
-        class="govuk-form-group {% if error == 'organisation-type' %}govuk-form-group--error{% endif %}"
-      >
-        <label class="govuk-label" for="organisation-type"
-          >Select an organisation type</label
-        >
-        {% if error == 'organisation-type' %}
-        <p class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span> Please select an
-          organisation type.
-        </p>
+    <form method="post" action="/admin/organisations/add" novalidate>
+      <div class="govuk-form-group {% if error %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label" for="organisation-type">
+          Select an organisation type
+        </label>
+        {% if error %}
+          <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Select an organisation type
+          </p>
         {% endif %}
-        <select
-          class="govuk-select govuk-!-width-two-thirds {% if error == 'organisation-type' %}govuk-input--error{% endif %}"
-          id="organisation-type"
-          name="organisation-type"
-        >
+        <select class="govuk-select govuk-!-width-two-thirds {% if error %}govuk-select--error{% endif %}" id="organisation-type" name="organisation-type">
           <option value="">Select an organisation type</option>
-          <option value="Authority">Authority</option>
-          <option value="PSO">PSO</option>
-          <option value="RMA">RMA</option>
+          <option value="Authority" {% if data['organisation-type'] == 'Authority' %}selected{% endif %}>Authority</option>
+          <option value="PSO" {% if data['organisation-type'] == 'PSO' %}selected{% endif %}>PSO</option>
+          <option value="RMA" {% if data['organisation-type'] == 'RMA' %}selected{% endif %}>RMA</option>
         </select>
       </div>
 
-      <button class="govuk-button" type="submit">Continue</button>
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+      </button>
     </form>
   </div>
 </div>

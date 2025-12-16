@@ -1,0 +1,51 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Select main RMA area - " ~ ("Add new user" if isAdmin else "Request an account") %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedPsoAreas = data['rmaPsoAreas'] or [] %}
+
+{% block beforeContent %}
+  <a href="{{ backLink or '/request-account/rma-pso-areas' }}" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if error == 'area-not-selected' %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [ { text: "Select your main RMA area", href: "#mainArea" } ]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-l">Select main RMA area</h1>
+
+    <form action="{{ ('/admin/add-user-rma-main-area' if isAdmin else '/request-account/rma-main-area') }}" method="post" novalidate>
+      <div class="govuk-form-group {% if error == 'area-not-selected' %}govuk-form-group--error{% endif %}">
+        <label class="govuk-label govuk-label--m" for="mainArea">Main RMA area</label>
+        <div id="mainArea-hint" class="govuk-hint">This will be your primary area</div>
+        {% if error == 'area-not-selected' %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select your main RMA area</p>
+        {% endif %}
+        <select class="govuk-select {% if error == 'area-not-selected' %}govuk-select--error{% endif %}" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
+          <option value="">Select an RMA area</option>
+          {% for ea in eaAreas %}
+            {% for pso in ea.pso_areas %}
+              {% if pso.id in selectedPsoAreas %}
+                <optgroup label="{{ ea.name }} - {{ pso.name }}">
+                  {% for rma in pso.rma_areas %}
+                    <option value="{{ rma.id }}" {% if data['mainArea'] == rma.id %}selected{% endif %}>{{ rma.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

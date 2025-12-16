@@ -1,6 +1,9 @@
 package-lock.json
 node_modules
 coverage
-.tmp/
+  .tmp /
 .env
 migrate.log
+
+# Nunjucks templates - don't format
+app / views/**/ *.html

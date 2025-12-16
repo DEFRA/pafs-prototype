@@ -1,0 +1,81 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Users" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+
+    <h1 class="govuk-heading-xl">
+      Change permissions
+    </h1>
+
+    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-admin-status" novalidate>
+      
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Will this user be an admin?
+            </h2>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="isAdmin" name="isAdmin" type="radio" value="yes" {{ 'checked' if data.currentUser.isAdmin }}>
+              <label class="govuk-label govuk-radios__label" for="isAdmin">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="isAdmin-2" name="isAdmin" type="radio" value="no" {{ 'checked' if not data.currentUser.isAdmin }}>
+              <label class="govuk-label govuk-radios__label" for="isAdmin-2">
+                No
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      {% if not data.currentUser.isAdmin %}
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Is this user part of the NFM Screening Team?
+            </h2>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="nfmScreeningTeam" name="nfmScreeningTeam" type="radio" value="yes" {{ 'checked' if data.currentUser.nfmScreeningTeam }}>
+              <label class="govuk-label govuk-radios__label" for="nfmScreeningTeam">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="nfmScreeningTeam-2" name="nfmScreeningTeam" type="radio" value="no" {{ 'checked' if not data.currentUser.nfmScreeningTeam }}>
+              <label class="govuk-label govuk-radios__label" for="nfmScreeningTeam-2">
+                No
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      {% endif %}
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save and continue
+        </button>
+        <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}{% endblock %}

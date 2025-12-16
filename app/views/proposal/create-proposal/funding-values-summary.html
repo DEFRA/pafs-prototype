@@ -1,0 +1,40 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Confirm the estimated spend for each financial year." %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Confirm the estimated spend for each financial year.</h1>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Funding source</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total estimated spend (£)</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for item in fundingTotals %}
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">{{ item.label }}</th>
+            <td class="govuk-table__cell govuk-table__cell--numeric">{{ item.total }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="govuk-table__foot">
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Total</th>
+          <td class="govuk-table__cell govuk-table__cell--numeric">{{ grandTotal }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <form method="post" action="/proposal/create-proposal/funding-values-summary">
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
