@@ -1,0 +1,96 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Is the project urgent for any of the following reasons?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/any-environmental-benefits" class="govuk-back-link">Back</a>
+
+    {% if data['urgency-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#urgency-not-urgent">{{ data['urgency-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/urgency">
+      <div class="govuk-form-group {%- if data['urgency-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Is the project urgent for any of the following reasons?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Urgency proposals must be agreed with your local Partnership and Strategic Overview (PSO) officer before submission.
+          </p>
+
+          {% if data['urgency-error'] %}
+            <p id="urgency-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['urgency-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-not-urgent" name="urgency" type="radio" value="not_urgent" {% if data['urgency'] == 'not_urgent' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-not-urgent">
+                The project is not urgent
+              </label>
+            </div>
+            <div class="govuk-radios__divider">or</div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-statutory-need" name="urgency" type="radio" value="statutory_need" {% if data['urgency'] == 'statutory_need' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-statutory-need">
+                There is a business critical statutory need
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-legal-need" name="urgency" type="radio" value="legal_need" {% if data['urgency'] == 'legal_need' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-legal-need">
+                There is a business critical legal need
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-health-and-safety" name="urgency" type="radio" value="health_and_safety" {% if data['urgency'] == 'health_and_safety' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-health-and-safety">
+                There is a health and safety issue
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-emergency-works" name="urgency" type="radio" value="emergency_works" {% if data['urgency'] == 'emergency_works' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-emergency-works">
+                There is an emergency
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="urgency-time-limited" name="urgency" type="radio" value="time_limited" {% if data['urgency'] == 'time_limited' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="urgency-time-limited">
+                There is a specific aspect of the project that has a time limit
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

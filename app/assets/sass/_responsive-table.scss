@@ -57,3 +57,86 @@
     overflow-wrap: break-word;
   }
 }
+
+// Horizontal scroll wrapper for wide tables
+.scroll-horz {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+
+  // Add scrollbar styling for better UX
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: govuk-colour("light-grey");
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: govuk-colour("mid-grey");
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: govuk-colour("dark-grey");
+  }
+}
+
+// Funding table specific styles
+.funding-table {
+  min-width: 800px; // Ensure table doesn't collapse on smaller screens
+
+  // Header alignment
+  thead th {
+    text-align: left;
+    vertical-align: bottom;
+  }
+
+  // Body cells with inputs - center the inputs
+  tbody td:not(.row-total) {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  // Row totals in body
+  tbody td.row-total {
+    text-align: right;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+
+  // Input styling in table
+  .funding-value {
+    max-width: 150px;
+    text-align: right;
+  }
+
+  // Footer totals row styling
+  tfoot {
+    background-color: govuk-colour("light-grey");
+    font-weight: 700;
+
+    th {
+      font-weight: 700;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    td {
+      font-weight: 700;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    // Column totals should be centered to match body cells
+    td.column-total {
+      text-align: center;
+    }
+
+    // Grand total should be right-aligned to match row totals
+    td.grand-total {
+      text-align: right;
+    }
+  }
+}

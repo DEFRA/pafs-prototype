@@ -1,0 +1,53 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="{{ backLink }}" class="govuk-back-link">Back</a>
+
+    {% if data[benefitId + '-amount-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#{{ benefitId }}-amount">{{ data[benefitId + '-amount-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="{{ nextLink }}">
+      <div class="govuk-form-group {%- if data[benefitId + '-amount-error'] %} govuk-form-group--error {%- endif %}">
+        <h1 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--l" for="{{ benefitId }}-amount">
+            {{ pageHeading }}
+          </label>
+        </h1>
+        
+        {% if data[benefitId + '-amount-error'] %}
+          <p id="{{ benefitId }}-amount-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data[benefitId + '-amount-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-5" id="{{ benefitId }}-amount" name="{{ benefitId }}-amount" type="number" spellcheck="false" value="{{ data[benefitId + '-amount'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">{{ unit }}</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

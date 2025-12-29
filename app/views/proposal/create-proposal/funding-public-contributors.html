@@ -6,6 +6,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    <a href="/proposal/create-proposal/funding-sources" class="govuk-back-link">Back</a>
+
     {% if data and data['public-contributors-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
@@ -52,7 +54,7 @@
             {% endfor %}
           </div>
           <p class="govuk-body">
-            <button class="govuk-link" type="submit" name="action" value="add">
+            <button class="govuk-button govuk-button--secondary" type="submit" name="action" value="add">
               Add another contributor
             </button>
           </p>

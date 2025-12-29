@@ -1,0 +1,87 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What is the current flood risk in the area the project is likely to benefit?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if data['coastal-erosion'] %}
+      <a href="/proposal/create-proposal/properties-affected-coastal-erosion" class="govuk-back-link">Back</a>
+    {% else %}
+      <a href="/proposal/create-proposal/properties-affected-flooding" class="govuk-back-link">Back</a>
+    {% endif %}
+
+    {% if data['current-flood-risk-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#current-flood-risk">{{ data['current-flood-risk-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/current-flood-risk">
+      <div class="govuk-form-group {%- if data['current-flood-risk-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the current flood risk in the area the project is likely to benefit?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Select the risk category that has the most coverage within the area of benefit
+          </p>
+
+          {% if data['current-flood-risk-error'] %}
+            <p id="current-flood-risk-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['current-flood-risk-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios" id="current-flood-risk">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-high" name="current-flood-risk" type="radio" value="high" {% if data['current-flood-risk'] == 'high' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-high">
+                high risk – this means that each year an area has a chance of flooding of greater than 3.3% (greater than a 1 in 30 chance of flooding)
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-medium" name="current-flood-risk" type="radio" value="medium" {% if data['current-flood-risk'] == 'medium' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-medium">
+                medium risk – this means that each year an area has a chance of flooding between 1% and 3.3% (1 in 30 to a 1 in 100 chance of flooding)
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-low" name="current-flood-risk" type="radio" value="low" {% if data['current-flood-risk'] == 'low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-low">
+                low risk – this means that each year an area has a chance of flooding of between 0.1% and 1% (1 in 100 to a 1 in 1,000 chance of flooding)
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-very-low" name="current-flood-risk" type="radio" value="very-low" {% if data['current-flood-risk'] == 'very-low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-very-low">
+                very low risk – this means that each year an area has a chance of flooding of less than 0.1% (less than a 1 in 1,000 chance of flooding)
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

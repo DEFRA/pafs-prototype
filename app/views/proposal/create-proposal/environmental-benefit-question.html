@@ -1,0 +1,69 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="{{ backLink }}" class="govuk-back-link">Back</a>
+
+    {% if data[benefitId + '-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#{{ benefitId }}-yes">{{ data[benefitId + '-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="{{ nextLink }}">
+      <div class="govuk-form-group {%- if data[benefitId + '-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              {{ pageHeading }}
+            </h1>
+          </legend>
+          {% if lede %}
+          <p class="govuk-body">{{ lede }}</p>
+          {% endif %}
+
+          {% if data[benefitId + '-error'] %}
+            <p id="{{ benefitId }}-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data[benefitId + '-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="{{ benefitId }}-yes" name="{{ benefitId }}" type="radio" value="yes" {% if data[benefitId] == 'yes' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="{{ benefitId }}-yes">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="{{ benefitId }}-no" name="{{ benefitId }}" type="radio" value="no" {% if data[benefitId] == 'no' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="{{ benefitId }}-no">
+                No
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

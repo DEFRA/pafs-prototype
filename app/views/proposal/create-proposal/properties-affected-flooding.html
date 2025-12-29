@@ -1,0 +1,160 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="How many properties affected by flooding is the project likely to benefit?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    {% if data['selected-risks'] and (data['selected-risks'] | length) > 1 %}
+      <a href="/proposal/create-proposal/main-risk" class="govuk-back-link">Back</a>
+    {% else %}
+      <a href="/proposal/create-proposal/risks" class="govuk-back-link">Back</a>
+    {% endif %}
+
+    {% if data['properties-affected-flooding-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#properties-affected-flooding-error">{{ data['properties-affected-flooding-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/properties-affected-flooding">
+      <div class="govuk-form-group {%- if data['properties-affected-flooding-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              How many properties affected by flooding is the project likely to benefit?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            These are properties that are at risk today.
+          </p>
+
+          {% if data['properties-affected-flooding-error'] %}
+            <p id="properties-affected-flooding-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['properties-affected-flooding-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-checkboxes govuk-!-margin-bottom-6" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="no-properties-affected-flooding" name="no-properties-affected-flooding" type="checkbox" value="true" {% if data['no-properties-affected-flooding'] == 'true' %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="no-properties-affected-flooding">
+                My project does not benefit any properties at risk of flooding
+              </label>
+            </div>
+          </div>
+
+          <div class="govuk-form-group">
+            <table class="govuk-table" id="properties-flooding-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header"></th>
+                  <th scope="col" class="govuk-table__header">Maintaining flood protection</th>
+                  <th scope="col" class="govuk-table__header">Reducing flood risk (50% or more)</th>
+                  <th scope="col" class="govuk-table__header">Reducing flood risk (less than 50%)</th>
+                  <th scope="col" class="govuk-table__header">Increasing flood resilience</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell"></td>
+                  <td class="govuk-table__cell">
+                    How many properties are estimated to benefit from maintaining existing assets?
+                  </td>
+                  <td class="govuk-table__cell">
+                    How many properties are estimated to benefit from a reduction in flood probability of 50% or more?
+                  </td>
+                  <td class="govuk-table__cell">
+                    How many properties are estimated to benefit from a reduction in flood probability of less than 50% (excluding property flood resilience)?
+                  </td>
+                  <td class="govuk-table__cell">
+                    How many properties will benefit from an individual property intervention?
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell govuk-!-font-weight-bold">Total</td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-maintaining-protection">
+                        Number of properties for maintaining flood protection
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-maintaining-protection" name="properties-maintaining-protection" type="number" inputmode="numeric" value="{{ data['properties-maintaining-protection'] }}">
+                    </div>
+                  </td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-reducing-risk-50-plus">
+                        Number of properties for reducing flood risk 50% or more
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-reducing-risk-50-plus" name="properties-reducing-risk-50-plus" type="number" inputmode="numeric" value="{{ data['properties-reducing-risk-50-plus'] }}">
+                    </div>
+                  </td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-reducing-risk-less-50">
+                        Number of properties for reducing flood risk less than 50%
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-reducing-risk-less-50" name="properties-reducing-risk-less-50" type="number" inputmode="numeric" value="{{ data['properties-reducing-risk-less-50'] }}">
+                    </div>
+                  </td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-increasing-resilience">
+                        Number of properties for increasing flood resilience
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-increasing-resilience" name="properties-increasing-resilience" type="number" inputmode="numeric" value="{{ data['properties-increasing-resilience'] }}">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('no-properties-affected-flooding');
+    const inputs = document.querySelectorAll('#properties-flooding-table input[type="number"]');
+
+    function updateInputs() {
+      if (checkbox.checked) {
+        inputs.forEach(input => {
+          input.disabled = true;
+          input.value = '';
+        });
+      } else {
+        inputs.forEach(input => {
+          input.disabled = false;
+        });
+      }
+    }
+
+    checkbox.addEventListener('change', updateInputs);
+    
+    // Initial check
+    updateInputs();
+  });
+</script>
+{% endblock %}

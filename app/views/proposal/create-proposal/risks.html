@@ -1,0 +1,98 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Select which risks your project protects against" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Back</a>
+
+    {% if data and data['risks-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#risks">{{ data['risks-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/risks">
+      <div class="govuk-form-group {%- if data and data['risks-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" aria-describedby="risks-hint">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Select which risks your project protects against
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Select all that apply
+          </p>
+          {% if data and data['risks-error'] %}
+            <p id="risks-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['risks-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="risks">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="fluvial-flooding" name="fluvial-flooding" type="checkbox" value="true" {% if data['fluvial-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="fluvial-flooding">
+                Fluvial flooding (river flooding)
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="tidal-flooding" name="tidal-flooding" type="checkbox" value="true" {% if data['tidal-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="tidal-flooding">
+                Tidal flooding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="groundwater-flooding" name="groundwater-flooding" type="checkbox" value="true" {% if data['groundwater-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="groundwater-flooding">
+                Groundwater flooding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="surface-water-flooding" name="surface-water-flooding" type="checkbox" value="true" {% if data['surface-water-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="surface-water-flooding">
+                Surface water flooding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="sea-flooding" name="sea-flooding" type="checkbox" value="true" {% if data['sea-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="sea-flooding">
+                Sea flooding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="reservoir-flooding" name="reservoir-flooding" type="checkbox" value="true" {% if data['reservoir-flooding'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="reservoir-flooding">
+                Reservoir flooding
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="coastal-erosion" name="coastal-erosion" type="checkbox" value="true" {% if data['coastal-erosion'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="coastal-erosion">
+                Coastal erosion
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

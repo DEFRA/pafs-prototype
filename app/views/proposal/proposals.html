@@ -30,18 +30,6 @@
         >
       </div>
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="status-filter">
-          Filter by status
-        </label>
-        <select class="govuk-select govuk-!-width-two-thirds" id="status-filter" name="status">
-          <option value="">All statuses</option>
-          <option value="Draft" {% if data['status'] == 'Draft' %}selected{% endif %}>Draft</option>
-          <option value="Submitted" {% if data['status'] == 'Submitted' %}selected{% endif %}>Submitted</option>
-          <option value="Awaiting for NMS review" {% if data['status'] == 'Awaiting for NMS review' %}selected{% endif %}>Awaiting for NMS review</option>
-        </select>
-      </div>
-
       <div class="govuk-button-group">
         <button type="submit" class="govuk-button" data-module="govuk-button">
           Filter

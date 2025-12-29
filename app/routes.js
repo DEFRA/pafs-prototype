@@ -109,7 +109,9 @@ function getFundingSourceLabel(key) {
 // Funding journey helpers
 function hasBaseFundingSource(data, key) {
   const sources =
-    data && Array.isArray(data['funding-sources']) ? data['funding-sources'] : []
+    data && Array.isArray(data['funding-sources'])
+      ? data['funding-sources']
+      : []
   return sources.includes(key)
 }
 
@@ -161,7 +163,9 @@ function nextFundingStepAfterPrivateValues(data) {
 
 function getFundingValueSources(data) {
   const base =
-    data && Array.isArray(data['funding-sources']) ? data['funding-sources'] : []
+    data && Array.isArray(data['funding-sources'])
+      ? data['funding-sources']
+      : []
   const gia =
     data && Array.isArray(data['gia-funding-sources'])
       ? data['gia-funding-sources']
@@ -174,11 +178,14 @@ function getFundingValueSources(data) {
   if (base.includes('precept')) sources.push('precept')
   if (base.includes('other')) sources.push('other')
 
-  gia.forEach((g) => {
-    if (!sources.includes(g)) {
-      sources.push(g)
-    }
-  })
+  // Only include FCRM GIA sources if 'fcrm-grant' was selected
+  if (base.includes('fcrm-grant')) {
+    gia.forEach((g) => {
+      if (!sources.includes(g)) {
+        sources.push(g)
+      }
+    })
+  }
 
   return sources
 }
@@ -191,7 +198,11 @@ function getFundingYears(data) {
   const endYear = Number(endYearRaw)
   const years = []
 
-  if (!Number.isNaN(startYear) && !Number.isNaN(endYear) && endYear >= startYear) {
+  if (
+    !Number.isNaN(startYear) &&
+    !Number.isNaN(endYear) &&
+    endYear >= startYear
+  ) {
     for (let y = startYear; y <= endYear; y++) {
       years.push(y)
     }
@@ -1055,7 +1066,9 @@ router.post('/admin/add-user-pso-ea-areas', function (req, res) {
   req.session.data.psoEaAreas = psoEaAreas
 
   if (!psoEaAreas || psoEaAreas.length === 0) {
-    return res.redirect('/admin/add-user-pso-ea-areas?error=regions-not-selected')
+    return res.redirect(
+      '/admin/add-user-pso-ea-areas?error=regions-not-selected'
+    )
   }
 
   const areasData = loadAreasData()
@@ -1142,7 +1155,9 @@ router.post('/admin/add-user-rma-ea-areas', function (req, res) {
   req.session.data.rmaEaAreas = rmaEaAreas
 
   if (!rmaEaAreas || rmaEaAreas.length === 0) {
-    return res.redirect('/admin/add-user-rma-ea-areas?error=regions-not-selected')
+    return res.redirect(
+      '/admin/add-user-rma-ea-areas?error=regions-not-selected'
+    )
   }
 
   const areasData = loadAreasData()
@@ -1171,7 +1186,9 @@ router.post('/admin/add-user-rma-pso-areas', function (req, res) {
   req.session.data.rmaPsoAreas = rmaPsoAreas
 
   if (!rmaPsoAreas || rmaPsoAreas.length === 0) {
-    return res.redirect('/admin/add-user-rma-pso-areas?error=regions-not-selected')
+    return res.redirect(
+      '/admin/add-user-rma-pso-areas?error=regions-not-selected'
+    )
   }
 
   const areasData = loadAreasData()
@@ -2716,6 +2733,7 @@ router.post('/proposal/create-proposal/start', function (req, res) {
 // GET proposal title page
 router.get('/proposal/create-proposal/title', function (req, res) {
   const error = req.query.error
+  const fromOverview = req.query.from === 'overview'
   let errorMessage = ''
   if (error === 'project-title-empty') {
     errorMessage = 'Enter a project name'
@@ -2723,22 +2741,28 @@ router.get('/proposal/create-proposal/title', function (req, res) {
   res.render('proposal/create-proposal/title', {
     data: req.session.data,
     errorMessage: errorMessage,
-    formData: req.session.data
+    formData: req.session.data,
+    fromOverview: fromOverview
   })
 })
 
 // POST proposal title
 router.post('/proposal/create-proposal/title', function (req, res) {
   const projectTitle = (req.body.projectTitle || '').trim()
+  const fromOverview = req.body.fromOverview === 'true'
 
   // Validation: projectTitle must not be empty
   if (!projectTitle) {
     return res.redirect(
-      '/proposal/create-proposal/title?error=project-title-empty'
+      `/proposal/create-proposal/title?error=project-title-empty${fromOverview ? '&from=overview' : ''}`
     )
   }
 
   req.session.data.proposalTitle = projectTitle
+  req.session.data.projectTitle = projectTitle
+  if (fromOverview) {
+    return res.redirect('/proposal/create-proposal/check-answers')
+  }
   res.redirect('/proposal/create-proposal/rma-selection')
 })
 
@@ -2761,9 +2785,10 @@ router.post('/proposal/create-proposal/title-unique', function (req, res) {
 router.get('/proposal/create-proposal/rma-selection', function (req, res) {
   const organisationsData = loadOrganisationsData()
   const error = req.query.error
+  const fromOverview = req.query.from === 'overview'
   let errorMessage = ''
   if (error === 'rma-not-selected') {
-    errorMessage = 'Select a risk management authority'
+    errorMessage = 'Select a lead risk management authority'
   }
 
   // Filter for RMA type organisations and format as options
@@ -2778,18 +2803,20 @@ router.get('/proposal/create-proposal/rma-selection', function (req, res) {
     data: req.session.data,
     rmaOptions: rmaOptions,
     errorMessage: errorMessage,
-    formData: req.session.data
+    formData: req.session.data,
+    fromOverview: fromOverview
   })
 })
 
 // POST RMA selection
 router.post('/proposal/create-proposal/rma-selection', function (req, res) {
   const selectedRma = req.body.rmaName
+  const fromOverview = req.body.fromOverview === 'true'
 
   // Validation: RMA must be selected
   if (!selectedRma) {
     return res.redirect(
-      '/proposal/create-proposal/rma-selection?error=rma-not-selected'
+      `/proposal/create-proposal/rma-selection?error=rma-not-selected${fromOverview ? '&from=overview' : ''}`
     )
   }
 
@@ -2802,6 +2829,9 @@ router.post('/proposal/create-proposal/rma-selection', function (req, res) {
   req.session.data.selectedRma = selectedRma
   req.session.data.selectedRmaLabel = selectedOrg ? selectedOrg.name : undefined
 
+  if (fromOverview) {
+    return res.redirect('/proposal/create-proposal/check-answers')
+  }
   res.redirect('/proposal/create-proposal/project-type')
 })
 
@@ -2953,6 +2983,7 @@ router.post(
 // Question 1: Project Type
 router.get('/proposal/create-proposal/project-type', function (req, res) {
   const error = req.query.error
+  const fromOverview = req.query.from === 'overview'
   let errorMessage = ''
   if (error === 'project-type-empty') {
     errorMessage = 'Select a project type'
@@ -2962,22 +2993,27 @@ router.get('/proposal/create-proposal/project-type', function (req, res) {
     {
       value: 'DEF',
       label:
-        'Create a new flood and coastal erosion risk management asset or change an existing approach to risk management in an area already with assets (this could include natural flood management measures, property flood resilience or sustainable drainage systems)'
-    },
-    {
-      value: 'REP',
-      label:
-        'Entirely replace an existing flood and coastal erosion risk management asset that is at the end of its life with another asset which sustains the standard of service and the design performance on an equivalent basis (this could include natural flood management measures, property flood resilience or sustainable drainage systems)'
+        'Create a new flood and coastal erosion risk management asset, or change an existing approach to risk management in an area already with assets'
     },
     {
       value: 'REF',
       label:
-        'Replace, or substantially renew, one or more asset elements or components in an existing flood and coastal erosion risk management asset (this could include natural flood management measures, property flood resilience or sustainable drainage systems)'
+        'Substantially renew or replace, one or more asset elements or components in an existing flood and coastal erosion risk management asset'
     },
     {
-      value: 'HCP',
+      value: 'REP',
       label:
-        'Protect, compensate or restore habitats and natural functions, to support coastal risk management legal compliance and wider environmental outcomes (habitat restoration and compensation)'
+        'Replace an existing flood and coastal erosion risk management asset that is at the end of its life with another asset which sustains the standard of service and the design performance on an equivalent basis'
+    },
+    {
+      value: 'ELO',
+      label:
+        'Implement measures to address impacts arising from existing or historic flood or coastal erosion risk management assets or actions to comply with specified environmental legislation - Sites of Special Scientific Interest (SSSIs) and Water Environment Regulations (WER)'
+    },
+    {
+      value: 'HCR',
+      label:
+        'Implement measures to protect, compensate or restore habitats and natural functions, to support coastal risk management legal compliance (Habitat Regulations) and wider environmental outcomes'
     },
     {
       value: 'STR',
@@ -2987,12 +3023,7 @@ router.get('/proposal/create-proposal/project-type', function (req, res) {
     {
       value: 'STU',
       label:
-        'Produce a study to support the case that a project is needed resolve a flood or coastal erosion risk problem – helping to define the scope, purpose, and viability of any future project(s)'
-    },
-    {
-      value: 'ELO',
-      label:
-        'Implement measures to address impacts arising from existing or historic flood or coastal erosion risk management assets or actions to comply with specified environmental legislation - Sites of Special Scientific Interest (SSSIs) and Water Environment Regulations (WER)'
+        'To support the case that a project is needed to resolve a flood or coastal erosion risk problem – helping to define the scope, purpose, and viability of any future project(s)'
     }
   ]
 
@@ -3000,22 +3031,27 @@ router.get('/proposal/create-proposal/project-type', function (req, res) {
     data: req.session.data,
     projectTypeOptions: projectTypeOptions,
     errorMessage: errorMessage,
-    formData: req.session.data
+    formData: req.session.data,
+    fromOverview: fromOverview
   })
 })
 
 // POST project type
 router.post('/proposal/create-proposal/project-type', function (req, res) {
   const projectType = req.body.projectType
+  const fromOverview = req.body.fromOverview === 'true'
 
   // Validation: project type must be selected
   if (!projectType) {
     return res.redirect(
-      '/proposal/create-proposal/project-type?error=project-type-empty'
+      `/proposal/create-proposal/project-type?error=project-type-empty${fromOverview ? '&from=overview' : ''}`
     )
   }
 
   req.session.data.projectType = projectType
+  if (fromOverview) {
+    return res.redirect('/proposal/create-proposal/check-answers')
+  }
   if (projectType === 'DEF' || projectType === 'REP' || projectType === 'REF') {
     return res.redirect('/proposal/create-proposal/project-type-assets')
   }
@@ -3032,18 +3068,37 @@ router.get(
       errorMessage = 'Select at least one intervention type'
     }
 
-    const assetTypeOptions = [
-      { value: 'nfm', label: 'Natural flood management measures' },
-      { value: 'sds', label: 'Sustainable drainage systems' },
-      { value: 'pfr', label: 'Property flood resilience' },
-      { value: 'others', label: 'Others' }
+    const projectType = req.session.data.projectType
+
+    // All intervention types
+    const allInterventions = [
+      { value: 'NFM', label: 'Natural Flood Management' },
+      { value: 'PFE', label: 'Property Flood Resilience' },
+      { value: 'SUD', label: 'Sustainable Drainage Systems' },
+      { value: 'OTH', label: 'Other' }
     ]
+
+    // Filter interventions based on project type
+    let assetTypeOptions = []
+    if (projectType === 'DEF') {
+      // DEF can have: NFM, PFE, SUD, OTH
+      assetTypeOptions = allInterventions
+    } else if (projectType === 'REF') {
+      // REF can have: NFM, SUD, OTH
+      assetTypeOptions = allInterventions.filter((i) =>
+        ['NFM', 'SUD', 'OTH'].includes(i.value)
+      )
+    } else if (projectType === 'REP') {
+      // REP can have: NFM, PFE, SUD, OTH
+      assetTypeOptions = allInterventions
+    }
 
     res.render('proposal/create-proposal/project-type-assets', {
       data: req.session.data,
       assetTypeOptions: assetTypeOptions,
       errorMessage: errorMessage,
-      formData: req.session.data
+      formData: req.session.data,
+      fromOverview: req.query.from === 'overview'
     })
   }
 )
@@ -3054,19 +3109,24 @@ router.post(
   function (req, res) {
     let assetTypes = toArray(req.body.assetTypes)
     assetTypes = assetTypes.filter((type) => type && type !== '_unchecked')
+    const fromOverview = req.body.fromOverview === 'true'
 
     // Validation: at least one asset type must be selected
     if (assetTypes.length === 0) {
       return res.redirect(
-        '/proposal/create-proposal/project-type-assets?error=assets-empty'
+        `/proposal/create-proposal/project-type-assets?error=assets-empty${fromOverview ? '&from=overview' : ''}`
       )
     }
 
     req.session.data.assetTypes = assetTypes
 
-    // If only one selection, skip to next question (financial-year)
+    // If only one selection, automatically set it as primary benefit and skip to financial-year
     // If multiple selections, go to Question 2b (primary benefit)
     if (assetTypes.length === 1) {
+      req.session.data.primaryBenefit = assetTypes[0]
+      if (fromOverview) {
+        return res.redirect('/proposal/create-proposal/check-answers')
+      }
       return res.redirect('/proposal/create-proposal/financial-year')
     }
     return res.redirect(
@@ -3087,10 +3147,10 @@ router.get(
 
     // Generate options based on selected asset types in Question 2a
     const assetTypeMap = {
-      nfm: { value: 'nfm', label: 'Natural flood management measures' },
-      sds: { value: 'sds', label: 'Sustainable drainage systems' },
-      pfr: { value: 'pfr', label: 'Property flood resilience' },
-      others: { value: 'others', label: 'Others' }
+      NFM: { value: 'NFM', label: 'Natural Flood Management' },
+      PFE: { value: 'PFE', label: 'Property Flood Resilience' },
+      SUD: { value: 'SUD', label: 'Sustainable Drainage Systems' },
+      OTH: { value: 'OTH', label: 'Other' }
     }
 
     // Only show options that are valid and were selected
@@ -3105,7 +3165,8 @@ router.get(
       data: req.session.data,
       primaryBenefitOptions: primaryBenefitOptions,
       errorMessage: errorMessage,
-      formData: req.session.data
+      formData: req.session.data,
+      fromOverview: req.query.from === 'overview'
     })
   }
 )
@@ -3115,15 +3176,19 @@ router.post(
   '/proposal/create-proposal/project-type-primary-benefit',
   function (req, res) {
     const primaryBenefit = req.body.primaryBenefit
+    const fromOverview = req.body.fromOverview === 'true'
 
     // Validation: primary benefit must be selected
     if (!primaryBenefit) {
       return res.redirect(
-        '/proposal/create-proposal/project-type-primary-benefit?error=primary-benefit-empty'
+        `/proposal/create-proposal/project-type-primary-benefit?error=primary-benefit-empty${fromOverview ? '&from=overview' : ''}`
       )
     }
 
     req.session.data.primaryBenefit = primaryBenefit
+    if (fromOverview) {
+      return res.redirect('/proposal/create-proposal/check-answers')
+    }
     res.redirect('/proposal/create-proposal/financial-year')
   }
 )
@@ -3131,6 +3196,7 @@ router.post(
 // GET financial year start page
 router.get('/proposal/create-proposal/financial-year', function (req, res) {
   const error = req.query.error
+  const fromOverview = req.query.from === 'overview'
   let errorMessage = ''
   if (error === 'financial-year-empty') {
     errorMessage =
@@ -3155,7 +3221,8 @@ router.get('/proposal/create-proposal/financial-year', function (req, res) {
     financialYearOptions: years,
     afterYear: afterYear,
     errorMessage: errorMessage,
-    formData: req.session.data
+    formData: req.session.data,
+    fromOverview: fromOverview
   })
 })
 
@@ -3163,6 +3230,7 @@ router.get('/proposal/create-proposal/financial-year', function (req, res) {
 router.post('/proposal/create-proposal/financial-year', function (req, res) {
   const selectedYear = req.body.financialYear
   const afterYear = req.body.afterYear
+  const fromOverview = req.body.fromOverview === 'true'
 
   if (selectedYear) {
     req.session.data.financialYear = selectedYear
@@ -3171,6 +3239,11 @@ router.post('/proposal/create-proposal/financial-year', function (req, res) {
       req.session.data.financialYearLabel = `April ${yearNumber} to March ${yearNumber + 1}`
     } else {
       req.session.data.financialYearLabel = selectedYear
+    }
+    // Clear the 'after' field since they're the same
+    delete req.session.data.financialYearAfter
+    if (fromOverview) {
+      return res.redirect('/proposal/create-proposal/check-answers')
     }
     return res.redirect('/proposal/create-proposal/financial-year-spending')
   }
@@ -3189,7 +3262,13 @@ router.get(
     let errorMessage = ''
     if (error === 'financial-year-after-empty') {
       errorMessage =
-        'Enter the financial year when the project first requires funding'
+        'Enter the financial year when the project will begin spending funds'
+    } else if (error === 'financial-year-after-invalid') {
+      errorMessage = 'Enter a valid financial year'
+    } else if (error === 'financial-year-after-past') {
+      errorMessage = 'The financial year must be in the future'
+    } else if (error === 'financial-year-after-future') {
+      errorMessage = 'The financial year must be 2100 or earlier'
     }
     res.render('proposal/create-proposal/financial-year-after', {
       data: req.session.data,
@@ -3204,18 +3283,47 @@ router.post(
   '/proposal/create-proposal/financial-year-after',
   function (req, res) {
     const afterYearValue = (req.body.financialYearAfter || '').trim()
+
+    // Calculate current financial year
+    const now = new Date()
+    const currentFinancialYear =
+      now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
+
     if (!afterYearValue) {
       return res.redirect(
         '/proposal/create-proposal/financial-year-after?error=financial-year-after-empty'
       )
     }
-    req.session.data.financialYearAfter = afterYearValue
+
     const yearNumber = Number(afterYearValue)
-    if (!Number.isNaN(yearNumber)) {
-      req.session.data.financialYearAfterLabel = `April ${yearNumber} to March ${yearNumber + 1}`
-    } else {
-      req.session.data.financialYearAfterLabel = afterYearValue
+
+    // Validate it's a number
+    if (Number.isNaN(yearNumber)) {
+      return res.redirect(
+        '/proposal/create-proposal/financial-year-after?error=financial-year-after-invalid'
+      )
     }
+
+    // Validate it's current year or later
+    if (yearNumber < currentFinancialYear) {
+      return res.redirect(
+        '/proposal/create-proposal/financial-year-after?error=financial-year-after-past'
+      )
+    }
+
+    // Validate it's 2100 or earlier
+    if (yearNumber > 2100) {
+      return res.redirect(
+        '/proposal/create-proposal/financial-year-after?error=financial-year-after-future'
+      )
+    }
+
+    req.session.data.financialYear = afterYearValue
+    req.session.data.financialYearLabel = `April ${yearNumber} to March ${yearNumber + 1}`
+    // Keep afterYearValue for tracking that manual entry was used
+    req.session.data.financialYearAfter = afterYearValue
+    req.session.data.financialYearAfterLabel = `April ${yearNumber} to March ${yearNumber + 1}`
+
     return res.redirect('/proposal/create-proposal/financial-year-spending')
   }
 )
@@ -3224,30 +3332,45 @@ router.get(
   '/proposal/create-proposal/financial-year-spending',
   function (req, res) {
     const error = req.query.error
+    const fromOverview = req.query.from === 'overview'
     let errorMessage = ''
     if (error === 'financial-year-spending-empty') {
       errorMessage =
         'Select the financial year when the project will stop spending funds'
+    } else if (error === 'financial-year-spending-before-start') {
+      errorMessage = 'The end year must be after the start year'
     }
+
     // Calculate current and next 5 financial years
+    // But start from the project start year if it's later
     const now = new Date()
     let currentYear =
       now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
+    const startYear = Number(
+      req.session.data.financialYear ||
+        req.session.data.financialYearAfter ||
+        currentYear
+    )
+
+    // Use the later of current year or start year
+    const baseYear = Math.max(currentYear, startYear)
+
     const years = []
     for (let i = 0; i < 6; i++) {
       years.push({
-        value: `${currentYear + i}`,
-        label: `April ${currentYear + i} to March ${currentYear + i + 1}`
+        value: `${baseYear + i}`,
+        label: `April ${baseYear + i} to March ${baseYear + i + 1}`
       })
     }
-    const afterYear = currentYear + 5 + 1
+    const afterYear = baseYear + 5 + 1
 
     res.render('proposal/create-proposal/financial-year-spending', {
       data: req.session.data,
       financialYearOptions: years,
       afterYear: afterYear,
       errorMessage: errorMessage,
-      formData: req.session.data
+      formData: req.session.data,
+      fromOverview: fromOverview
     })
   }
 )
@@ -3256,26 +3379,44 @@ router.get(
 router.post(
   '/proposal/create-proposal/financial-year-spending',
   function (req, res) {
-    const selectedYear = req.body.financialYear
+    const selectedYear = req.body.financialYearSpending
     const afterYear = req.body.afterYear
+    const fromOverview = req.body.fromOverview === 'true'
 
     if (selectedYear) {
-      req.session.data.financialYearSpending = selectedYear
       const yearNumber = Number(selectedYear)
+      const startYear = Number(
+        req.session.data.financialYear || req.session.data.financialYearAfter
+      )
+
+      // Validate end year is after start year
+      if (
+        !Number.isNaN(yearNumber) &&
+        !Number.isNaN(startYear) &&
+        yearNumber <= startYear
+      ) {
+        return res.redirect(
+          `/proposal/create-proposal/financial-year-spending?error=financial-year-spending-before-start${fromOverview ? '&from=overview' : ''}`
+        )
+      }
+
+      req.session.data.financialYearSpending = selectedYear
       if (!Number.isNaN(yearNumber)) {
         req.session.data.financialYearSpendingLabel = `April ${yearNumber} to March ${yearNumber + 1}`
       } else {
         req.session.data.financialYearSpendingLabel = selectedYear
       }
+      // Clear the 'after' field since they're the same
+      delete req.session.data.financialYearSpendingAfter
       return res.redirect('/proposal/create-proposal/check-answers')
     }
     if (afterYear) {
       return res.redirect(
-        '/proposal/create-proposal/financial-year-spending-after'
+        `/proposal/create-proposal/financial-year-spending-after${fromOverview ? '?from=overview' : ''}`
       )
     }
     return res.redirect(
-      '/proposal/create-proposal/financial-year-spending?error=financial-year-spending-empty'
+      `/proposal/create-proposal/financial-year-spending?error=financial-year-spending-empty${fromOverview ? '&from=overview' : ''}`
     )
   }
 )
@@ -3284,15 +3425,25 @@ router.get(
   '/proposal/create-proposal/financial-year-spending-after',
   function (req, res) {
     const error = req.query.error
+    const fromOverview = req.query.from === 'overview'
     let errorMessage = ''
     if (error === 'financial-year-spending-after-empty') {
       errorMessage =
         'Enter the financial year when the project will stop spending funds'
+    } else if (error === 'financial-year-spending-after-invalid') {
+      errorMessage = 'Enter a valid financial year'
+    } else if (error === 'financial-year-spending-after-past') {
+      errorMessage = 'The financial year must be in the future'
+    } else if (error === 'financial-year-spending-after-future') {
+      errorMessage = 'The financial year must be 2100 or earlier'
+    } else if (error === 'financial-year-spending-after-before-start') {
+      errorMessage = 'The end year must be after the start year'
     }
     res.render('proposal/create-proposal/financial-year-spending-after', {
       data: req.session.data,
       errorMessage: errorMessage,
-      formData: req.session.data
+      formData: req.session.data,
+      fromOverview: fromOverview
     })
   }
 )
@@ -3302,18 +3453,64 @@ router.post(
   '/proposal/create-proposal/financial-year-spending-after',
   function (req, res) {
     const afterYearValue = (req.body.financialYearSpendingAfter || '').trim()
+    const fromOverview = req.body.fromOverview === 'true'
+
+    // Calculate current financial year
+    const now = new Date()
+    const currentFinancialYear =
+      now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
+    const startYear = Number(
+      req.session.data.financialYear || req.session.data.financialYearAfter
+    )
+
+    console.log('DEBUG: Start year validation')
+    console.log('  financialYear:', req.session.data.financialYear)
+    console.log('  financialYearAfter:', req.session.data.financialYearAfter)
+    console.log('  startYear (calculated):', startYear)
+    console.log('  afterYearValue (end year):', afterYearValue)
+    console.log('  yearNumber (end year as number):', Number(afterYearValue))
+
     if (!afterYearValue) {
       return res.redirect(
-        '/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-empty'
+        `/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-empty${fromOverview ? '&from=overview' : ''}`
       )
     }
-    req.session.data.financialYearSpendingAfter = afterYearValue
+
     const yearNumber = Number(afterYearValue)
-    if (!Number.isNaN(yearNumber)) {
-      req.session.data.financialYearSpendingAfterLabel = `April ${yearNumber} to March ${yearNumber + 1}`
-    } else {
-      req.session.data.financialYearSpendingAfterLabel = afterYearValue
+
+    // Validate it's a number
+    if (Number.isNaN(yearNumber)) {
+      return res.redirect(
+        `/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-invalid${fromOverview ? '&from=overview' : ''}`
+      )
     }
+
+    // Validate it's current year or later
+    if (yearNumber < currentFinancialYear) {
+      return res.redirect(
+        `/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-past${fromOverview ? '&from=overview' : ''}`
+      )
+    }
+
+    // Validate it's 2100 or earlier
+    if (yearNumber > 2100) {
+      return res.redirect(
+        `/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-future${fromOverview ? '&from=overview' : ''}`
+      )
+    }
+
+    // Validate it's after start year
+    if (!Number.isNaN(startYear) && yearNumber <= startYear) {
+      return res.redirect(
+        `/proposal/create-proposal/financial-year-spending-after?error=financial-year-spending-after-before-start${fromOverview ? '&from=overview' : ''}`
+      )
+    }
+
+    req.session.data.financialYearSpending = afterYearValue
+    req.session.data.financialYearSpendingLabel = `April ${yearNumber} to March ${yearNumber + 1}`
+    // Keep afterYearValue for tracking that manual entry was used
+    req.session.data.financialYearSpendingAfter = afterYearValue
+    req.session.data.financialYearSpendingAfterLabel = `April ${yearNumber} to March ${yearNumber + 1}`
     return res.redirect('/proposal/create-proposal/check-answers')
   }
 )
@@ -3346,7 +3543,12 @@ function parseMonthYear(monthStr, yearStr) {
 
 function isMonthYearPlausible(date) {
   if (!date) return false
-  return date.month >= 1 && date.month <= 12 && date.year >= 2000 && date.year <= 2100
+  return (
+    date.month >= 1 &&
+    date.month <= 12 &&
+    date.year >= 2000 &&
+    date.year <= 2100
+  )
 }
 
 function isDateInFuture(date) {
@@ -3379,14 +3581,17 @@ router.get(
   '/proposal/create-proposal/important-dates/obc-start',
   function (req, res) {
     const error = req.query.error
+    const fromOverview = req.query.from === 'overview'
     let errorMessage = ''
     if (error === 'obc-start-empty') {
-      errorMessage = "Enter the date you expect to award the project's main contract"
+      errorMessage =
+        "Enter the date you expect to award the project's main contract"
     }
     res.render('proposal/create-proposal/obc-start-date', {
       data: req.session.data,
       errorMessage: errorMessage,
-      formData: req.session.data
+      formData: req.session.data,
+      fromOverview: fromOverview
     })
   }
 )
@@ -3410,7 +3615,7 @@ router.post(
         data: sessionData,
         // From StartOutlineBusinessCaseDateStep
         errorMessage:
-          "Enter the date you expect to start your outline business case",
+          'Enter the date you expect to start your outline business case',
         formData: sessionData
       })
     }
@@ -3478,9 +3683,12 @@ router.post(
       sessionData['obc-start-year']
     )
 
-    if (isMonthYearPlausible(startDate) && isLaterThan(startDate, completionDate)) {
-      const startLabel = formatMonthYear(startDate) ||
-        `${startDate.month} ${startDate.year}`
+    if (
+      isMonthYearPlausible(startDate) &&
+      isLaterThan(startDate, completionDate)
+    ) {
+      const startLabel =
+        formatMonthYear(startDate) || `${startDate.month} ${startDate.year}`
       const message =
         'You expect to start your outline business case on ' +
         startLabel +
@@ -3547,8 +3755,12 @@ router.post(
       sessionData['obc-completion-year']
     )
 
-    if (isMonthYearPlausible(completionDate) && isLaterThan(completionDate, awardDate)) {
-      const completionLabel = formatMonthYear(completionDate) ||
+    if (
+      isMonthYearPlausible(completionDate) &&
+      isLaterThan(completionDate, awardDate)
+    ) {
+      const completionLabel =
+        formatMonthYear(completionDate) ||
         `${completionDate.month} ${completionDate.year}`
       const message =
         'You expect to complete your outline business case on ' +
@@ -3601,7 +3813,11 @@ router.post(
     const startConstructionDate = parseMonthYear(monthInput, yearInput)
 
     // Presence and plausibility
-    if (!monthInput || !yearInput || !isMonthYearPlausible(startConstructionDate)) {
+    if (
+      !monthInput ||
+      !yearInput ||
+      !isMonthYearPlausible(startConstructionDate)
+    ) {
       return res.render('proposal/create-proposal/start-construction-date', {
         data: sessionData,
         errorMessage:
@@ -3616,9 +3832,12 @@ router.post(
       sessionData['contract-awarded-year']
     )
 
-    if (isMonthYearPlausible(awardDate) && isLaterThan(awardDate, startConstructionDate)) {
-      const awardLabel = formatMonthYear(awardDate) ||
-        `${awardDate.month} ${awardDate.year}`
+    if (
+      isMonthYearPlausible(awardDate) &&
+      isLaterThan(awardDate, startConstructionDate)
+    ) {
+      const awardLabel =
+        formatMonthYear(awardDate) || `${awardDate.month} ${awardDate.year}`
       const message =
         "You expect to award the project's main contract on " +
         awardLabel +
@@ -3670,7 +3889,11 @@ router.post(
     const readyForServiceDate = parseMonthYear(monthInput, yearInput)
 
     // Presence and plausibility
-    if (!monthInput || !yearInput || !isMonthYearPlausible(readyForServiceDate)) {
+    if (
+      !monthInput ||
+      !yearInput ||
+      !isMonthYearPlausible(readyForServiceDate)
+    ) {
       return res.render('proposal/create-proposal/ready-for-service-date', {
         data: sessionData,
         errorMessage:
@@ -3689,7 +3912,8 @@ router.post(
       isMonthYearPlausible(startConstructionDate) &&
       isLaterThan(startConstructionDate, readyForServiceDate)
     ) {
-      const startLabel = formatMonthYear(startConstructionDate) ||
+      const startLabel =
+        formatMonthYear(startConstructionDate) ||
         `${startConstructionDate.month} ${startConstructionDate.year}`
       const message =
         'You expect to start the work on ' +
@@ -3705,6 +3929,122 @@ router.post(
 
     req.session.data['ready-for-service-month'] = monthInput
     req.session.data['ready-for-service-year'] = yearInput
+    res.redirect(
+      '/proposal/create-proposal/important-dates/could-start-earlier'
+    )
+  }
+)
+
+// GET Could Start Earlier
+router.get(
+  '/proposal/create-proposal/important-dates/could-start-earlier',
+  function (req, res) {
+    const error = req.query.error
+    let errorMessage = ''
+    if (error === 'could-start-earlier-empty') {
+      errorMessage =
+        'Select yes if the project could start earlier if Grant in Aid funding was made available'
+    }
+    res.render('proposal/create-proposal/could-start-earlier', {
+      data: req.session.data,
+      errorMessage: errorMessage,
+      formData: req.session.data
+    })
+  }
+)
+
+// POST Could Start Earlier
+router.post(
+  '/proposal/create-proposal/important-dates/could-start-earlier',
+  function (req, res) {
+    const couldStartEarlier = req.body['could-start-earlier']
+
+    if (!couldStartEarlier) {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/could-start-earlier?error=could-start-earlier-empty'
+      )
+    }
+
+    req.session.data['could-start-earlier'] = couldStartEarlier
+
+    if (couldStartEarlier === 'yes') {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/earliest-with-gia'
+      )
+    }
+
+    // If no, skip the date question and go to check answers
+    req.session.data['important-dates-added'] = true
+    res.redirect('/proposal/create-proposal/check-answers')
+  }
+)
+
+// GET Earliest Start Date With GIA
+router.get(
+  '/proposal/create-proposal/important-dates/earliest-with-gia',
+  function (req, res) {
+    const error = req.query.error
+    let errorMessage = ''
+    if (error === 'earliest-with-gia-empty') {
+      errorMessage = 'Tell us the earliest date the project can start'
+    } else if (error === 'earliest-with-gia-invalid-month') {
+      errorMessage = 'The month must be between 1 and 12'
+    } else if (error === 'earliest-with-gia-invalid-year') {
+      errorMessage = 'The year must be between 2000 and 2100'
+    } else if (error === 'earliest-with-gia-past') {
+      errorMessage = 'You cannot enter a date in the past'
+    }
+    res.render('proposal/create-proposal/earliest-with-gia-date', {
+      data: req.session.data,
+      errorMessage: errorMessage,
+      formData: req.session.data
+    })
+  }
+)
+
+// POST Earliest Start Date With GIA
+router.post(
+  '/proposal/create-proposal/important-dates/earliest-with-gia',
+  function (req, res) {
+    const sessionData = req.session.data || {}
+    const monthInput = (req.body['earliest-with-gia-month'] || '').trim()
+    const yearInput = (req.body['earliest-with-gia-year'] || '').trim()
+
+    sessionData['earliest-with-gia-month'] = monthInput
+    sessionData['earliest-with-gia-year'] = yearInput
+
+    const earliestDate = parseMonthYear(monthInput, yearInput)
+
+    // Presence check
+    if (!monthInput || !yearInput) {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/earliest-with-gia?error=earliest-with-gia-empty'
+      )
+    }
+
+    // Month validation
+    if (!earliestDate || earliestDate.month < 1 || earliestDate.month > 12) {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/earliest-with-gia?error=earliest-with-gia-invalid-month'
+      )
+    }
+
+    // Year validation
+    if (earliestDate.year < 2000 || earliestDate.year > 2100) {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/earliest-with-gia?error=earliest-with-gia-invalid-year'
+      )
+    }
+
+    // Check if date is in future
+    if (!isDateInFuture(earliestDate)) {
+      return res.redirect(
+        '/proposal/create-proposal/important-dates/earliest-with-gia?error=earliest-with-gia-past'
+      )
+    }
+
+    req.session.data['earliest-with-gia-month'] = monthInput
+    req.session.data['earliest-with-gia-year'] = yearInput
     req.session.data['important-dates-added'] = true
     res.redirect('/proposal/create-proposal/check-answers')
   }
@@ -3799,9 +4139,12 @@ router.post(
     if (action === 'add') {
       data.publicContributors = raw.concat([''])
       delete data['public-contributors-error']
-      return res.render('proposal/create-proposal/funding-public-contributors', {
-        data: data
-      })
+      return res.render(
+        'proposal/create-proposal/funding-public-contributors',
+        {
+          data: data
+        }
+      )
     }
 
     const names = raw.map((n) => (n || '').trim()).filter((n) => n)
@@ -3809,19 +4152,26 @@ router.post(
     if (names.length === 0) {
       data['public-contributors-error'] = 'Please add at least one contributor'
       data.publicContributors = raw
-      return res.render('proposal/create-proposal/funding-public-contributors', {
-        data: data
-      })
+      return res.render(
+        'proposal/create-proposal/funding-public-contributors',
+        {
+          data: data
+        }
+      )
     }
 
     const lower = names.map((n) => n.toLowerCase())
     const hasDuplicates = lower.some((n, idx) => lower.indexOf(n) !== idx)
     if (hasDuplicates) {
-      data['public-contributors-error'] = 'Please add each contributor only once'
+      data['public-contributors-error'] =
+        'Please add each contributor only once'
       data.publicContributors = raw
-      return res.render('proposal/create-proposal/funding-public-contributors', {
-        data: data
-      })
+      return res.render(
+        'proposal/create-proposal/funding-public-contributors',
+        {
+          data: data
+        }
+      )
     }
 
     delete data['public-contributors-error']
@@ -3914,7 +4264,8 @@ router.post(
       return res.render(
         'proposal/create-proposal/funding-public-contributor-values',
         {
-          data: data
+          data: data,
+          fundingYears: years
         }
       )
     }
@@ -3969,9 +4320,12 @@ router.post(
     if (names.length === 0) {
       data['private-contributors-error'] = 'Please add at least one contributor'
       data.privateContributors = raw
-      return res.render('proposal/create-proposal/funding-private-contributors', {
-        data: data
-      })
+      return res.render(
+        'proposal/create-proposal/funding-private-contributors',
+        {
+          data: data
+        }
+      )
     }
 
     const lower = names.map((n) => n.toLowerCase())
@@ -3980,9 +4334,12 @@ router.post(
       data['private-contributors-error'] =
         'Please add each contributor only once'
       data.privateContributors = raw
-      return res.render('proposal/create-proposal/funding-private-contributors', {
-        data: data
-      })
+      return res.render(
+        'proposal/create-proposal/funding-private-contributors',
+        {
+          data: data
+        }
+      )
     }
 
     delete data['private-contributors-error']
@@ -4075,7 +4432,8 @@ router.post(
       return res.render(
         'proposal/create-proposal/funding-private-contributor-values',
         {
-          data: data
+          data: data,
+          fundingYears: years
         }
       )
     }
@@ -4172,10 +4530,10 @@ router.get(
 
     const fundingYears = getFundingYears(data)
 
-    res.render(
-      'proposal/create-proposal/funding-other-ea-contributor-values',
-      { data: data, fundingYears: fundingYears }
-    )
+    res.render('proposal/create-proposal/funding-other-ea-contributor-values', {
+      data: data,
+      fundingYears: fundingYears
+    })
   }
 )
 
@@ -4234,7 +4592,7 @@ router.post(
       data.otherEaContributorValues = values
       return res.render(
         'proposal/create-proposal/funding-other-ea-contributor-values',
-        { data: data }
+        { data: data, fundingYears: years }
       )
     }
 
@@ -4261,7 +4619,11 @@ router.get('/proposal/create-proposal/funding-values', function (req, res) {
   const startYear = Number(startYearRaw)
   const endYear = Number(endYearRaw)
   const years = []
-  if (!Number.isNaN(startYear) && !Number.isNaN(endYear) && endYear >= startYear) {
+  if (
+    !Number.isNaN(startYear) &&
+    !Number.isNaN(endYear) &&
+    endYear >= startYear
+  ) {
     for (let y = startYear; y <= endYear; y++) {
       years.push(y)
     }
@@ -4288,7 +4650,11 @@ router.post('/proposal/create-proposal/funding-values', function (req, res) {
   const startYear = Number(startYearRaw)
   const endYear = Number(endYearRaw)
   const years = []
-  if (!Number.isNaN(startYear) && !Number.isNaN(endYear) && endYear >= startYear) {
+  if (
+    !Number.isNaN(startYear) &&
+    !Number.isNaN(endYear) &&
+    endYear >= startYear
+  ) {
     for (let y = startYear; y <= endYear; y++) {
       years.push(y)
     }
@@ -4301,9 +4667,7 @@ router.post('/proposal/create-proposal/funding-values', function (req, res) {
     fundingValues[year] = fundingValues[year] || {}
     sources.forEach((source) => {
       const fieldName = `funding-value-${year}-${source}`
-      const rawAmount = (req.body[fieldName] || '')
-        .toString()
-        .replace(/,/g, '')
+      const rawAmount = (req.body[fieldName] || '').toString().replace(/,/g, '')
       const amount = rawAmount === '' ? 0 : Number(rawAmount)
       if (!Number.isNaN(amount)) {
         fundingValues[year][source] = amount
@@ -4361,10 +4725,7 @@ router.get(
       }
     })
 
-    const grandTotal = fundingTotals.reduce(
-      (sum, item) => sum + item.total,
-      0
-    )
+    const grandTotal = fundingTotals.reduce((sum, item) => sum + item.total, 0)
 
     res.render('proposal/create-proposal/funding-values-summary', {
       data: data,
@@ -4394,7 +4755,10 @@ router.get('/proposal/create-proposal/check-answers', function (req, res) {
 
   const importantDates = {
     obcStart: formatMonthYear(
-      parseMonthYear(data && data['obc-start-month'], data && data['obc-start-year'])
+      parseMonthYear(
+        data && data['obc-start-month'],
+        data && data['obc-start-year']
+      )
     ),
     obcCompletion: formatMonthYear(
       parseMonthYear(
@@ -4419,12 +4783,24 @@ router.get('/proposal/create-proposal/check-answers', function (req, res) {
         data && data['ready-for-service-month'],
         data && data['ready-for-service-year']
       )
+    ),
+    couldStartEarlier: data && data['could-start-earlier'],
+    earliestWithGia: formatMonthYear(
+      parseMonthYear(
+        data && data['earliest-with-gia-month'],
+        data && data['earliest-with-gia-year']
+      )
     )
   }
 
   const fundingSources = (data && data['funding-sources']) || []
+  const giaFundingSources = (data && data['gia-funding-sources']) || []
+
+  // Combine base funding sources and FCRM GIA sources
+  const allSelectedSources = [...fundingSources, ...giaFundingSources]
+
   const fundingSummary = {
-    selectedSources: fundingSources.map((key) => ({
+    selectedSources: allSelectedSources.map((key) => ({
       key: key,
       label: getFundingSourceLabel(key)
     }))
@@ -4449,4 +4825,723 @@ router.post('/proposal/create-proposal/check-answers', function (req, res) {
   res.redirect('/proposal/proposals')
 })
 
+// GET risks page
+router.get('/proposal/create-proposal/risks', function (req, res) {
+  const data = req.session.data
+  const fundingYears = getFundingYears(data)
+
+  res.render('proposal/create-proposal/risks', {
+    data: data,
+    fundingYears: fundingYears
+  })
+})
+
+// POST risks page
+router.post('/proposal/create-proposal/risks', function (req, res) {
+  const data = req.session.data
+
+  // Clear any previous error
+  delete data['risks-error']
+
+  // Helper to check if a checkbox is checked
+  function isChecked(val) {
+    if (!val) return false
+    if (Array.isArray(val)) {
+      return val.includes('true')
+    }
+    return val === 'true'
+  }
+
+  // Get checkbox values from the submitted form
+  const fluvialFlooding = isChecked(req.body['fluvial-flooding'])
+  const tidalFlooding = isChecked(req.body['tidal-flooding'])
+  const groundwaterFlooding = isChecked(req.body['groundwater-flooding'])
+  const surfaceWaterFlooding = isChecked(req.body['surface-water-flooding'])
+  const seaFlooding = isChecked(req.body['sea-flooding'])
+  const reservoirFlooding = isChecked(req.body['reservoir-flooding'])
+  const coastalErosion = isChecked(req.body['coastal-erosion'])
+
+  const selectedRisks = []
+  if (fluvialFlooding) selectedRisks.push('fluvial-flooding')
+  if (tidalFlooding) selectedRisks.push('tidal-flooding')
+  if (groundwaterFlooding) selectedRisks.push('groundwater-flooding')
+  if (surfaceWaterFlooding) selectedRisks.push('surface-water-flooding')
+  if (seaFlooding) selectedRisks.push('sea-flooding')
+  if (reservoirFlooding) selectedRisks.push('reservoir-flooding')
+  if (coastalErosion) selectedRisks.push('coastal-erosion')
+
+  if (selectedRisks.length === 0) {
+    data['risks-error'] = 'Please select at least one risk'
+    // Don't save any values, just redirect to show error
+    return res.redirect('/proposal/create-proposal/risks')
+  }
+
+  // Clear previous risk selections first
+  delete data['fluvial-flooding']
+  delete data['tidal-flooding']
+  delete data['groundwater-flooding']
+  delete data['surface-water-flooding']
+  delete data['sea-flooding']
+  delete data['reservoir-flooding']
+  delete data['coastal-erosion']
+
+  // Save only the checked selections
+  if (fluvialFlooding) data['fluvial-flooding'] = 'true'
+  if (tidalFlooding) data['tidal-flooding'] = 'true'
+  if (groundwaterFlooding) data['groundwater-flooding'] = 'true'
+  if (surfaceWaterFlooding) data['surface-water-flooding'] = 'true'
+  if (seaFlooding) data['sea-flooding'] = 'true'
+  if (reservoirFlooding) data['reservoir-flooding'] = 'true'
+  if (coastalErosion) data['coastal-erosion'] = 'true'
+
+  data['risks-selected'] = true
+  data['selected-risks'] = selectedRisks
+
+  // If multiple risks selected, ask for main risk
+  if (selectedRisks.length > 1) {
+    res.redirect('/proposal/create-proposal/main-risk')
+  } else {
+    // Single risk selected, set it as main risk automatically
+    data['main-risk'] = selectedRisks[0]
+    res.redirect('/proposal/create-proposal/properties-affected-flooding')
+  }
+})
+
+// GET main risk page
+router.get('/proposal/create-proposal/main-risk', function (req, res) {
+  const data = req.session.data
+
+  res.render('proposal/create-proposal/main-risk', {
+    data: data
+  })
+})
+
+// POST main risk page
+router.post('/proposal/create-proposal/main-risk', function (req, res) {
+  const data = req.session.data
+
+  // Clear any previous error
+  delete data['main-risk-error']
+
+  const mainRisk = req.body['main-risk']
+
+  if (!mainRisk) {
+    data['main-risk-error'] = 'Please select the main source of risk'
+    return res.redirect('/proposal/create-proposal/main-risk')
+  }
+
+  // Save the main risk
+  data['main-risk'] = mainRisk
+
+  res.redirect('/proposal/create-proposal/properties-affected-flooding')
+})
+
+// GET properties affected by flooding
+router.get(
+  '/proposal/create-proposal/properties-affected-flooding',
+  function (req, res) {
+    const data = req.session.data
+    res.render('proposal/create-proposal/properties-affected-flooding', {
+      data: data
+    })
+  }
+)
+
+// POST properties affected by flooding
+router.post(
+  '/proposal/create-proposal/properties-affected-flooding',
+  function (req, res) {
+    const data = req.session.data
+    delete data['properties-affected-flooding-error']
+
+    // Helper to check if a checkbox is checked
+    function isChecked(val) {
+      if (!val) return false
+      if (Array.isArray(val)) {
+        return val.includes('true')
+      }
+      return val === 'true'
+    }
+
+    const noProperties = isChecked(req.body['no-properties-affected-flooding'])
+
+    if (noProperties) {
+      data['no-properties-affected-flooding'] = 'true'
+      // Clear values
+      delete data['properties-maintaining-protection']
+      delete data['properties-reducing-risk-50-plus']
+      delete data['properties-reducing-risk-less-50']
+      delete data['properties-increasing-resilience']
+    } else {
+      delete data['no-properties-affected-flooding']
+
+      const p1 = req.body['properties-maintaining-protection']
+      const p2 = req.body['properties-reducing-risk-50-plus']
+      const p3 = req.body['properties-reducing-risk-less-50']
+      const p4 = req.body['properties-increasing-resilience']
+
+      // Check if at least one value is provided
+      if (!p1 && !p2 && !p3 && !p4) {
+        data['properties-affected-flooding-error'] =
+          'Enter the number of properties affected by flooding'
+        return res.redirect(
+          '/proposal/create-proposal/properties-affected-flooding'
+        )
+      }
+
+      data['properties-maintaining-protection'] = p1
+      data['properties-reducing-risk-50-plus'] = p2
+      data['properties-reducing-risk-less-50'] = p3
+      data['properties-increasing-resilience'] = p4
+    }
+
+    // Navigation logic
+    if (data['coastal-erosion']) {
+      res.redirect(
+        '/proposal/create-proposal/properties-affected-coastal-erosion'
+      )
+    } else {
+      res.redirect('/proposal/create-proposal/current-flood-risk')
+    }
+  }
+)
+
+// GET properties affected by coastal erosion
+router.get(
+  '/proposal/create-proposal/properties-affected-coastal-erosion',
+  function (req, res) {
+    const data = req.session.data
+    res.render('proposal/create-proposal/properties-affected-coastal-erosion', {
+      data: data
+    })
+  }
+)
+
+// POST properties affected by coastal erosion
+router.post(
+  '/proposal/create-proposal/properties-affected-coastal-erosion',
+  function (req, res) {
+    const data = req.session.data
+    delete data['properties-affected-coastal-error']
+
+    // Helper to check if a checkbox is checked
+    function isChecked(val) {
+      if (!val) return false
+      if (Array.isArray(val)) {
+        return val.includes('true')
+      }
+      return val === 'true'
+    }
+
+    const noProperties = isChecked(req.body['no-properties-affected-coastal'])
+
+    if (noProperties) {
+      data['no-properties-affected-coastal'] = 'true'
+      delete data['properties-maintaining-coastal-protection']
+      delete data['properties-reducing-coastal-risk']
+    } else {
+      delete data['no-properties-affected-coastal']
+
+      const p1 = req.body['properties-maintaining-coastal-protection']
+      const p2 = req.body['properties-reducing-coastal-risk']
+
+      if (!p1 && !p2) {
+        data['properties-affected-coastal-error'] =
+          'Enter the number of properties affected by coastal erosion'
+        return res.redirect(
+          '/proposal/create-proposal/properties-affected-coastal-erosion'
+        )
+      }
+
+      data['properties-maintaining-coastal-protection'] = p1
+      data['properties-reducing-coastal-risk'] = p2
+    }
+
+    res.redirect('/proposal/create-proposal/current-flood-risk')
+  }
+)
+
+// GET current flood risk
+router.get('/proposal/create-proposal/current-flood-risk', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/current-flood-risk', { data: data })
+})
+
+// POST current flood risk
+router.post(
+  '/proposal/create-proposal/current-flood-risk',
+  function (req, res) {
+    const data = req.session.data
+    delete data['current-flood-risk-error']
+
+    const risk = req.body['current-flood-risk']
+
+    if (!risk) {
+      data['current-flood-risk-error'] = 'Select the current flood risk'
+      return res.redirect('/proposal/create-proposal/current-flood-risk')
+    }
+
+    data['current-flood-risk'] = risk
+
+    if (data['coastal-erosion']) {
+      res.redirect('/proposal/create-proposal/current-coastal-erosion-risk')
+    } else {
+      res.redirect('/proposal/create-proposal/check-answers')
+    }
+  }
+)
+
+// GET current coastal erosion risk
+router.get(
+  '/proposal/create-proposal/current-coastal-erosion-risk',
+  function (req, res) {
+    const data = req.session.data
+    res.render('proposal/create-proposal/current-coastal-erosion-risk', {
+      data: data
+    })
+  }
+)
+
+// POST current coastal erosion risk
+router.post(
+  '/proposal/create-proposal/current-coastal-erosion-risk',
+  function (req, res) {
+    const data = req.session.data
+    delete data['current-coastal-risk-error']
+
+    const risk = req.body['current-coastal-risk']
+
+    if (!risk) {
+      data['current-coastal-risk-error'] =
+        'Select the current coastal erosion risk'
+      return res.redirect(
+        '/proposal/create-proposal/current-coastal-erosion-risk'
+      )
+    }
+
+    data['current-coastal-risk'] = risk
+
+    res.redirect('/proposal/create-proposal/check-answers')
+  }
+)
+
+// GET flood protection outcomes page
+router.get(
+  '/proposal/create-proposal/flood-protection-outcomes',
+  function (req, res) {
+    const data = req.session.data
+    const fundingYears = getFundingYears(data)
+
+    res.render('proposal/create-proposal/flood-protection-outcomes', {
+      data: data,
+      fundingYears: fundingYears
+    })
+  }
+)
+
+// POST flood protection outcomes page
+router.post(
+  '/proposal/create-proposal/flood-protection-outcomes',
+  function (req, res) {
+    const data = req.session.data
+    const fundingYears = getFundingYears(data)
+
+    // Clear any previous error
+    delete data['flood-protection-outcomes-error']
+
+    // Save the checkbox
+    data['reduced-risk-of-households-for-floods'] =
+      req.body['reduced-risk-of-households-for-floods']
+
+    // Save the flood outcomes data
+    if (!data['flood-outcomes']) {
+      data['flood-outcomes'] = {}
+    }
+
+    fundingYears.forEach((year) => {
+      if (!data['flood-outcomes'][year]) {
+        data['flood-outcomes'][year] = {}
+      }
+      data['flood-outcomes'][year]['a'] =
+        req.body[`flood-outcome-a-${year}`] || ''
+      data['flood-outcomes'][year]['b'] =
+        req.body[`flood-outcome-b-${year}`] || ''
+      data['flood-outcomes'][year]['c'] =
+        req.body[`flood-outcome-c-${year}`] || ''
+      data['flood-outcomes'][year]['d'] =
+        req.body[`flood-outcome-d-${year}`] || ''
+      data['flood-outcomes'][year]['e'] =
+        req.body[`flood-outcome-e-${year}`] || ''
+    })
+
+    // Check if coastal erosion is selected, navigate accordingly
+    if (data['coastal-erosion']) {
+      // Navigate to coastal erosion outcomes page (to be created)
+      res.redirect('/proposal/create-proposal/check-answers')
+    } else {
+      // Navigate back to overview
+      res.redirect('/proposal/create-proposal/check-answers')
+    }
+  }
+)
+
 // Add your routes here
+
+// Environmental Benefits Data
+const environmentalBenefits = [
+  {
+    id: 'intertidal-habitat',
+    heading:
+      'Will the project create or enhance an intertidal wetland habitat?',
+    lede: 'Intertidal wetland habitats are found between the high and low tide marks. The habitats most associated with FCERM works are salt marshes and mud flats.',
+    unit: 'hectares'
+  },
+  {
+    id: 'woodland-habitat',
+    heading: 'Will the project create or enhance a woodland habitat?',
+    lede: 'Woodlands are areas of vegetation dominated by trees that are more than 5m high when mature, which forms a canopy (areas of trees with a canopy greater than 20%). This includes felled, young or newly planted woodland.',
+    unit: 'hectares'
+  },
+  {
+    id: 'wet-woodland-habitat',
+    heading: 'Will the project create or enhance a wet woodlands habitat?',
+    lede: 'Wet woodland habitats have trees associated with wet soils such as alder, birch and willow.',
+    unit: 'hectares'
+  },
+  {
+    id: 'wetland-or-wet-grassland-habitat',
+    heading:
+      'Will the project create or enhance a wetland or wet grassland habitat?',
+    lede: 'Wetlands and wet grassland habitats include flood plains, wetlands mosaics, reed beds and bogs.',
+    unit: 'hectares'
+  },
+  {
+    id: 'grassland-habitat',
+    heading: 'Will the project create or enhance a grassland habitat?',
+    lede: 'This is land under permanent-natural or semi-natural grassland, dominated by grassland species with very little or no dwarf shrub, wetland or wooded species within the sward.',
+    unit: 'hectares'
+  },
+  {
+    id: 'heathland-habitat',
+    heading: 'Will the project create or enhance a heathland habitat?',
+    lede: 'This is habitat that covers the full altitudinal range of heathlands and has at least 25% cover of the heathers and other dwarf shrubs, or previously heathland in a degraded state below this.',
+    unit: 'hectares'
+  },
+  {
+    id: 'ponds-lakes-habitat',
+    heading: 'Will the project create or enhance a pond and/or lake habitat?',
+    lede: 'Lakes are generally all bodies of water over 2 hectares in area. Ponds are all bodies of water up to 1 hectare.',
+    unit: 'hectares'
+  },
+  {
+    id: 'arable-land-habitat',
+    heading: 'Will the project create or enhance an arable land habitat?',
+    lede: 'This is land under cultivation, it includes temporary grass leys.',
+    unit: 'hectares'
+  },
+  {
+    id: 'comprehensive-restoration',
+    heading:
+      'Will the project include comprehensive restoration or creation of natural processes, habitats and/or removal of physical modifications?',
+    lede: 'This includes creating new channels with minor physical modifications that do not inhibit natural river processes.',
+    unit: 'kilometres'
+  },
+  {
+    id: 'partial-restoration',
+    heading:
+      'Will the project include partial restoration of natural processes, habitats and/or partial removal of physical modifications?',
+    lede: 'This includes creating new channels with some physical modifications and partial functioning of natural processes.',
+    unit: 'kilometres'
+  },
+  {
+    id: 'create-habitat-watercourse',
+    heading:
+      'Will the project enhance or create a single major physical or habitat of watercourse?',
+    lede: '',
+    unit: 'kilometres'
+  }
+]
+
+// Make environmentalBenefits available to views
+router.use((req, res, next) => {
+  res.locals.environmentalBenefits = environmentalBenefits
+  next()
+})
+
+// GET approach
+router.get('/proposal/create-proposal/approach', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/approach', { data: data })
+})
+
+// POST approach
+router.post('/proposal/create-proposal/approach', function (req, res) {
+  const data = req.session.data
+  delete data['approach-error']
+
+  if (!req.body['approach']) {
+    data['approach-error'] =
+      'Explain how your project will achieve the outcomes'
+    return res.redirect('/proposal/create-proposal/approach')
+  }
+
+  res.redirect('/proposal/create-proposal/check-answers')
+})
+
+// GET any environmental benefits
+router.get(
+  '/proposal/create-proposal/any-environmental-benefits',
+  function (req, res) {
+    const data = req.session.data
+    res.render('proposal/create-proposal/any-environmental-benefits', {
+      data: data
+    })
+  }
+)
+
+// POST any environmental benefits
+router.post(
+  '/proposal/create-proposal/any-environmental-benefits',
+  function (req, res) {
+    const data = req.session.data
+    delete data['any-environmental-benefits-error']
+
+    if (!req.body['any-environmental-benefits']) {
+      data['any-environmental-benefits-error'] =
+        'Select yes if the project includes any environmental benefits'
+      return res.redirect(
+        '/proposal/create-proposal/any-environmental-benefits'
+      )
+    }
+
+    if (data['any-environmental-benefits'] === 'yes') {
+      res.redirect(
+        '/proposal/create-proposal/environmental-benefit/' +
+          environmentalBenefits[0].id
+      )
+    } else {
+      res.redirect('/proposal/create-proposal/check-answers')
+    }
+  }
+)
+
+// GET environmental benefit question
+router.get(
+  '/proposal/create-proposal/environmental-benefit/:benefitId',
+  function (req, res) {
+    const benefitId = req.params.benefitId
+    const benefit = environmentalBenefits.find((b) => b.id === benefitId)
+    const index = environmentalBenefits.findIndex((b) => b.id === benefitId)
+
+    let backLink = ''
+    if (index === 0) {
+      backLink = '/proposal/create-proposal/any-environmental-benefits'
+    } else {
+      const prevBenefit = environmentalBenefits[index - 1]
+      // Check if previous benefit was 'yes', if so back link is amount page
+      if (req.session.data[prevBenefit.id] === 'yes') {
+        backLink =
+          '/proposal/create-proposal/environmental-benefit-amount/' +
+          prevBenefit.id
+      } else {
+        backLink =
+          '/proposal/create-proposal/environmental-benefit/' + prevBenefit.id
+      }
+    }
+
+    res.render('proposal/create-proposal/environmental-benefit-question', {
+      pageHeading: benefit.heading,
+      lede: benefit.lede,
+      benefitId: benefitId,
+      backLink: backLink,
+      nextLink: '/proposal/create-proposal/environmental-benefit/' + benefitId
+    })
+  }
+)
+
+// POST environmental benefit question
+router.post(
+  '/proposal/create-proposal/environmental-benefit/:benefitId',
+  function (req, res) {
+    const benefitId = req.params.benefitId
+    const data = req.session.data
+    const index = environmentalBenefits.findIndex((b) => b.id === benefitId)
+
+    delete data[benefitId + '-error']
+
+    if (!req.body[benefitId]) {
+      data[benefitId + '-error'] =
+        'Select yes if the project will create or enhance this habitat'
+      return res.redirect(
+        '/proposal/create-proposal/environmental-benefit/' + benefitId
+      )
+    }
+
+    if (data[benefitId] === 'yes') {
+      res.redirect(
+        '/proposal/create-proposal/environmental-benefit-amount/' + benefitId
+      )
+    } else {
+      if (index < environmentalBenefits.length - 1) {
+        res.redirect(
+          '/proposal/create-proposal/environmental-benefit/' +
+            environmentalBenefits[index + 1].id
+        )
+      } else {
+        res.redirect('/proposal/create-proposal/check-answers')
+      }
+    }
+  }
+)
+
+// GET environmental benefit amount
+router.get(
+  '/proposal/create-proposal/environmental-benefit-amount/:benefitId',
+  function (req, res) {
+    const benefitId = req.params.benefitId
+    const benefit = environmentalBenefits.find((b) => b.id === benefitId)
+
+    // Heading for amount page is slightly different, usually "How many hectares..."
+    // But for simplicity and "exactly same" requirement, I'll construct it based on unit.
+    let pageHeading = ''
+    if (benefit.unit === 'hectares') {
+      pageHeading =
+        'How many hectares of ' +
+        benefit.id.replace(/-/g, ' ').replace('habitat', '').trim() +
+        ' habitat will the project create or enhance?'
+      // Fix specific wordings if needed to match exactly
+      if (benefit.id === 'intertidal-habitat')
+        pageHeading =
+          'How many hectares of intertidal wetland habitat will the project create or enhance?'
+      if (benefit.id === 'woodland-habitat')
+        pageHeading =
+          'How many hectares of woodland habitat will the project create or enhance?'
+      if (benefit.id === 'wet-woodland-habitat')
+        pageHeading =
+          'How many hectares of wet woodlands habitat will the project create or enhance?'
+      if (benefit.id === 'wetland-or-wet-grassland-habitat')
+        pageHeading =
+          'How many hectares of wetland or wet grassland habitat will the project create or enhance?'
+      if (benefit.id === 'grassland-habitat')
+        pageHeading =
+          'How many hectares of grassland habitat will the project create or enhance?'
+      if (benefit.id === 'heathland-habitat')
+        pageHeading =
+          'How many hectares of heathland habitat will the project create or enhance?'
+      if (benefit.id === 'ponds-lakes-habitat')
+        pageHeading =
+          'How many hectares of pond and/or lake habitat will the project create or enhance?'
+      if (benefit.id === 'arable-land-habitat')
+        pageHeading =
+          'How many hectares of arable land habitat will the project create or enhance?'
+    } else {
+      if (benefit.id === 'comprehensive-restoration')
+        pageHeading =
+          'How many kilometres of comprehensive river restoration will be enhanced or created?'
+      if (benefit.id === 'partial-restoration')
+        pageHeading =
+          'How many kilometres of partial restoration will be enhanced or created?'
+      if (benefit.id === 'create-habitat-watercourse')
+        pageHeading =
+          'How many kilometres of single major physical improvement the project will be enhanced or created?'
+    }
+
+    res.render('proposal/create-proposal/environmental-benefit-amount', {
+      pageHeading: pageHeading,
+      benefitId: benefitId,
+      unit: benefit.unit,
+      backLink: '/proposal/create-proposal/environmental-benefit/' + benefitId,
+      nextLink:
+        '/proposal/create-proposal/environmental-benefit-amount/' + benefitId
+    })
+  }
+)
+
+// POST environmental benefit amount
+router.post(
+  '/proposal/create-proposal/environmental-benefit-amount/:benefitId',
+  function (req, res) {
+    const benefitId = req.params.benefitId
+    const index = environmentalBenefits.findIndex((b) => b.id === benefitId)
+    const data = req.session.data
+
+    delete data[benefitId + '-amount-error']
+
+    if (!req.body[benefitId + '-amount']) {
+      data[benefitId + '-amount-error'] = 'Enter the amount'
+      return res.redirect(
+        '/proposal/create-proposal/environmental-benefit-amount/' + benefitId
+      )
+    }
+
+    if (index < environmentalBenefits.length - 1) {
+      res.redirect(
+        '/proposal/create-proposal/environmental-benefit/' +
+          environmentalBenefits[index + 1].id
+      )
+    } else {
+      res.redirect('/proposal/create-proposal/check-answers')
+    }
+  }
+)
+
+// GET urgency
+router.get('/proposal/create-proposal/urgency', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/urgency', { data: data })
+})
+
+// POST urgency
+router.post('/proposal/create-proposal/urgency', function (req, res) {
+  const data = req.session.data
+  delete data['urgency-error']
+
+  if (!req.body['urgency']) {
+    data['urgency-error'] = 'Select the reason why your project is urgent'
+    return res.redirect('/proposal/create-proposal/urgency')
+  }
+
+  if (data['urgency'] === 'not_urgent') {
+    res.redirect('/proposal/create-proposal/check-answers')
+  } else {
+    res.redirect('/proposal/create-proposal/urgency-details')
+  }
+})
+
+// GET urgency details
+router.get('/proposal/create-proposal/urgency-details', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/urgency-details', { data: data })
+})
+
+// POST urgency details
+router.post('/proposal/create-proposal/urgency-details', function (req, res) {
+  const data = req.session.data
+  delete data['urgency-details-error']
+
+  if (!req.body['urgency-details']) {
+    // Error message depends on reason
+    const reason = data['urgency']
+    let error = 'Enter details'
+    if (reason === 'statutory_need')
+      error =
+        'You told us the project is urgent due to a business critical statutory need. Tell us more information about this.'
+    if (reason === 'legal_need')
+      error =
+        'You told us the project is urgent due to a business critical legal need. Tell us more information about this.'
+    if (reason === 'health_and_safety')
+      error =
+        'You told us the project is urgent due to a health and safety issue. Tell us more information about this.'
+    if (reason === 'emergency_works')
+      error =
+        'You told us the project is urgent due to an emergency. Tell us more information about this.'
+    if (reason === 'time_limited')
+      error =
+        'You told us the project is urgent due to a specific aspect of the project that has a time limit. Tell us more information about this.'
+
+    data['urgency-details-error'] = error
+    return res.redirect('/proposal/create-proposal/urgency-details')
+  }
+
+  res.redirect('/proposal/create-proposal/check-answers')
+})

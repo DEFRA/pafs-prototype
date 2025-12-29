@@ -1,0 +1,133 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Households better protected against flood risk (OM3)" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <a href="/proposal/create-proposal/risks" class="govuk-back-link">Back</a>
+
+    {% if data and data['flood-protection-outcomes-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#flood-protection-outcomes-table">{{ data['flood-protection-outcomes-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/flood-protection-outcomes">
+      <div class="govuk-form-group {%- if data and data['flood-protection-outcomes-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Households better protected against flood risk (OM3)
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Provide outcomes for households for each financial year in which your project will provide benefits. Households which benefit in more than one financial year should only be counted in the first year they benefit.
+          </p>
+          {% if data and data['flood-protection-outcomes-error'] %}
+            <p id="flood-protection-outcomes-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['flood-protection-outcomes-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-checkboxes govuk-!-margin-bottom-4" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="reduced-risk-of-households-for-floods" name="reduced-risk-of-households-for-floods" type="checkbox" value="true" {% if data['reduced-risk-of-households-for-floods'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="reduced-risk-of-households-for-floods">
+                This project provides a reduced risk of households flooding
+              </label>
+            </div>
+          </div>
+
+          <div class="scroll-horz govuk-body-s">
+            <table class="govuk-table protection-outcomes-table" id="flood-protection-outcomes-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header financial-year-column">Financial year</th>
+                  <th scope="col" class="govuk-table__header data-column protection-outcomes reduced-risk">Households at reduced risk</th>
+                  <th scope="col" class="govuk-table__header data-column protection-outcomes significant-to-low-risk">Households moved from very significant and significant to moderate or low</th>
+                  <th scope="col" class="govuk-table__header data-column protection-outcomes most-deprived">Households protected from loss in 20 percent most deprived</th>
+                  <th scope="col" class="govuk-table__header data-column protection-outcomes plp-measures">Households protected through property level protection measures</th>
+                  <th scope="col" class="govuk-table__header data-column protection-outcomes non-residential-properties">Non-residential properties better protected</th>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell"></td>
+                  <th class="govuk-table__header data-column protection-outcomes-subheading">A</th>
+                  <th class="govuk-table__header data-column protection-outcomes-subheading">B</th>
+                  <th class="govuk-table__header data-column protection-outcomes-subheading">C</th>
+                  <th class="govuk-table__header data-column protection-outcomes-subheading">D</th>
+                  <th class="govuk-table__header data-column protection-outcomes-subheading">E</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for year in fundingYears %}
+                  <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">April {{ year }} to March {{ year + 1 }}</th>
+                    <td class="govuk-table__cell">
+                      <label class="govuk-visually-hidden" for="flood-outcome-a-{{ year }}">
+                        Column A {{ year }}
+                      </label>
+                      <input class="govuk-input govuk-input--width-10 protection-value reduced-risk" id="flood-outcome-a-{{ year }}" name="flood-outcome-a-{{ year }}" type="text" value="{{ (data['flood-outcomes'] and data['flood-outcomes'][year] and data['flood-outcomes'][year]['a']) or '' }}">
+                    </td>
+                    <td class="govuk-table__cell">
+                      <label class="govuk-visually-hidden" for="flood-outcome-b-{{ year }}">
+                        Column B {{ year }}
+                      </label>
+                      <input class="govuk-input govuk-input--width-10 protection-value significant-to-low-risk" id="flood-outcome-b-{{ year }}" name="flood-outcome-b-{{ year }}" type="text" value="{{ (data['flood-outcomes'] and data['flood-outcomes'][year] and data['flood-outcomes'][year]['b']) or '' }}">
+                    </td>
+                    <td class="govuk-table__cell">
+                      <label class="govuk-visually-hidden" for="flood-outcome-c-{{ year }}">
+                        Column C {{ year }}
+                      </label>
+                      <input class="govuk-input govuk-input--width-10 protection-value most-deprived" id="flood-outcome-c-{{ year }}" name="flood-outcome-c-{{ year }}" type="text" value="{{ (data['flood-outcomes'] and data['flood-outcomes'][year] and data['flood-outcomes'][year]['c']) or '' }}">
+                    </td>
+                    <td class="govuk-table__cell">
+                      <label class="govuk-visually-hidden" for="flood-outcome-d-{{ year }}">
+                        Column D {{ year }}
+                      </label>
+                      <input class="govuk-input govuk-input--width-10 protection-value plp-measures" id="flood-outcome-d-{{ year }}" name="flood-outcome-d-{{ year }}" type="text" value="{{ (data['flood-outcomes'] and data['flood-outcomes'][year] and data['flood-outcomes'][year]['d']) or '' }}">
+                    </td>
+                    <td class="govuk-table__cell">
+                      <label class="govuk-visually-hidden" for="flood-outcome-e-{{ year }}">
+                        Column E {{ year }}
+                      </label>
+                      <input class="govuk-input govuk-input--width-10 protection-value non-residential-properties" id="flood-outcome-e-{{ year }}" name="flood-outcome-e-{{ year }}" type="text" value="{{ (data['flood-outcomes'] and data['flood-outcomes'][year] and data['flood-outcomes'][year]['e']) or '' }}">
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot class="govuk-table__foot">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">Total</td>
+                  <td class="govuk-table__cell numeric households-at-reduced-risk-total">0</td>
+                  <td class="govuk-table__cell numeric moved-from-very-significant-and-significant-to-moderate-or-low-total">0</td>
+                  <td class="govuk-table__cell numeric households-protected-from-loss-in-20-percent-most-deprived-total">0</td>
+                  <td class="govuk-table__cell numeric households-protected-through-plp-measures">0</td>
+                  <td class="govuk-table__cell numeric non-residential-properties">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

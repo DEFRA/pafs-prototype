@@ -1,0 +1,109 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What is the main risk your proposed project will protect against?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/risks" class="govuk-back-link">Back</a>
+
+    {% if data and data['main-risk-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#main-risk">{{ data['main-risk-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/main-risk">
+      <div class="govuk-form-group {%- if data and data['main-risk-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the main risk your proposed project will protect against?
+            </h1>
+          </legend>
+          {% if data and data['main-risk-error'] %}
+            <p id="main-risk-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['main-risk-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios" id="main-risk">
+            {% if data['fluvial-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-fluvial" name="main-risk" type="radio" value="fluvial-flooding" {% if data['main-risk'] == 'fluvial-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-fluvial">
+                  Fluvial flooding (river flooding)
+                </label>
+              </div>
+            {% endif %}
+            {% if data['tidal-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-tidal" name="main-risk" type="radio" value="tidal-flooding" {% if data['main-risk'] == 'tidal-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-tidal">
+                  Tidal flooding
+                </label>
+              </div>
+            {% endif %}
+            {% if data['groundwater-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-groundwater" name="main-risk" type="radio" value="groundwater-flooding" {% if data['main-risk'] == 'groundwater-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-groundwater">
+                  Groundwater flooding
+                </label>
+              </div>
+            {% endif %}
+            {% if data['surface-water-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-surface-water" name="main-risk" type="radio" value="surface-water-flooding" {% if data['main-risk'] == 'surface-water-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-surface-water">
+                  Surface water flooding
+                </label>
+              </div>
+            {% endif %}
+            {% if data['sea-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-sea" name="main-risk" type="radio" value="sea-flooding" {% if data['main-risk'] == 'sea-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-sea">
+                  Sea flooding
+                </label>
+              </div>
+            {% endif %}
+            {% if data['reservoir-flooding'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-reservoir" name="main-risk" type="radio" value="reservoir-flooding" {% if data['main-risk'] == 'reservoir-flooding' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-reservoir">
+                  Reservoir flooding
+                </label>
+              </div>
+            {% endif %}
+            {% if data['coastal-erosion'] %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="main-risk-coastal" name="main-risk" type="radio" value="coastal-erosion" {% if data['main-risk'] == 'coastal-erosion' %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="main-risk-coastal">
+                  Coastal erosion
+                </label>
+              </div>
+            {% endif %}
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

@@ -8,39 +8,57 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">In what financial year will the project stop spending funds?</h1>
+    
+    {% if fromOverview %}
+      <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Return to proposal overview</a>
+    {% elif data.financialYearAfter or (data.financialYear and data.financialYear | int > (afterYear - 1)) %}
+      <a href="/proposal/create-proposal/financial-year-after" class="govuk-back-link">Back</a>
+    {% else %}
+      <a href="/proposal/create-proposal/financial-year" class="govuk-back-link">Back</a>
+    {% endif %}
+    
     {% if errorMessage %}
-  <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
-    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-    <div class="govuk-error-summary__body">
-      <ul class="govuk-list govuk-error-summary__list">
-        <li><a href="#financialYear">{{ errorMessage }}</a></li>
-      </ul>
-    </div>
-  </div>
-{% endif %}
-
-<form method="post" action="/proposal/create-proposal/financial-year-spending" novalidate>
-  <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}" id="financialYear">
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">&nbsp;</legend>
-      <div class="govuk-radios" data-module="govuk-radios">
-        {% for option in financialYearOptions %}
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="financialYear-{{ option.value }}" name="financialYear" type="radio" value="{{ option.value }}" {% if formData.financialYearSpending == option.value %}checked{% endif %}>
-            <label class="govuk-label govuk-radios__label" for="financialYear-{{ option.value }}">{{ option.label }}</label>
-          </div>
-        {% endfor %}
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#financialYear">{{ errorMessage }}</a></li>
+          </ul>
+        </div>
       </div>
-    </fieldset>
-  </div>
-  <div class="govuk-form-group">
-    <button class="govuk-button" data-module="govuk-button">Save and continue</button>
-  </div>
-  <div class="govuk-form-group">
-    <button class="govuk-link" name="afterYear" value="1" formaction="/proposal/create-proposal/financial-year-spending" formmethod="post" style="background:none;border:none;padding:0;color:#1d70b8;text-decoration:underline;cursor:pointer;">The project stops spending funds after March {{ afterYear }}</button>
-  </div>
-</form>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/financial-year-spending" novalidate>
+      <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset" aria-describedby="financialYear-hint">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            In what financial year will the project stop spending funds?
+          </legend>
+          {% if errorMessage %}
+            <p class="govuk-error-message">{{ errorMessage }}</p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for option in financialYearOptions %}
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="financialYearSpending-{{ option.value }}" name="financialYearSpending" type="radio" value="{{ option.value }}" {% if formData.financialYearSpending == option.value %}checked{% endif %}>
+                <label class="govuk-label govuk-radios__label" for="financialYearSpending-{{ option.value }}">
+                  {{ option.label }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      <p class="govuk-body govuk-!-margin-bottom-4">
+        <a class="govuk-link" href="/proposal/create-proposal/financial-year-spending-after{% if fromOverview %}?from=overview{% endif %}">The project stops spending funds after March {{ afterYear }}</a>
+      </p>
+
+      <input type="hidden" name="fromOverview" value="{{ fromOverview }}">
+      <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+    </form>
   </div>
 </div>
 

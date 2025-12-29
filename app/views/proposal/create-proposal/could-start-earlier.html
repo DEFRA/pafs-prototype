@@ -1,0 +1,61 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Create a new proposal" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    <a href="/proposal/create-proposal/important-dates/ready-for-service" class="govuk-back-link">Back</a>
+    
+    {% if errorMessage %}
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#could-start-earlier">{{ errorMessage }}</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/important-dates/could-start-earlier" novalidate>
+      <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset" aria-describedby="could-start-earlier-hint">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            Could the project start earlier if Grant in Aid funding was made available?
+          </legend>
+          <div id="could-start-earlier-hint" class="govuk-hint">
+            Without impacting deliverability or outcomes
+          </div>
+          {% if errorMessage %}
+            <p class="govuk-error-message">{{ errorMessage }}</p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="could-start-earlier-yes" name="could-start-earlier" type="radio" value="yes" {% if formData['could-start-earlier'] == 'yes' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="could-start-earlier-yes">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="could-start-earlier-no" name="could-start-earlier" type="radio" value="no" {% if formData['could-start-earlier'] == 'no' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="could-start-earlier-no">
+                No
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

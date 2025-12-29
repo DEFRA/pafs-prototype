@@ -1,0 +1,132 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="How many properties affected by coastal erosion is the project likely to benefit?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <a href="/proposal/create-proposal/properties-affected-flooding" class="govuk-back-link">Back</a>
+
+    {% if data['properties-affected-coastal-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#properties-affected-coastal-error">{{ data['properties-affected-coastal-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/properties-affected-coastal-erosion">
+      <div class="govuk-form-group {%- if data['properties-affected-coastal-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              How many properties affected by coastal erosion is the project likely to benefit?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            These are properties that are at risk today.
+          </p>
+
+          {% if data['properties-affected-coastal-error'] %}
+            <p id="properties-affected-coastal-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['properties-affected-coastal-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-checkboxes govuk-!-margin-bottom-6" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="no-properties-affected-coastal" name="no-properties-affected-coastal" type="checkbox" value="true" {% if data['no-properties-affected-coastal'] == 'true' %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="no-properties-affected-coastal">
+                My project does not benefit any properties at risk of coastal erosion
+              </label>
+            </div>
+          </div>
+
+          <div class="govuk-form-group">
+            <table class="govuk-table" id="properties-coastal-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header"></th>
+                  <th scope="col" class="govuk-table__header">Maintaining coastal erosion protection</th>
+                  <th scope="col" class="govuk-table__header">Reducing coastal erosion risk</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell"></td>
+                  <td class="govuk-table__cell">
+                    How many properties are estimated to benefit from maintaining existing assets?
+                  </td>
+                  <td class="govuk-table__cell">
+                    How many properties are estimated to benefit from investment to reduce coastal erosion?
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell govuk-!-font-weight-bold">Total</td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-maintaining-coastal-protection">
+                        Number of properties for maintaining coastal erosion protection
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-maintaining-coastal-protection" name="properties-maintaining-coastal-protection" type="number" inputmode="numeric" value="{{ data['properties-maintaining-coastal-protection'] }}">
+                    </div>
+                  </td>
+                  <td class="govuk-table__cell">
+                    <div class="govuk-form-group govuk-!-margin-bottom-0">
+                      <label class="govuk-label govuk-visually-hidden" for="properties-reducing-coastal-risk">
+                        Number of properties for reducing coastal erosion risk
+                      </label>
+                      <input class="govuk-input govuk-input--width-5" id="properties-reducing-coastal-risk" name="properties-reducing-coastal-risk" type="number" inputmode="numeric" value="{{ data['properties-reducing-coastal-risk'] }}">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('no-properties-affected-coastal');
+    const inputs = document.querySelectorAll('#properties-coastal-table input[type="number"]');
+
+    function updateInputs() {
+      if (checkbox.checked) {
+        inputs.forEach(input => {
+          input.disabled = true;
+          input.value = '';
+        });
+      } else {
+        inputs.forEach(input => {
+          input.disabled = false;
+        });
+      }
+    }
+
+    checkbox.addEventListener('change', updateInputs);
+    
+    // Initial check
+    updateInputs();
+  });
+</script>
+{% endblock %}

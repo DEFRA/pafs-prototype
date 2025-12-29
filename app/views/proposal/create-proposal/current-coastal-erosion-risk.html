@@ -1,0 +1,71 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="What is the current coastal erosion risk in the area the project is likely to benefit?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/current-flood-risk" class="govuk-back-link">Back</a>
+
+    {% if data['current-coastal-risk-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#current-coastal-risk">{{ data['current-coastal-risk-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/current-coastal-erosion-risk">
+      <div class="govuk-form-group {%- if data['current-coastal-risk-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the current coastal erosion risk in the area the project is likely to benefit?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Select the risk category that has the most coverage within the area of benefit
+          </p>
+
+          {% if data['current-coastal-risk-error'] %}
+            <p id="current-coastal-risk-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['current-coastal-risk-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios" id="current-coastal-risk">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-medium-term" name="current-coastal-risk" type="radio" value="medium-term" {% if data['current-coastal-risk'] == 'medium-term' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-medium-term">
+                Medium term loss: Less than or equal to 30 years (1 year to 30 years), in a no future intervention scenario
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="risk-longer-term" name="current-coastal-risk" type="radio" value="longer-term" {% if data['current-coastal-risk'] == 'longer-term' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="risk-longer-term">
+                Longer term loss: Greater than 30 years (31 years to 100 years), in a no future intervention scenario
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

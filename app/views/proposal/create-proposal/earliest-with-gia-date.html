@@ -1,0 +1,67 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Create a new proposal" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    
+    <a href="/proposal/create-proposal/important-dates/could-start-earlier" class="govuk-back-link">Back</a>
+    
+    {% if errorMessage %}
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#earliest-with-gia-date">{{ errorMessage }}</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/important-dates/earliest-with-gia" novalidate>
+      <div class="govuk-form-group{% if errorMessage %} govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset" role="group" aria-describedby="earliest-with-gia-hint">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            What is the earliest date the project could start?
+          </legend>
+          <div id="earliest-with-gia-hint" class="govuk-hint">
+            If Grant in Aid funding was made available earlier
+          </div>
+          {% if errorMessage %}
+            <p class="govuk-error-message" id="earliest-with-gia-date-error">
+              <span class="govuk-visually-hidden">Error:</span> {{ errorMessage }}
+            </p>
+          {% endif %}
+          <div class="govuk-date-input" id="earliest-with-gia-date">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="earliest-with-gia-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2{% if errorMessage %} govuk-input--error{% endif %}" id="earliest-with-gia-month" name="earliest-with-gia-month" type="text" inputmode="numeric" value="{{ formData['earliest-with-gia-month'] }}">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="earliest-with-gia-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4{% if errorMessage %} govuk-input--error{% endif %}" id="earliest-with-gia-year" name="earliest-with-gia-year" type="text" inputmode="numeric" value="{{ formData['earliest-with-gia-year'] }}">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

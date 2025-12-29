@@ -13,18 +13,10 @@
       "mainAreaName": "Liverpool City Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": [
-        "ea5"
-      ],
-      "rmaEaAreasNames": [
-        "North West"
-      ],
-      "rmaPsoAreas": [
-        "pso20"
-      ],
-      "rmaPsoAreasNames": [
-        "PSO Merseyside"
-      ],
+      "rmaEaAreas": ["ea5"],
+      "rmaEaAreasNames": ["North West"],
+      "rmaPsoAreas": ["pso20"],
+      "rmaPsoAreasNames": ["PSO Merseyside"],
       "requestedDate": "2025-10-18",
       "invitationSentDate": null,
       "invitationSentTime": null,
@@ -45,12 +37,8 @@
       "responsibility": "ea",
       "mainArea": "ea1",
       "mainAreaName": "North West",
-      "additionalAreas": [
-        "ea6"
-      ],
-      "additionalAreasNames": [
-        "Yorkshire"
-      ],
+      "additionalAreas": ["ea6"],
+      "additionalAreasNames": ["Yorkshire"],
       "requestedDate": "2025-10-15",
       "invitationSentDate": null,
       "invitationSentTime": null,
@@ -69,20 +57,12 @@
       "organisation": "Manchester City Council",
       "jobTitle": "Senior Engineer",
       "responsibility": "pso",
-      "psoEaAreas": [
-        "ea5"
-      ],
-      "psoEaAreasNames": [
-        "North West"
-      ],
+      "psoEaAreas": ["ea5"],
+      "psoEaAreasNames": ["North West"],
       "mainArea": "pso19",
       "mainAreaName": "PSO Greater Manchester",
-      "additionalAreas": [
-        "pso20"
-      ],
-      "additionalAreasNames": [
-        "PSO Merseyside"
-      ],
+      "additionalAreas": ["pso20"],
+      "additionalAreasNames": ["PSO Merseyside"],
       "requestedDate": "2025-10-14",
       "invitationSentDate": null,
       "invitationSentTime": null,
@@ -105,18 +85,10 @@
       "mainAreaName": "Bristol City Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": [
-        "ea1"
-      ],
-      "rmaEaAreasNames": [
-        "Wessex"
-      ],
-      "rmaPsoAreas": [
-        "pso1"
-      ],
-      "rmaPsoAreasNames": [
-        "PSO West of England"
-      ],
+      "rmaEaAreas": ["ea1"],
+      "rmaEaAreasNames": ["Wessex"],
+      "rmaPsoAreas": ["pso1"],
+      "rmaPsoAreasNames": ["PSO West of England"],
       "requestedDate": "2025-10-12",
       "invitationSentDate": null,
       "invitationSentTime": null,
@@ -137,12 +109,8 @@
       "responsibility": "pso",
       "mainArea": "ea2",
       "mainAreaName": "Thames",
-      "additionalAreas": [
-        "ea4"
-      ],
-      "additionalAreasNames": [
-        "South East"
-      ],
+      "additionalAreas": ["ea4"],
+      "additionalAreasNames": ["South East"],
       "requestedDate": "2025-10-10",
       "invitationSentDate": null,
       "invitationSentTime": null,
@@ -165,12 +133,8 @@
       "responsibility": "ea",
       "mainArea": "ea2",
       "mainAreaName": "Thames",
-      "additionalAreas": [
-        "ea4"
-      ],
-      "additionalAreasNames": [
-        "South East"
-      ],
+      "additionalAreas": ["ea4"],
+      "additionalAreasNames": ["South East"],
       "isAdmin": true,
       "invitationSentDate": "2025-09-15",
       "invitationSentTime": "14:30",
@@ -194,18 +158,10 @@
       "mainAreaName": "Bristol City Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": [
-        "ea1"
-      ],
-      "rmaEaAreasNames": [
-        "Wessex"
-      ],
-      "rmaPsoAreas": [
-        "pso1"
-      ],
-      "rmaPsoAreasNames": [
-        "PSO West of England"
-      ],
+      "rmaEaAreas": ["ea1"],
+      "rmaEaAreasNames": ["Wessex"],
+      "rmaPsoAreas": ["pso1"],
+      "rmaPsoAreasNames": ["PSO West of England"],
       "isAdmin": false,
       "invitationSentDate": "2025-09-20",
       "invitationSentTime": "10:15",
@@ -225,20 +181,12 @@
       "organisation": "Environment Agency",
       "jobTitle": "Partnership Coordinator",
       "responsibility": "pso",
-      "psoEaAreas": [
-        "ea5"
-      ],
-      "psoEaAreasNames": [
-        "North West"
-      ],
+      "psoEaAreas": ["ea5"],
+      "psoEaAreasNames": ["North West"],
       "mainArea": "pso19",
       "mainAreaName": "PSO Greater Manchester",
-      "additionalAreas": [
-        "pso20"
-      ],
-      "additionalAreasNames": [
-        "PSO Merseyside"
-      ],
+      "additionalAreas": ["pso20"],
+      "additionalAreasNames": ["PSO Merseyside"],
       "isAdmin": false,
       "invitationSentDate": "2025-09-10",
       "invitationSentTime": "11:00",
@@ -285,18 +233,10 @@
       "mainAreaName": "Dorset Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": [
-        "ea1"
-      ],
-      "rmaEaAreasNames": [
-        "Wessex"
-      ],
-      "rmaPsoAreas": [
-        "pso2"
-      ],
-      "rmaPsoAreasNames": [
-        "PSO Dorset"
-      ],
+      "rmaEaAreas": ["ea1"],
+      "rmaEaAreasNames": ["Wessex"],
+      "rmaPsoAreas": ["pso2"],
+      "rmaPsoAreasNames": ["PSO Dorset"],
       "isAdmin": false,
       "invitationSentDate": "2025-10-05",
       "invitationSentTime": "15:20",
@@ -316,20 +256,12 @@
       "organisation": "Environment Agency",
       "jobTitle": "Strategic Oversight Officer",
       "responsibility": "pso",
-      "psoEaAreas": [
-        "ea1"
-      ],
-      "psoEaAreasNames": [
-        "Wessex"
-      ],
+      "psoEaAreas": ["ea1"],
+      "psoEaAreasNames": ["Wessex"],
       "mainArea": "pso2",
       "mainAreaName": "PSO Dorset",
-      "additionalAreas": [
-        "pso3"
-      ],
-      "additionalAreasNames": [
-        "PSO Somerset"
-      ],
+      "additionalAreas": ["pso3"],
+      "additionalAreasNames": ["PSO Somerset"],
       "isAdmin": false,
       "invitationSentDate": "2025-09-01",
       "invitationSentTime": "08:30",

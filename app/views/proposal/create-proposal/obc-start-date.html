@@ -8,6 +8,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
+    {% if fromOverview %}
+      <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Back to proposal overview</a>
+    {% endif %}
+
     {% if errorMessage or data['obc-start-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">

@@ -6,6 +6,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
+    <a href="/proposal/create-proposal/funding-sources" class="govuk-back-link">Back</a>
+
     {% if data and data['funding-values-error'] %}
       <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
@@ -41,13 +43,14 @@
           {% endif %}
 
           <div class="scroll-horz govuk-body-s">
-            <table class="govuk-table" id="funding-values-table">
+            <table class="govuk-table funding-table" id="funding-values-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Financial year</th>
                   {% for source in fundingSources %}
                     <th scope="col" class="govuk-table__header">{{ source | replace("-"," ") | capitalize }}</th>
                   {% endfor %}
+                  <th scope="col" class="govuk-table__header">Total (£)</th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
@@ -60,12 +63,22 @@
                         <label class="govuk-visually-hidden" for="funding-value-{{ year }}-{{ source }}">
                           Amount for {{ source }} in {{ year }}
                         </label>
-                        <input class="govuk-input govuk-input--width-10" id="funding-value-{{ year }}-{{ source }}" name="funding-value-{{ year }}-{{ source }}" type="text" value="{{ existing }}">
+                        <input class="govuk-input govuk-input--width-10 funding-value" id="funding-value-{{ year }}-{{ source }}" name="funding-value-{{ year }}-{{ source }}" type="text" value="{{ existing }}" data-year="{{ year }}" data-source="{{ source }}">
                       </td>
                     {% endfor %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-year="{{ year }}">0</td>
                   </tr>
                 {% endfor %}
               </tbody>
+              <tfoot class="govuk-table__foot">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Total (£)</th>
+                  {% for source in fundingSources %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric column-total" data-source="{{ source }}">0</td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric grand-total">0</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </fieldset>
