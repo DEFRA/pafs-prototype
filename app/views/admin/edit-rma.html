@@ -1,0 +1,67 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Edit RMA" %}
+
+{% block beforeContent %}
+  <a href="/admin/organisations" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Edit RMA</h1>
+
+    <form method="post" action="/admin/organisations/edit-rma/{{ org.id }}" novalidate>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="organisation-name">Name of organisation</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="organisation-name" name="organisation-name" type="text" value="{{ org.name }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="identifier-code">Identifier code</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="identifier-code" name="identifier-code" type="text" value="{{ org.identifierCode }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="authority-code">Authority code</label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="authority-code" name="authority-code">
+          <option value="">Select an authority code</option>
+          <option value="AC001" {% if org.authorityCode == 'AC001' %}selected{% endif %}>AC001</option>
+          <option value="AC002" {% if org.authorityCode == 'AC002' %}selected{% endif %}>AC002</option>
+          <option value="AC003" {% if org.authorityCode == 'AC003' %}selected{% endif %}>AC003</option>
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="associated-pso">Associated PSO</label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="associated-pso" name="associated-pso">
+          <option value="">Select an associated PSO</option>
+          {% for otherOrg in data.organisationsData or [] %}
+            {% if otherOrg.type == 'PSO' %}
+              <option value="{{ otherOrg.name }}" {% if org.associatedPso == otherOrg.name %}selected{% endif %}>{{ otherOrg.name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="end-date">
+          End date if available
+          <span class="govuk-hint">Optional</span>
+        </label>
+        <input class="govuk-input govuk-input--width-10" id="end-date" name="end-date" type="date" value="{{ org.endDate }}">
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save changes
+        </button>
+        <a href="/admin/organisations" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

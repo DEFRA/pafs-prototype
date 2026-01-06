@@ -9,15 +9,28 @@
       "organisation": "Liverpool City Council",
       "jobTitle": "Flood Risk Manager",
       "responsibility": "rma",
-      "mainArea": "rma66",
-      "mainAreaName": "Liverpool City Council",
+      "mainArea": "rma1",
+      "mainAreaName": "Bristol City Council",
+      "rmaEaAreas": [
+        "ea1"
+      ],
+      "rmaEaAreasNames": [
+        "Wessex"
+      ],
+      "rmaPsoAreas": [
+        "pso1",
+        "pso2",
+        "pso19"
+      ],
+      "rmaPsoAreasNames": [
+        "PSO West of England",
+        "PSO Dorset",
+        "PSO Greater Manchester"
+      ],
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": ["ea5"],
-      "rmaEaAreasNames": ["North West"],
-      "rmaPsoAreas": ["pso20"],
-      "rmaPsoAreasNames": ["PSO Merseyside"],
-      "requestedDate": "2025-10-18",
+      "requestedDate": "2025-10-06",
+      "requestedTime": "09:30",
       "invitationSentDate": null,
       "invitationSentTime": null,
       "invitationAcceptedDate": null,
@@ -36,10 +49,11 @@
       "jobTitle": "Environmental Consultant",
       "responsibility": "ea",
       "mainArea": "ea1",
-      "mainAreaName": "North West",
-      "additionalAreas": ["ea6"],
-      "additionalAreasNames": ["Yorkshire"],
-      "requestedDate": "2025-10-15",
+      "mainAreaName": "Wessex",
+      "additionalAreas": [],
+      "additionalAreasNames": [],
+      "requestedDate": "2025-10-08",
+      "requestedTime": "10:15",
       "invitationSentDate": null,
       "invitationSentTime": null,
       "invitationAcceptedDate": null,
@@ -57,13 +71,18 @@
       "organisation": "Manchester City Council",
       "jobTitle": "Senior Engineer",
       "responsibility": "pso",
-      "psoEaAreas": ["ea5"],
-      "psoEaAreasNames": ["North West"],
+      "psoEaAreas": [
+        "ea5"
+      ],
+      "psoEaAreasNames": [
+        "North West"
+      ],
       "mainArea": "pso19",
       "mainAreaName": "PSO Greater Manchester",
-      "additionalAreas": ["pso20"],
-      "additionalAreasNames": ["PSO Merseyside"],
-      "requestedDate": "2025-10-14",
+      "additionalAreas": [],
+      "additionalAreasNames": [],
+      "requestedDate": "2025-10-07",
+      "requestedTime": "16:45",
       "invitationSentDate": null,
       "invitationSentTime": null,
       "invitationAcceptedDate": null,
@@ -85,11 +104,20 @@
       "mainAreaName": "Bristol City Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": ["ea1"],
-      "rmaEaAreasNames": ["Wessex"],
-      "rmaPsoAreas": ["pso1"],
-      "rmaPsoAreasNames": ["PSO West of England"],
+      "rmaEaAreas": [
+        "ea1"
+      ],
+      "rmaEaAreasNames": [
+        "Wessex"
+      ],
+      "rmaPsoAreas": [
+        "pso1"
+      ],
+      "rmaPsoAreasNames": [
+        "PSO West of England"
+      ],
       "requestedDate": "2025-10-12",
+      "requestedTime": "13:55",
       "invitationSentDate": null,
       "invitationSentTime": null,
       "invitationAcceptedDate": null,
@@ -99,19 +127,106 @@
       "status": "pending"
     },
     {
-      "id": "pending-5",
-      "firstName": "James",
-      "lastName": "Wilson",
-      "email": "james.wilson@environment-agency.gov.uk",
-      "telephone": "020 3456 7890",
-      "organisation": "Thames Water Partnership",
-      "jobTitle": "Project Manager",
+      "id": "pending-6",
+      "firstName": "Alice",
+      "lastName": "Thompson",
+      "email": "alice.thompson@environment-agency.gov.uk",
+      "telephone": "0117 922 3000",
+      "organisation": "Environment Agency",
+      "jobTitle": "Area Programme Team Manager",
+      "responsibility": "ea",
+      "mainArea": "ea1",
+      "mainAreaName": "Wessex",
+      "additionalAreas": [
+        "ea2",
+        "ea4"
+      ],
+      "additionalAreasNames": [
+        "Thames",
+        "South East"
+      ],
+      "requestedDate": "2025-10-08",
+      "requestedTime": "10:15",
+      "invitationSentDate": null,
+      "invitationSentTime": null,
+      "invitationAcceptedDate": null,
+      "invitationAcceptedTime": null,
+      "invitationAccepted": false,
+      "accountSuspended": false,
+      "status": "pending"
+    },
+    {
+      "id": "pending-7",
+      "firstName": "Peter",
+      "lastName": "Robinson",
+      "email": "p.robinson@environment-agency.gov.uk",
+      "telephone": "0161 234 5000",
+      "organisation": "Environment Agency",
+      "jobTitle": "PSO Team Lead",
       "responsibility": "pso",
-      "mainArea": "ea2",
-      "mainAreaName": "Thames",
-      "additionalAreas": ["ea4"],
-      "additionalAreasNames": ["South East"],
-      "requestedDate": "2025-10-10",
+      "psoEaAreas": [
+        "ea5"
+      ],
+      "psoEaAreasNames": [
+        "North West"
+      ],
+      "mainArea": "pso19",
+      "mainAreaName": "PSO Greater Manchester",
+      "additionalAreas": [
+        "pso20",
+        "pso21"
+      ],
+      "additionalAreasNames": [
+        "PSO Merseyside",
+        "PSO Lancashire"
+      ],
+      "requestedDate": "2025-10-07",
+      "requestedTime": "16:45",
+      "invitationSentDate": null,
+      "invitationSentTime": null,
+      "invitationAcceptedDate": null,
+      "invitationAcceptedTime": null,
+      "invitationAccepted": false,
+      "accountSuspended": false,
+      "status": "pending"
+    },
+    {
+      "id": "pending-8",
+      "firstName": "Carol",
+      "lastName": "Martinez",
+      "email": "c.martinez@bristol.gov.uk",
+      "telephone": "0117 922 6000",
+      "organisation": "West of England Combined Authority",
+      "jobTitle": "Strategic Flood Risk Manager",
+      "responsibility": "rma",
+      "mainArea": "rma1",
+      "mainAreaName": "Bristol City Council",
+      "rmaEaAreas": [
+        "ea1"
+      ],
+      "rmaEaAreasNames": [
+        "Wessex"
+      ],
+      "rmaPsoAreas": [
+        "pso1",
+        "pso2",
+        "pso19"
+      ],
+      "rmaPsoAreasNames": [
+        "PSO West of England",
+        "PSO Dorset",
+        "PSO Greater Manchester"
+      ],
+      "additionalAreas": [
+        "rma5",
+        "rma8"
+      ],
+      "additionalAreasNames": [
+        "Dorset Council",
+        "Gloucestershire County Council"
+      ],
+      "requestedDate": "2025-10-06",
+      "requestedTime": "09:30",
       "invitationSentDate": null,
       "invitationSentTime": null,
       "invitationAcceptedDate": null,
@@ -133,8 +248,12 @@
       "responsibility": "ea",
       "mainArea": "ea2",
       "mainAreaName": "Thames",
-      "additionalAreas": ["ea4"],
-      "additionalAreasNames": ["South East"],
+      "additionalAreas": [
+        "ea4"
+      ],
+      "additionalAreasNames": [
+        "South East"
+      ],
       "isAdmin": true,
       "invitationSentDate": "2025-09-15",
       "invitationSentTime": "14:30",
@@ -153,15 +272,23 @@
       "telephone": "0117 922 4567",
       "organisation": "Bristol City Council",
       "jobTitle": "Drainage Engineer",
-      "responsibility": "rma",
+      "responsibility": "pso",
       "mainArea": "rma1",
       "mainAreaName": "Bristol City Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": ["ea1"],
-      "rmaEaAreasNames": ["Wessex"],
-      "rmaPsoAreas": ["pso1"],
-      "rmaPsoAreasNames": ["PSO West of England"],
+      "rmaEaAreas": [
+        "ea1"
+      ],
+      "rmaEaAreasNames": [
+        "Wessex"
+      ],
+      "rmaPsoAreas": [
+        "pso1"
+      ],
+      "rmaPsoAreasNames": [
+        "PSO West of England"
+      ],
       "isAdmin": false,
       "invitationSentDate": "2025-09-20",
       "invitationSentTime": "10:15",
@@ -181,12 +308,20 @@
       "organisation": "Environment Agency",
       "jobTitle": "Partnership Coordinator",
       "responsibility": "pso",
-      "psoEaAreas": ["ea5"],
-      "psoEaAreasNames": ["North West"],
+      "psoEaAreas": [
+        "ea5"
+      ],
+      "psoEaAreasNames": [
+        "North West"
+      ],
       "mainArea": "pso19",
       "mainAreaName": "PSO Greater Manchester",
-      "additionalAreas": ["pso20"],
-      "additionalAreasNames": ["PSO Merseyside"],
+      "additionalAreas": [
+        "pso20"
+      ],
+      "additionalAreasNames": [
+        "PSO Merseyside"
+      ],
       "isAdmin": false,
       "invitationSentDate": "2025-09-10",
       "invitationSentTime": "11:00",
@@ -233,10 +368,18 @@
       "mainAreaName": "Dorset Council",
       "additionalAreas": [],
       "additionalAreasNames": [],
-      "rmaEaAreas": ["ea1"],
-      "rmaEaAreasNames": ["Wessex"],
-      "rmaPsoAreas": ["pso2"],
-      "rmaPsoAreasNames": ["PSO Dorset"],
+      "rmaEaAreas": [
+        "ea1"
+      ],
+      "rmaEaAreasNames": [
+        "Wessex"
+      ],
+      "rmaPsoAreas": [
+        "pso2"
+      ],
+      "rmaPsoAreasNames": [
+        "PSO Dorset"
+      ],
       "isAdmin": false,
       "invitationSentDate": "2025-10-05",
       "invitationSentTime": "15:20",
@@ -256,12 +399,20 @@
       "organisation": "Environment Agency",
       "jobTitle": "Strategic Oversight Officer",
       "responsibility": "pso",
-      "psoEaAreas": ["ea1"],
-      "psoEaAreasNames": ["Wessex"],
+      "psoEaAreas": [
+        "ea1"
+      ],
+      "psoEaAreasNames": [
+        "Wessex"
+      ],
       "mainArea": "pso2",
       "mainAreaName": "PSO Dorset",
-      "additionalAreas": ["pso3"],
-      "additionalAreasNames": ["PSO Somerset"],
+      "additionalAreas": [
+        "pso3"
+      ],
+      "additionalAreasNames": [
+        "PSO Somerset"
+      ],
       "isAdmin": false,
       "invitationSentDate": "2025-09-01",
       "invitationSentTime": "08:30",

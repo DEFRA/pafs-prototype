@@ -1,0 +1,56 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Edit Authority Code" %}
+
+{% block beforeContent %}
+  <a href="/admin/organisations" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Edit Authority Code</h1>
+    <h2 class="govuk-heading-m">{{ org.name }}</h2>
+
+    <form method="post" action="/admin/organisations/edit-authority/{{ org.id }}" novalidate>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="organisation-name">Organisation name</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="organisation-name" name="organisation-name" type="text" value="{{ org.name }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="identifier-code">Identifier code</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="identifier-code" name="identifier-code" type="text" value="{{ org.identifierCode }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="authority-code">Authority code</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="authority-code" name="authority-code" type="text" value="{{ org.authorityCode }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="authority-type">Authority type</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="authority-type" name="authority-type" type="text" value="{{ org.authorityType }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="end-date">
+          End date if available
+          <span class="govuk-hint">Optional</span>
+        </label>
+        <input class="govuk-input govuk-input--width-10" id="end-date" name="end-date" type="date" value="{{ org.endDate }}">
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save changes
+        </button>
+        <a href="/admin/organisations" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

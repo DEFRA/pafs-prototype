@@ -1,15 +1,14 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="Change main PSO area" %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/edit-pso-ea-areas" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
-
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-l">
       Change main PSO area
     </h1>
 
@@ -19,6 +18,7 @@
         <label class="govuk-label govuk-label--m" for="main-pso-area">
           Main PSO area
         </label>
+        <div id="mainArea-hint" class="govuk-hint">This will be the user's primary area</div>
         <select class="govuk-select" id="main-pso-area" name="mainArea">
           <option value="">Select an area</option>
           {% for ea in data.areasData.ea_areas or [] %}

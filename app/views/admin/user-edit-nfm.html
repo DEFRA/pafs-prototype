@@ -1,13 +1,15 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="NFM Screening Team" %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
 
     <h1 class="govuk-heading-xl">
       NFM Screening Team

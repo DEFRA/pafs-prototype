@@ -51,6 +51,20 @@
     </div>
     {% endif %}
 
+    {% if data['userApprovedNotification'] %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">User approved</h3>
+        <p class="govuk-body">An invitation email has been sent to {{ data['userApprovedName'] }}.</p>
+      </div>
+    </div>
+    {% endif %}
+
     {% if data['userActionNotification'] %}
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
       <div class="govuk-notification-banner__header">
@@ -111,11 +125,11 @@
             <dt class="govuk-summary-list__key">Responsibility</dt>
             <dd class="govuk-summary-list__value">
               {% if data.currentUser.responsibility == 'ea' %}
-                Environment Agency
+                Environment Agency – Area Programme Team
               {% elif data.currentUser.responsibility == 'pso' %}
-                PSO
+                Environment Agency – Partnership & Strategic Overview Team
               {% elif data.currentUser.responsibility == 'rma' %}
-                RMA
+                Risk Management Authority (RMA)
               {% else %}
                 Not set
               {% endif %}
@@ -153,7 +167,7 @@
             </div>
           {% elif data.currentUser.responsibility == 'pso' %}
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">EA areas</dt>
+              <dt class="govuk-summary-list__key">Main EA area</dt>
               <dd class="govuk-summary-list__value">
                 {% if data.currentUser.psoEaAreasNames and data.currentUser.psoEaAreasNames.length > 0 %}
                   {{ data.currentUser.psoEaAreasNames | join(',<br>') | safe }}
@@ -161,7 +175,7 @@
                   {% for areaId in data.currentUser.psoEaAreas %}{{ getAreaName(areaId, 'ea') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
                 {% else %}Not selected{% endif %}
               </dd>
-              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/edit-pso-ea-areas">Change<span class="govuk-visually-hidden"> EA areas</span></a></dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/edit-pso-ea-areas">Change<span class="govuk-visually-hidden"> EA area</span></a></dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Main PSO area</dt>
@@ -181,7 +195,7 @@
             </div>
           {% elif data.currentUser.responsibility == 'rma' %}
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">EA areas</dt>
+              <dt class="govuk-summary-list__key">Main EA area</dt>
               <dd class="govuk-summary-list__value">
                 {% if data.currentUser.rmaEaAreasNames and data.currentUser.rmaEaAreasNames.length > 0 %}
                   {{ data.currentUser.rmaEaAreasNames | join(',<br>') | safe }}
@@ -189,7 +203,7 @@
                   {% for areaId in data.currentUser.rmaEaAreas %}{{ getAreaName(areaId, 'ea') }}{% if not loop.last %}<br>{% endif %}{% endfor %}
                 {% else %}Not selected{% endif %}
               </dd>
-              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/edit-rma-ea-areas">Change<span class="govuk-visually-hidden"> EA areas</span></a></dd>
+              <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/edit-rma-ea-areas">Change<span class="govuk-visually-hidden"> EA area</span></a></dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">PSO areas</dt>
@@ -255,14 +269,24 @@
     </div>
     {% endif %}
 
-    {# Account Information - For Active Accounts Only #}
-    {% if data.currentUser.status == 'active' %}
+    {# Account Information - For Pending and Active Accounts #}
+    {% if data.currentUser.status == 'pending' or data.currentUser.status == 'active' %}
     <div class="govuk-summary-card govuk-!-margin-bottom-6">
       <div class="govuk-summary-card__title-wrapper">
         <h2 class="govuk-summary-card__title">Account information</h2>
       </div>
       <div class="govuk-summary-card__content">
         <dl class="govuk-summary-list">
+          {% if data.currentUser.status == 'pending' %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Requested on</dt>
+            <dd class="govuk-summary-list__value">
+              {{ data.currentUser.requestedDate }} 
+              {% if data.currentUser.requestedTime %} at {{ data.currentUser.requestedTime }}{% endif %}
+            </dd>
+          </div>
+          {% endif %}
+          
           {% if data.currentUser.invitationSentDate %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Invitation sent</dt>
@@ -287,9 +311,11 @@
     {% endif %}
 
     {# Action Buttons #}
-    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;" class="govuk-!-margin-top-9">
+    <div class="govuk-button-group govuk-!-margin-top-9">
       {% if data.currentUser.status == 'pending' %}
-        <a class="govuk-button govuk-!-margin-bottom-0" href="#">Approve user</a>
+        <a class="govuk-button" href="/admin/users/{{ data.currentUser.id }}/approve" role="button" data-module="govuk-button">
+          Approve user
+        </a>
         <a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/delete">Delete user</a>
       {% else %}
         {% if not data.currentUser.invitationAccepted %}

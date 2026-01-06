@@ -6,7 +6,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    {% if data['organisationAddedNotification'] %}
+    {% if data['organisationAddedNotification'] or data['organisationUpdatedNotification'] %}
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
       <div class="govuk-notification-banner__header">
         <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
@@ -14,7 +14,7 @@
         </h2>
       </div>
       <div class="govuk-notification-banner__content">
-        <p class="govuk-body">The organisation has been successfully added.</p>
+        <p class="govuk-body">The organisation has been successfully {% if data['organisationUpdatedNotification'] %}updated{% else %}added{% endif %}.</p>
       </div>
     </div>
     {% endif %}
@@ -51,7 +51,7 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <table class="govuk-table app-table--responsive" data-module="govuk-table">
+    <table class="govuk-table app-table--responsive" data-module="govuk-table" style="font-size: 1rem;">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Organisation Name</th>

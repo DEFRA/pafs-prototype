@@ -1,0 +1,156 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Failed PoL Submissions" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    {% if successMessage %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        {% if successMessage == 'resend' %}
+          <p class="govuk-body">Submission has been resent to PoL.</p>
+        {% elif successMessage == 'marked' %}
+          <p class="govuk-body">Submission has been marked as successful in PoL.</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Failed PoL Submissions</h1>
+    <p class="govuk-body">The following submissions have not been flagged as received by PoL.</p>
+
+    <table class="govuk-table" data-module="govuk-table" style="font-size: 1rem;">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">National project number</th>
+          <th scope="col" class="govuk-table__header">Project name</th>
+          <th scope="col" class="govuk-table__header">Created by</th>
+          <th scope="col" class="govuk-table__header">Last updated</th>
+          <th scope="col" class="govuk-table__header">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for project in projects %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">{{ project.projectNumber }}</td>
+          <td class="govuk-table__cell">{{ project.projectName }}</td>
+          <td class="govuk-table__cell">{{ project.createdBy }}</td>
+          <td class="govuk-table__cell">{{ project.lastUpdated }}</td>
+          <td class="govuk-table__cell">
+            <ul class="govuk-summary-list__actions-list" style="list-style: none; padding: 0; margin: 0; display: flex; gap: 15px;">
+              <li>
+                <form action="/admin/failed-submissions/{{ project.id }}/resend" method="post" style="display: inline;">
+                  <button type="submit" class="govuk-link" style="background: none; border: none; padding: 0; font: inherit; cursor: pointer; color: #1d70b8; text-decoration: underline;">Resend to PoL</button>
+                </form>
+              </li>
+              <li>
+                <form action="/admin/failed-submissions/{{ project.id }}/mark-submitted" method="post" style="display: inline;">
+                  <button type="submit" class="govuk-link" style="background: none; border: none; padding: 0; font: inherit; cursor: pointer; color: #1d70b8; text-decoration: underline;">Proposal in PoL</button>
+                </form>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        {% else %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell" colspan="5">There are no failed submissions</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if projects.length > 0 %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+      <p class="govuk-body" style="margin: 0;">Showing <strong>{{ pagination.startIndex }} to {{ pagination.endIndex }}</strong> of <strong>{{ pagination.totalItems }}</strong> submissions</p>
+      
+      <nav class="govuk-pagination" role="navigation" aria-label="Pagination" style="margin: 0;">
+        {% if pagination.currentPage > 1 %}
+        <div class="govuk-pagination__prev">
+          <a class="govuk-link govuk-pagination__link" href="/admin/failed-submissions?page={{ pagination.currentPage - 1 }}" rel="prev">
+            <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+            </svg>
+            <span class="govuk-pagination__link-title">
+              Previous<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+        {% endif %}
+        
+        <ul class="govuk-pagination__list">
+          {% for i in range(1, pagination.totalPages + 1) %}
+          <li class="govuk-pagination__item {% if i == pagination.currentPage %}govuk-pagination__item--current{% endif %}">
+            <a class="govuk-link govuk-pagination__link" href="/admin/failed-submissions?page={{ i }}" aria-label="Page {{ i }}" {% if i == pagination.currentPage %}aria-current="page"{% endif %}>{{ i }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if pagination.currentPage < pagination.totalPages %}
+        <div class="govuk-pagination__next">
+          <a class="govuk-link govuk-pagination__link" href="/admin/failed-submissions?page={{ pagination.currentPage + 1 }}" rel="next">
+            <span class="govuk-pagination__link-title">
+              Next<span class="govuk-visually-hidden"> page</span>
+            </span>
+            <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+            </svg>
+          </a>
+        </div>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+
+    <div class="govuk-grid-row govuk-!-margin-top-9">
+      <div class="govuk-grid-column-two-thirds">
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              How to manage failed submissions
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            <p class="govuk-body">Check if the proposal has arrived in PoL</p>
+            <ul class="govuk-list govuk-list--bullet instruction-list">
+              <li>If YES, click on the 'Proposal in PoL' link. The proposal will disappear from the list, end of process.</li>
+              <li>If NO, click on the 'Resend to PoL' link.
+                <ul class="govuk-list govuk-list--bullet">
+                  <li>If it displays successfully resubmitted, end of process.</li>
+                  <li>If it displays failed to resubmit, the resend was unsuccessful.
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>For unsuccessful resends, please contact the Program Framework helpdesk <a href="mailto:helpdesk@programframework.com" class="govuk-link">helpdesk@programframework.com</a></li>
+                      <li>Also copy into the email the Asset Management Business Systems Team <a href="mailto:AssetManagementTeam@environment-agency.gov.uk" class="govuk-link">AssetManagementTeam@environment-agency.gov.uk</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+  // Clear notification banner flag on page load so it doesn't persist on refresh
+  if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+    // This is a page refresh
+    fetch('/admin/clear-notification', { method: 'POST' })
+      .catch(function(error) {
+        console.log('Could not clear notification:', error);
+      });
+  }
+</script>
+{% endblock %}

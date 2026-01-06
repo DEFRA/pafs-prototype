@@ -1,48 +1,38 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="Select EA areas" %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/edit-details" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Select EA areas</h1>
+    <p class="govuk-body">Select the Environment Agency areas the user works with.</p>
 
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
-
-    <h1 class="govuk-heading-xl">
-      Change EA areas
-    </h1>
-
-    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-rma-ea-areas" novalidate>
-
+    <form action="/admin/users/{{ data.currentUser.id }}/edit-rma-ea-areas" method="post" novalidate>
       <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-            <h2 class="govuk-fieldset__heading">
-              EA areas
-            </h2>
-          </legend>
+          <legend class="govuk-fieldset__legend">EA areas</legend>
           <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-            {% for area in data.areasData.ea_areas or [] %}
+            {% for ea in eaAreas %}
               <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="rma-ea-areas-{{ loop.index }}" name="rmaEaAreas" type="checkbox" value="{{ area.id }}" {{ 'checked' if area.id in (data.currentUser.rmaEaAreas or []) }}>
-                <label class="govuk-label govuk-checkboxes__label" for="rma-ea-areas-{{ loop.index }}">
-                  {{ area.name }}
-                </label>
+                <input class="govuk-checkboxes__input" id="rmaEaAreas-{{ ea.id }}" name="rmaEaAreas" type="checkbox" value="{{ ea.id }}" {% if data.currentUser.rmaEaAreas and ea.id in data.currentUser.rmaEaAreas %}checked{% endif %}>
+                <label class="govuk-label govuk-checkboxes__label" for="rmaEaAreas-{{ ea.id }}">{{ ea.name }}</label>
               </div>
             {% endfor %}
           </div>
         </fieldset>
       </div>
-
       <div class="govuk-button-group">
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-          Save and continue
-        </button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
         <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
       </div>
     </form>
-
   </div>
 </div>
 

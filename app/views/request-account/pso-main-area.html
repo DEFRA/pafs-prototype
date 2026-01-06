@@ -25,9 +25,9 @@
     <form action="{{ ('/admin/add-user-pso-main-area' if isAdmin else '/request-account/pso-main-area') }}" method="post" novalidate>
       <div class="govuk-form-group {% if error == 'area-not-selected' %}govuk-form-group--error{% endif %}">
         <label class="govuk-label govuk-label--m" for="mainArea">Main PSO area</label>
-        <div id="mainArea-hint" class="govuk-hint">This will be your primary area</div>
+        <div id="mainArea-hint" class="govuk-hint">This will be {{ "the user's" if isAdmin else "your" }} primary area</div>
         {% if error == 'area-not-selected' %}
-          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select your main PSO area</p>
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> Select {{ "the user's" if isAdmin else "your" }} main PSO area</p>
         {% endif %}
         <select class="govuk-select {% if error == 'area-not-selected' %}govuk-select--error{% endif %}" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
           <option value="">Select a PSO area</option>

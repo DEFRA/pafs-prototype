@@ -1,6 +1,10 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Add new user" %}
+{% if isAdmin %}
+  {% set pageName = "Edit administrator details" %}
+{% else %}
+  {% set pageName = "Edit user details" %}
+{% endif %}
 
 {% block beforeContent %}
   <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
@@ -8,82 +12,99 @@
 
 {% block content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-    <h1 class="govuk-heading-xl">Add new user</h1>
+      <h1 class="govuk-heading-xl">{{"Edit user details" if not isAdmin else "Edit administrator details"}}</h1>
 
-    <p class="govuk-body">
-      Enter the details of the new user account.
+      <p class="govuk-body">
+      Update the details of the {{"user" if not isAdmin else "administrator"}} account.
     </p>
 
-    <form action="/admin/users/{{ data.currentUser.id }}/edit-details" method="post" novalidate>
+      <form action="/admin/users/{{ data.currentUser.id }}/edit-details" method="post" novalidate>
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="first-name">First name</label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="first-name" name="firstName" type="text" autocomplete="given-name" value="{{ data.currentUser.firstName }}">
-      </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="first-name">First name</label>
+          <input class="govuk-input govuk-!-width-two-thirds" id="first-name" name="firstName" type="text"
+          autocomplete="given-name" value="{{ data.currentUser.firstName }}">
+        </div>
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="last-name">Last name</label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="last-name" name="lastName" type="text" autocomplete="family-name" value="{{ data.currentUser.lastName }}">
-      </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="last-name">Last name</label>
+          <input class="govuk-input govuk-!-width-two-thirds" id="last-name" name="lastName" type="text"
+          autocomplete="family-name" value="{{ data.currentUser.lastName }}">
+        </div>
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="email">Email address</label>
-        <input class="govuk-input govuk-!-width-two-thirds" id="email" name="email" type="email" spellcheck="false" autocomplete="email" value="{{ data.currentUser.email }}">
-      </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="email">Email address</label>
+          <input class="govuk-input govuk-!-width-two-thirds" id="email" name="email" type="email" spellcheck="false"
+          autocomplete="email" value="{{ data.currentUser.email }}">
+        </div>
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="telephone">Telephone number</label>
-        <div class="govuk-hint">Optional</div>
-        <input class="govuk-input govuk-input--width-20" id="telephone" name="telephone" type="tel" autocomplete="tel" value="{{ data.currentUser.telephone }}">
-      </div>
-
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="organisation">Organisation</label>
-        <div class="govuk-hint">Optional</div>
-        <input class="govuk-input govuk-!-width-two-thirds" id="organisation" name="organisation" type="text" autocomplete="organization" value="{{ data.currentUser.organisation }}">
-      </div>
-
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="job-title">Job title</label>
-        <div class="govuk-hint">Optional</div>
-        <input class="govuk-input govuk-!-width-two-thirds" id="job-title" name="jobTitle" type="text" autocomplete="organization-title" value="{{ data.currentUser.jobTitle }}">
-      </div>
-
-      <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend">What is the user's responsibility?</legend>
-          <div class="govuk-radios" data-module="govuk-radios">
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="responsibility-ea" name="responsibility" type="radio" value="ea" {% if data.currentUser.responsibility == 'ea' %}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="responsibility-ea">
-                Environment Agency – Area Programme Team
-                <div class="govuk-hint">Allows the user to view all records created within the boundary of their Area.</div>
-              </label>
-            </div>
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="responsibility-pso" name="responsibility" type="radio" value="pso" {% if data.currentUser.responsibility == 'pso' %}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="responsibility-pso">
-                Environment Agency – Partnership &amp; Strategic Overview Team
-                <div class="govuk-hint">Allows the user to view and edit all records created within the boundary of their Team</div>
-              </label>
-            </div>
-            <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="responsibility-rma" name="responsibility" type="radio" value="rma" {% if data.currentUser.responsibility == 'rma' %}checked{% endif %}>
-              <label class="govuk-label govuk-radios__label" for="responsibility-rma">
-                Risk Management Authority (RMA)
-                <div class="govuk-hint">Allows the user to create, edit, and view all records created within the boundary of their RMA.</div>
-              </label>
-            </div>
+        {% if not isAdmin %}
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="telephone">Telephone number</label>
+            <div class="govuk-hint">Optional</div>
+            <input class="govuk-input govuk-input--width-20" id="telephone" name="telephone" type="tel" autocomplete="tel"
+          value="{{ data.currentUser.telephone }}">
           </div>
-        </fieldset>
-      </div>
 
-      <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
-    </form>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="organisation">Organisation</label>
+            <div class="govuk-hint">Optional</div>
+            <input class="govuk-input govuk-!-width-two-thirds" id="organisation" name="organisation" type="text"
+          autocomplete="organization" value="{{ data.currentUser.organisation }}">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="job-title">Job title</label>
+            <div class="govuk-hint">Optional</div>
+            <input class="govuk-input govuk-!-width-two-thirds" id="job-title" name="jobTitle" type="text"
+          autocomplete="organization-title" value="{{ data.currentUser.jobTitle }}">
+          </div>
+
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend">What is the user's responsibility?</legend>
+              <div class="govuk-radios" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="responsibility-ea" name="responsibility" type="radio" value="ea" {%
+                if data.currentUser.responsibility=='ea' %}checked{% endif %}>
+                  <label class="govuk-label govuk-radios__label" for="responsibility-ea">
+                Environment Agency – Area Programme Team
+                <div class="govuk-hint">Allows the user to view all records created within the boundary of their Area.
+                </div>
+                  </label>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="responsibility-pso" name="responsibility" type="radio" value="pso"
+                {% if data.currentUser.responsibility=='pso' %}checked{% endif %}>
+                  <label class="govuk-label govuk-radios__label" for="responsibility-pso">
+                Environment Agency – Partnership &amp; Strategic Overview Team
+                <div class="govuk-hint">Allows the user to view and edit all records created within the boundary of
+                  their Team</div>
+                  </label>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="responsibility-rma" name="responsibility" type="radio" value="rma"
+                {% if data.currentUser.responsibility=='rma' %}checked{% endif %}>
+                  <label class="govuk-label govuk-radios__label" for="responsibility-rma">
+                Risk Management Authority (RMA)
+                <div class="govuk-hint">Allows the user to create, edit, and view all records created within the
+                  boundary of their RMA.</div>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        {% endif %}
+
+        <div class="govuk-button-group">
+          <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
+          <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
 {% endblock %}

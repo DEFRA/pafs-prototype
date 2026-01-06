@@ -8,13 +8,18 @@
 
     <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
 
-    <h1 class="govuk-heading-xl">Are you sure you want to delete {{ data.currentUser.firstName }} {{ data.currentUser.lastName }}?</h1>
+    <h1 class="govuk-heading-xl">Are you sure you want to delete {{ data.currentUser.firstName }} {{
+      data.currentUser.lastName }}?</h1>
 
-    <p class="govuk-body">This will remove the user from the system.</p>
+    <p class="govuk-body">This will permanently remove the user from the system.</p>
 
     <form method="post" action="/admin/users/{{ data.currentUser.id }}/delete">
       <input type="hidden" name="confirm" value="yes">
-      <button class="govuk-button govuk-button--warning" data-module="govuk-button" type="submit">Yes, delete this user</button>
+      <div class="govuk-button-group">
+        <button class="govuk-button govuk-button--warning" data-module="govuk-button" type="submit">Yes, delete this
+          user</button>
+        <a class="govuk-link" href="/admin/users/{{ data.currentUser.id }}/view">Cancel</a>
+      </div>
     </form>
   </div>
 </div>

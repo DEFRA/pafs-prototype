@@ -92,7 +92,7 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <table class="govuk-table app-table--responsive" data-module="govuk-table">
+    <table class="govuk-table app-table--responsive" data-module="govuk-table" style="font-size: 1rem;">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Name</th>
@@ -108,7 +108,10 @@
           <td class="govuk-table__cell" data-label="Name">{{ user.firstName }} {{ user.lastName }}</td>
           <td class="govuk-table__cell" data-label="Email">{{ user.email }}</td>
           <td class="govuk-table__cell" data-label="Area">{{ user.mainAreaName }}</td>
-          <td class="govuk-table__cell govuk-!-white-space-nowrap" data-label="Requested">{{ user.requestedDate }}</td>
+          <td class="govuk-table__cell govuk-!-white-space-nowrap" data-label="Requested">
+            {{ user.requestedDate }}&nbsp;
+            <span class="govuk-hint govuk-!-font-size-16">{{ user.requestedTime or '12:00' }}</span>
+          </td>
           <td class="govuk-table__cell" data-label="Action"><a href="/admin/users/{{ user.id }}/view" class="govuk-link">View</a></td>
         </tr>
         {% endfor %}

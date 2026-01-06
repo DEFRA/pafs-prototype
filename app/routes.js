@@ -836,6 +836,8 @@ router.get('/admin/user-management-pending', function (req, res) {
   req.session.data.areasData = areasData
   req.session.data.search = req.query.search || ''
   req.session.data.area = req.query.area || ''
+  delete req.session.data.userDeletedNotification
+  delete req.session.data.userDeletedName
   res.render('admin/user-management-pending')
 })
 
@@ -847,6 +849,10 @@ router.get('/admin/user-management-active', function (req, res) {
   req.session.data.areasData = areasData
   req.session.data.search = req.query.search || ''
   req.session.data.area = req.query.area || ''
+  delete req.session.data.userAddedNotification
+  delete req.session.data.userAddedName
+  delete req.session.data.userDeletedNotification
+  delete req.session.data.userDeletedName
   res.render('admin/user-management-active')
 })
 
@@ -1336,6 +1342,109 @@ router.get('/admin/add-user-check-answers-rma-example', function (req, res) {
   res.render('admin/add-user-check-answers', { data: dummyData })
 })
 
+// Failed submissions routes
+router.get('/admin/failed-submissions', function (req, res) {
+  const projects = loadProjectsData()
+  const failedSubmissions = projects.filter(p => p.failedSubmission === true)
+
+  // Handle pagination (similar to user-management-active)
+  const page = parseInt(req.query.page) || 1
+  const limit = 10
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+
+  const results = failedSubmissions.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(failedSubmissions.length / limit)
+
+  res.render('admin/failed-submissions', {
+    projects: results,
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: failedSubmissions.length,
+      startIndex: startIndex + 1,
+      endIndex: Math.min(endIndex, failedSubmissions.length)
+    },
+    successMessage: req.session.data.failedSubmissionNotification
+  })
+})
+
+router.post('/admin/failed-submissions/:id/resend', function (req, res) {
+  const id = parseInt(req.params.id)
+  // In a real app, this would trigger the resend logic
+  req.session.data.failedSubmissionNotification = 'resend'
+  res.redirect('/admin/failed-submissions')
+})
+
+router.post('/admin/failed-submissions/:id/mark-submitted', function (req, res) {
+  const id = parseInt(req.params.id)
+  const projects = loadProjectsData()
+  const projectIndex = projects.findIndex(p => p.id === id)
+
+  if (projectIndex !== -1) {
+    projects[projectIndex].failedSubmission = false
+    fs.writeFileSync(projectsDataPath, JSON.stringify(projects, null, 2))
+  }
+
+  req.session.data.failedSubmissionNotification = 'marked'
+  res.redirect('/admin/failed-submissions')
+})
+
+// Archive routes
+router.get('/proposal/archive', function (req, res) {
+  const projects = loadProjectsData()
+  const archivedProjects = projects.filter(p => p.status === 'Archived')
+
+  // Handle pagination
+  const page = parseInt(req.query.page) || 1
+  const limit = 10
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+
+  const results = archivedProjects.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(archivedProjects.length / limit)
+
+  res.render('proposal/archive', {
+    projects: results,
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: archivedProjects.length,
+      startIndex: startIndex + 1,
+      endIndex: Math.min(endIndex, archivedProjects.length)
+    }
+  })
+})
+
+router.get('/proposal/empty-archive', function (req, res) {
+  const projects = loadProjectsData()
+  const archivedProjects = projects.filter(p => p.status === 'Archived')
+
+  // Handle pagination
+  const page = parseInt(req.query.page) || 1
+  const limit = 10
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+
+  const results = archivedProjects.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(archivedProjects.length / limit)
+
+  res.render('proposal/archive', {
+    projects: [],
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      totalItems: archivedProjects.length,
+      startIndex: startIndex + 1,
+      endIndex: Math.min(endIndex, archivedProjects.length)
+    }
+  })
+})
+
+router.get('/proposal/confirm-archive', function (req, res) {
+  res.render('proposal/confirm-archive')
+})
+
 router.post('/admin/add-user-check-answers', function (req, res) {
   // Store user added notification data
   const firstName = req.session.data.firstName
@@ -1350,21 +1459,146 @@ router.post('/admin/add-user-check-answers', function (req, res) {
 router.post('/admin/clear-notification', function (req, res) {
   req.session.data.userAddedNotification = undefined
   req.session.data.userAddedName = undefined
+  req.session.data.failedSubmissionNotification = undefined
   res.json({ success: true })
+})
+
+router.get('/admin/organisations/edit/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const org = organisations.find(o => o.id === orgId)
+
+  if (!org) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  if (org.type === 'Authority') {
+    return res.redirect(`/admin/organisations/edit-authority/${orgId}`)
+  } else if (org.type === 'PSO') {
+    return res.redirect(`/admin/organisations/edit-pso/${orgId}`)
+  } else if (org.type === 'RMA') {
+    return res.redirect(`/admin/organisations/edit-rma/${orgId}`)
+  }
+
+  return res.redirect('/admin/organisations')
+})
+
+router.get('/admin/organisations/edit-authority/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const org = organisations.find(o => o.id === orgId)
+
+  if (!org) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  res.render('admin/edit-authority', { org: org })
+})
+
+router.post('/admin/organisations/edit-authority/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const orgIndex = organisations.findIndex(o => o.id === orgId)
+
+  if (orgIndex === -1) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  organisations[orgIndex].name = req.body['organisation-name']
+  organisations[orgIndex].identifierCode = req.body['identifier-code']
+  organisations[orgIndex].authorityCode = req.body['authority-code']
+  organisations[orgIndex].authorityType = req.body['authority-type']
+  organisations[orgIndex].endDate = req.body['end-date'] || null
+
+  fs.writeFileSync(organisationsDataPath, JSON.stringify(organisations, null, 2))
+
+  req.session.data.organisationUpdatedNotification = true
+  return res.redirect('/admin/organisations')
+})
+
+router.get('/admin/organisations/edit-pso/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const org = organisations.find(o => o.id === orgId)
+
+  if (!org) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  const areasData = loadAreasData()
+  res.render('admin/edit-pso', { org: org, areasData: areasData })
+})
+
+router.post('/admin/organisations/edit-pso/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const orgIndex = organisations.findIndex(o => o.id === orgId)
+
+  if (orgIndex === -1) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  organisations[orgIndex].name = req.body['pso-name']
+  organisations[orgIndex].identifierCode = req.body['identifier-code']
+  organisations[orgIndex].associatedEaArea = req.body['ea-area']
+  organisations[orgIndex].rfccCode = req.body['rfcc-code']
+  organisations[orgIndex].endDate = req.body['end-date'] || null
+
+  fs.writeFileSync(organisationsDataPath, JSON.stringify(organisations, null, 2))
+
+  req.session.data.organisationUpdatedNotification = true
+  return res.redirect('/admin/organisations')
+})
+
+router.get('/admin/organisations/edit-rma/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const org = organisations.find(o => o.id === orgId)
+
+  if (!org) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  req.session.data.organisationsData = organisations
+  res.render('admin/edit-rma', { org: org })
+})
+
+router.post('/admin/organisations/edit-rma/:id', function (req, res) {
+  const orgId = parseInt(req.params.id)
+  const organisations = loadOrganisationsData()
+  const orgIndex = organisations.findIndex(o => o.id === orgId)
+
+  if (orgIndex === -1) {
+    return res.status(404).send('Organisation not found')
+  }
+
+  organisations[orgIndex].name = req.body['organisation-name']
+  organisations[orgIndex].identifierCode = req.body['identifier-code']
+  organisations[orgIndex].authorityCode = req.body['authority-code']
+  organisations[orgIndex].associatedPso = req.body['associated-pso']
+  organisations[orgIndex].endDate = req.body['end-date'] || null
+
+  fs.writeFileSync(organisationsDataPath, JSON.stringify(organisations, null, 2))
+
+  req.session.data.organisationUpdatedNotification = true
+  return res.redirect('/admin/organisations')
 })
 
 router.post('/admin/clear-organisation-notification', function (req, res) {
-  req.session.data.organisationAddedNotification = undefined
+  delete req.session.data.organisationAddedNotification
+  delete req.session.data.organisationUpdatedNotification
   res.json({ success: true })
 })
 
-// Organisation management routes
 router.get('/admin/organisations', function (req, res) {
   const areasData = loadAreasData()
   let organisations = loadOrganisationsData()
 
-  // Filter by name if provided
+  // Initialize filters from query
   const nameFilter = req.query['organisation-name']
+  const typeFilter = req.query['organisation-type']
+
+  // Filter by name if provided
   if (nameFilter && nameFilter.trim()) {
     organisations = organisations.filter((org) =>
       org.name.toLowerCase().includes(nameFilter.toLowerCase())
@@ -1372,7 +1606,6 @@ router.get('/admin/organisations', function (req, res) {
   }
 
   // Filter by type if provided
-  const typeFilter = req.query['organisation-type']
   if (typeFilter && typeFilter.trim()) {
     organisations = organisations.filter((org) => org.type === typeFilter)
   }
@@ -1380,8 +1613,14 @@ router.get('/admin/organisations', function (req, res) {
   // Store in session data for template access
   req.session.data.organisations = organisations
   req.session.data.areasData = areasData
+  req.session.data['organisation-name'] = nameFilter
+  req.session.data['organisation-type'] = typeFilter
 
   res.render('admin/organisations')
+
+  // Clear notifications after rendering
+  delete req.session.data.organisationAddedNotification
+  delete req.session.data.organisationUpdatedNotification
 })
 
 router.get('/admin/organisations/add', function (req, res) {
@@ -1550,6 +1789,7 @@ router.post('/set-cookie-preference', function (req, res) {
 router.get('/admin/projects', function (req, res) {
   let projects = loadProjectsData()
   const organisations = loadOrganisationsData()
+  const areasData = loadAreasData()
 
   // Initialize filters from query
   const searchFilter = req.query.search || ''
@@ -1574,8 +1814,28 @@ router.get('/admin/projects', function (req, res) {
   // Store in session data for template access
   req.session.data.projectsData = projects
   req.session.data.organisationsData = organisations
+  req.session.data.areasData = areasData
   req.session.data.search = searchFilter
   req.session.data.rma = rmaFilter
+
+  // Get unique sorted list of all RMAs from areas data
+  const allRmas = []
+  if (areasData && areasData.ea_areas) {
+    areasData.ea_areas.forEach(ea => {
+      if (ea.pso_areas) {
+        ea.pso_areas.forEach(pso => {
+          if (pso.rma_areas) {
+            pso.rma_areas.forEach(rma => {
+              if (rma.name && !allRmas.includes(rma.name)) {
+                allRmas.push(rma.name)
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+  req.session.data.allRmas = allRmas.sort()
 
   res.render('admin/projects')
 
@@ -1648,11 +1908,23 @@ router.get('/admin/users/:id/view', function (req, res) {
   const userId = req.params.id
   const usersData = loadUsersData()
 
+  // Capture and clear flash/simulation flags from session immediately
+  // This ensures they don't persist to the next request (refresh or navigation)
+  const simulatedApprovedUserId = req.session.data.simulatedApprovedUserId
+  const userApprovedNotification = req.session.data.userApprovedNotification
+  const userApprovedName = req.session.data.userApprovedName
+  const userUpdatedNotification = req.session.data.userUpdatedNotification
+  const userActionNotification = req.session.data.userActionNotification
+
+  delete req.session.data.simulatedApprovedUserId
+  delete req.session.data.userApprovedNotification
+  delete req.session.data.userApprovedName
+  delete req.session.data.userUpdatedNotification
+  delete req.session.data.userActionNotification
+
   // Find user in either pending or active users
   let user = usersData.pendingUsers.find((u) => u.id === userId)
   let userType = 'pending'
-  // Set notification
-  req.session.data.userUpdatedNotification = false
 
   if (!user) {
     user = usersData.activeUsers.find((u) => u.id === userId)
@@ -1663,9 +1935,26 @@ router.get('/admin/users/:id/view', function (req, res) {
     return res.status(404).send('User not found')
   }
 
-  // Store in session for edit pages
-  req.session.data.currentUser = user
+  // Create a copy of the user object to avoid mutating the original data
+  const userCopy = JSON.parse(JSON.stringify(user))
+
+  // Simulate approval for this request only
+  if (simulatedApprovedUserId === userId) {
+    userCopy.status = 'active'
+    userCopy.invitationSentDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    userCopy.invitationSentTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+    userCopy.lastSignIn = 'Never'
+  }
+
+  // Store in session for edit pages and standard template access
+  req.session.data.currentUser = userCopy
   req.session.data.currentUserType = userType
+
+  // Set local variables for this render only, so the template can show the notification
+  res.locals.data.userApprovedNotification = userApprovedNotification
+  res.locals.data.userApprovedName = userApprovedName
+  res.locals.data.userUpdatedNotification = userUpdatedNotification
+  res.locals.data.userActionNotification = userActionNotification
 
   // Load organisations for area names
   const organisationsData = loadOrganisationsData()
@@ -1674,21 +1963,6 @@ router.get('/admin/users/:id/view', function (req, res) {
   // Load areas data for area names
   const areasData = loadAreasData()
   req.session.data.areasData = areasData
-
-  const flashKeys = [
-    'userUpdatedNotification',
-    'userActionNotification',
-    'userDeletedNotification',
-    'userApprovedNotification'
-  ]
-
-  res.on('finish', function () {
-    flashKeys.forEach((key) => {
-      if (req.session?.data && req.session.data[key]) {
-        delete req.session.data[key]
-      }
-    })
-  })
 
   return res.render('admin/user-view')
 })
@@ -1709,54 +1983,91 @@ router.get('/admin/users/:id/edit-details', function (req, res) {
 
   req.session.data.currentUser = user
 
-  return res.render('admin/user-edit-details')
+  return res.render('admin/user-edit-details', { isAdmin: user.isAdmin ?? false })
 })
 
 // Edit user details - POST /admin/users/:id/edit-details
 router.post('/admin/users/:id/edit-details', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  // Find user and update
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
-  }
-
-  if (!user) {
-    return res.status(404).send('User not found')
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
   // Check if responsibility changed
-  const responsibilityChanged = user.responsibility !== req.body.responsibility
+  const responsibilityChanged = currentUser.responsibility !== req.body.responsibility
 
-  // Update user details
-  const userIndex = userArray.findIndex((u) => u.id === userId)
-  userArray[userIndex].firstName = req.body.firstName
-  userArray[userIndex].lastName = req.body.lastName
-  userArray[userIndex].email = req.body.email
-  userArray[userIndex].telephone = req.body.telephone || ''
-  userArray[userIndex].organisation = req.body.organisation || ''
-  userArray[userIndex].jobTitle = req.body.jobTitle || ''
-  userArray[userIndex].responsibility = req.body.responsibility
+  // Update session data instead of file
+  currentUser.firstName = req.body.firstName
+  currentUser.lastName = req.body.lastName
+  currentUser.email = req.body.email
+  currentUser.telephone = req.body.telephone || ''
+  currentUser.organisation = req.body.organisation || ''
+  currentUser.jobTitle = req.body.jobTitle || ''
+  currentUser.responsibility = req.body.responsibility
+
+  // If responsibility changed and user is not admin, they'll need to update areas
+  if (responsibilityChanged && !currentUser.isAdmin) {
+    if (currentUser.responsibility === 'ea') {
+      return res.redirect(`/admin/users/${userId}/edit-main-ea-area`)
+    } else if (currentUser.responsibility === 'pso') {
+      return res.redirect(`/admin/users/${userId}/edit-pso-ea-areas`)
+    } else if (currentUser.responsibility === 'rma') {
+      return res.redirect(`/admin/users/${userId}/edit-rma-ea-areas`)
+    }
+  }
+
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
+})
+
+// Edit check answers - GET /admin/users/:id/edit-check-answers
+router.get('/admin/users/:id/edit-check-answers', function (req, res) {
+  const userId = req.params.id
+  const currentUser = req.session.data.currentUser
+
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
+  }
+
+  const areasData = loadAreasData()
+  req.session.data.areasData = areasData
+
+  return res.render('admin/user-edit-check-answers')
+})
+
+// Edit check answers - POST /admin/users/:id/edit-check-answers
+router.post('/admin/users/:id/edit-check-answers', function (req, res) {
+  const userId = req.params.id
+  const currentUser = req.session.data.currentUser
+  const usersData = loadUsersData()
+  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
+  }
+
+  // Find user in the real data and update it
+  let userArray = usersData.pendingUsers
+  let userIndex = userArray.findIndex((u) => u.id === userId)
+
+  if (userIndex === -1) {
+    userArray = usersData.activeUsers
+    userIndex = userArray.findIndex((u) => u.id === userId)
+  }
+
+  if (userIndex === -1) {
+    return res.status(404).send('User not found in data')
+  }
+
+  // Update the user in the array with current session data
+  userArray[userIndex] = { ...userArray[userIndex], ...currentUser }
 
   // Write back to file
   fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
 
   // Set notification
   req.session.data.userUpdatedNotification = true
-
-  // If responsibility changed and user is not admin, redirect to edit areas page
-  if (responsibilityChanged && !user.isAdmin) {
-    // Reload user with updated data
-    const updatedUser = userArray[userIndex]
-    req.session.data.currentUser = updatedUser
-    return res.redirect(`/admin/users/${userId}/edit-areas`)
-  }
 
   return res.redirect(`/admin/users/${userId}/view`)
 })
@@ -1783,45 +2094,27 @@ router.get('/admin/users/:id/edit-admin', function (req, res) {
 // Edit admin status - POST /admin/users/:id/edit-admin
 router.post('/admin/users/:id/edit-admin', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  // Find user and update
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  // Update admin status
-  const userIndex = userArray.findIndex((u) => u.id === userId)
+  // Update session data
   const isAdmin = req.body.isAdmin === 'yes'
-  userArray[userIndex].isAdmin = isAdmin
+  currentUser.isAdmin = isAdmin
 
   // If user becomes admin, clear NFM screening team status
   if (isAdmin) {
-    userArray[userIndex].nfmScreeningTeam = false
+    currentUser.nfmScreeningTeam = false
   } else {
     // If not admin, update NFM screening team status if provided
     if (req.body.nfmScreeningTeam !== undefined) {
-      userArray[userIndex].nfmScreeningTeam =
-        req.body.nfmScreeningTeam === 'yes'
+      currentUser.nfmScreeningTeam = req.body.nfmScreeningTeam === 'yes'
     }
   }
 
-  // Write back to file
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-
-  // Set notification
-  req.session.data.userUpdatedNotification = true
-
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
 })
 
 // Edit NFM screening status - GET /admin/users/:id/edit-nfm
@@ -1846,33 +2139,16 @@ router.get('/admin/users/:id/edit-nfm', function (req, res) {
 // Edit NFM screening status - POST /admin/users/:id/edit-nfm
 router.post('/admin/users/:id/edit-nfm', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  // Find user and update
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
+  // Update session data
+  currentUser.nfmScreeningTeam = req.body.nfmScreeningTeam === 'yes'
 
-  // Update NFM status
-  const userIndex = userArray.findIndex((u) => u.id === userId)
-  userArray[userIndex].nfmScreeningTeam = req.body.nfmScreeningTeam === 'yes'
-
-  // Write back to file
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-
-  // Set notification
-  req.session.data.userUpdatedNotification = true
-
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
 })
 
 // Edit Responsibility and Areas - GET /admin/users/:id/edit-areas
@@ -1963,6 +2239,26 @@ router.post('/admin/users/:id/edit-areas', function (req, res) {
   // Set notification
   req.session.data.userUpdatedNotification = true
 
+  return res.redirect(`/admin/users/${userId}/view`)
+})
+
+// Approve pending user - GET /admin/users/:id/approve (simulation for prototype)
+router.get('/admin/users/:id/approve', function (req, res) {
+  const userId = req.params.id
+  const usersData = loadUsersData()
+
+  // Find user in pending users
+  const user = usersData.pendingUsers.find((u) => u.id === userId)
+  if (!user) {
+    return res.status(404).send('User not found')
+  }
+
+  // Set simulation flags in session
+  req.session.data.simulatedApprovedUserId = userId
+  req.session.data.userApprovedNotification = true
+  req.session.data.userApprovedName = `${user.firstName} ${user.lastName}`
+
+  // Redirect to the user view page to show the simulated active state
   return res.redirect(`/admin/users/${userId}/view`)
 })
 
@@ -2058,7 +2354,7 @@ router.post('/admin/users/:id/delete', function (req, res) {
   }
 
   // Write back to file
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
+  // fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
 
   // Set notification and redirect to appropriate list
   req.session.data.userDeletedNotification = true
@@ -2235,10 +2531,10 @@ router.get('/admin/users/:id/edit-pso-additional-areas', function (req, res) {
   req.session.data.areasData = areasData
   req.session.data.organisationsData = organisationsData
 
-  return res.render('admin/user-edit-rma-ea-areas')
+  return res.render('admin/user-edit-pso-additional-areas')
 })
 
-router.get('/admin/users/:id/edit-rma-pso-areas', function (req, res) {
+router.get('/admin/users/:id/edit-rma-ea-areas', function (req, res) {
   const userId = req.params.id
   const usersData = loadUsersData()
 
@@ -2395,260 +2691,170 @@ router.post('/admin/users/:id/edit-nfm-screening', function (req, res) {
 // Post handlers for individual area routes
 router.post('/admin/users/:id/edit-main-ea-area', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
+  currentUser.mainArea = req.body.mainArea
+  const areasData = loadAreasData()
+  const area = findEaArea(areasData, req.body.mainArea)
+  currentUser.mainAreaName = area ? area.name : undefined
 
-  const userIndex = userArray.findIndex((u) => u.id === userId)
-  userArray[userIndex].mainArea = req.body.mainArea
-
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
-
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-ea-additional-areas`)
 })
 
 router.post('/admin/users/:id/edit-ea-additional-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let additionalAreas = req.body.additionalAreas || []
   if (!Array.isArray(additionalAreas)) {
     additionalAreas = [additionalAreas]
   }
-  userArray[userIndex].additionalAreas = additionalAreas
+  currentUser.additionalAreas = additionalAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.additionalAreasNames = mapIdsToNames(additionalAreas, areasData, 'ea')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
 })
 
 router.post('/admin/users/:id/edit-pso-ea-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let eaAreas = req.body.psoEaAreas || []
   if (!Array.isArray(eaAreas)) {
     eaAreas = [eaAreas]
   }
-  userArray[userIndex].psoEaAreas = eaAreas
+  currentUser.psoEaAreas = eaAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.psoEaAreasNames = mapIdsToNames(eaAreas, areasData, 'ea')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-main-pso-area`)
 })
 
 router.post('/admin/users/:id/edit-main-pso-area', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
+  currentUser.mainArea = req.body.mainArea
+  const areasData = loadAreasData()
+  const area = findPsoArea(areasData, req.body.mainArea)
+  currentUser.mainAreaName = area ? area.name : undefined
 
-  const userIndex = userArray.findIndex((u) => u.id === userId)
-  userArray[userIndex].mainArea = req.body.mainArea
-
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
-
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-pso-additional-areas`)
 })
 
 router.post('/admin/users/:id/edit-pso-additional-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let additionalAreas = req.body.additionalAreas || []
   if (!Array.isArray(additionalAreas)) {
     additionalAreas = [additionalAreas]
   }
-  userArray[userIndex].additionalAreas = additionalAreas
+  currentUser.additionalAreas = additionalAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.additionalAreasNames = mapIdsToNames(additionalAreas, areasData, 'pso')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
 })
 
 router.post('/admin/users/:id/edit-rma-ea-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let eaAreas = req.body.rmaEaAreas || []
   if (!Array.isArray(eaAreas)) {
     eaAreas = [eaAreas]
   }
-  userArray[userIndex].rmaEaAreas = eaAreas
+  currentUser.rmaEaAreas = eaAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.rmaEaAreasNames = mapIdsToNames(eaAreas, areasData, 'ea')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-rma-pso-areas`)
 })
 
 router.post('/admin/users/:id/edit-rma-pso-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let psoAreas = req.body.rmaPsoAreas || []
   if (!Array.isArray(psoAreas)) {
     psoAreas = [psoAreas]
   }
-  userArray[userIndex].rmaPsoAreas = psoAreas
+  currentUser.rmaPsoAreas = psoAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.rmaPsoAreasNames = mapIdsToNames(psoAreas, areasData, 'pso')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-main-rma-area`)
 })
 
 router.post('/admin/users/:id/edit-main-rma-area', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
+  currentUser.mainArea = req.body.mainArea
+  const areasData = loadAreasData()
+  const area = findRmaArea(areasData, req.body.mainArea)
+  currentUser.mainAreaName = area ? area.name : undefined
 
-  const userIndex = userArray.findIndex((u) => u.id === userId)
-  userArray[userIndex].mainArea = req.body.mainArea
-
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
-
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-rma-additional-areas`)
 })
 
 router.post('/admin/users/:id/edit-rma-additional-areas', function (req, res) {
   const userId = req.params.id
-  const usersData = loadUsersData()
-  const usersDataPath = path.join(__dirname, 'data', 'users.json')
+  const currentUser = req.session.data.currentUser
 
-  let user = usersData.pendingUsers.find((u) => u.id === userId)
-  let userArray = usersData.pendingUsers
-
-  if (!user) {
-    user = usersData.activeUsers.find((u) => u.id === userId)
-    userArray = usersData.activeUsers
+  if (!currentUser || currentUser.id !== userId) {
+    return res.status(404).send('User session not found')
   }
 
-  if (!user) {
-    return res.status(404).send('User not found')
-  }
-
-  const userIndex = userArray.findIndex((u) => u.id === userId)
   let additionalAreas = req.body.additionalAreas || []
   if (!Array.isArray(additionalAreas)) {
     additionalAreas = [additionalAreas]
   }
-  userArray[userIndex].additionalAreas = additionalAreas
+  currentUser.additionalAreas = additionalAreas
 
-  fs.writeFileSync(usersDataPath, JSON.stringify(usersData, null, 2))
-  req.session.data.userUpdatedNotification = true
+  const areasData = loadAreasData()
+  currentUser.additionalAreasNames = mapIdsToNames(additionalAreas, areasData, 'rma')
 
-  return res.redirect(`/admin/users/${userId}/view`)
+  return res.redirect(`/admin/users/${userId}/edit-check-answers`)
 })
 
 // Proposal routes
@@ -3348,8 +3554,8 @@ router.get(
       now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
     const startYear = Number(
       req.session.data.financialYear ||
-        req.session.data.financialYearAfter ||
-        currentYear
+      req.session.data.financialYearAfter ||
+      currentYear
     )
 
     // Use the later of current year or start year
@@ -5317,7 +5523,7 @@ router.post(
     if (data['any-environmental-benefits'] === 'yes') {
       res.redirect(
         '/proposal/create-proposal/environmental-benefit/' +
-          environmentalBenefits[0].id
+        environmentalBenefits[0].id
       )
     } else {
       res.redirect('/proposal/create-proposal/check-answers')
@@ -5385,7 +5591,7 @@ router.post(
       if (index < environmentalBenefits.length - 1) {
         res.redirect(
           '/proposal/create-proposal/environmental-benefit/' +
-            environmentalBenefits[index + 1].id
+          environmentalBenefits[index + 1].id
         )
       } else {
         res.redirect('/proposal/create-proposal/check-answers')
@@ -5477,7 +5683,7 @@ router.post(
     if (index < environmentalBenefits.length - 1) {
       res.redirect(
         '/proposal/create-proposal/environmental-benefit/' +
-          environmentalBenefits[index + 1].id
+        environmentalBenefits[index + 1].id
       )
     } else {
       res.redirect('/proposal/create-proposal/check-answers')
@@ -5545,3 +5751,6 @@ router.post('/proposal/create-proposal/urgency-details', function (req, res) {
 
   res.redirect('/proposal/create-proposal/check-answers')
 })
+
+module.exports = router
+

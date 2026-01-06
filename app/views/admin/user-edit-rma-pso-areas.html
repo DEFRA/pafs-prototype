@@ -1,50 +1,43 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="Select PSO areas" %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedEaAreas = data.currentUser.rmaEaAreas or [] %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/edit-rma-ea-areas" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Select PSO areas</h1>
+    <p class="govuk-body">Select the PSO areas within the user's selected EA areas.</p>
 
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
-
-    <h1 class="govuk-heading-xl">
-      Change PSO areas
-    </h1>
-
-    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-rma-pso-areas" novalidate>
-
-      <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-            <h2 class="govuk-fieldset__heading">
-              PSO areas
-            </h2>
-          </legend>
-          <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-            {% for ea in data.areasData.ea_areas or [] %}
-              {% for pso in ea.pso_areas or [] %}
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="rma-pso-areas-{{ loop.index }}" name="rmaPsoAreas" type="checkbox" value="{{ pso.id }}" {{ 'checked' if pso.id in (data.currentUser.rmaPsoAreas or []) }}>
-                  <label class="govuk-label govuk-checkboxes__label" for="rma-pso-areas-{{ loop.index }}">
-                    {{ pso.name }}
-                  </label>
-                </div>
-              {% endfor %}
-            {% endfor %}
+    <form action="/admin/users/{{ data.currentUser.id }}/edit-rma-pso-areas" method="post" novalidate>
+      {% for ea in eaAreas %}
+        {% if ea.id in selectedEaAreas %}
+          <div class="govuk-form-group govuk-!-margin-bottom-8">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend"><strong>{{ ea.name }} - PSO areas</strong></legend>
+              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                {% for pso in ea.pso_areas %}
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="rmaPsoAreas-{{ pso.id }}" name="rmaPsoAreas" type="checkbox" value="{{ pso.id }}" {% if data.currentUser.rmaPsoAreas and pso.id in data.currentUser.rmaPsoAreas %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label" for="rmaPsoAreas-{{ pso.id }}">{{ pso.name }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </fieldset>
           </div>
-        </fieldset>
-      </div>
-
+        {% endif %}
+      {% endfor %}
       <div class="govuk-button-group">
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-          Save and continue
-        </button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
         <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
       </div>
     </form>
-
   </div>
 </div>
 

@@ -33,7 +33,7 @@
     <form method="get" action="/admin/projects" class="govuk-!-margin-bottom-6">
       <div class="govuk-form-group">
         <label class="govuk-label" for="search">
-          Enter a project number, name or RMA
+          Enter a project number or name
         </label>
         <input class="govuk-input govuk-!-width-two-thirds" id="search" name="search" type="text" value="{{ data['search'] }}">
       </div>
@@ -44,13 +44,9 @@
         </label>
         <select class="govuk-select govuk-!-width-two-thirds" id="rma-filter" name="rma">
           <option value="">All RMAs</option>
-          <optgroup label="RMAs">
-            {% for org in data.organisationsData or [] %}
-              {% if org.type == "RMA" %}
-                <option value="{{ org.name }}" {% if data['rma'] == org.name %}selected{% endif %}>{{ org.name }}</option>
-              {% endif %}
-            {% endfor %}
-          </optgroup>
+          {% for rmaName in data.allRmas %}
+            <option value="{{ rmaName }}" {% if data['rma'] == rmaName %}selected{% endif %}>{{ rmaName }}</option>
+          {% endfor %}
         </select>
       </div>
 
@@ -64,7 +60,7 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <table class="govuk-table app-table--responsive" data-module="govuk-table" style="font-size: 14px;">
+    <table class="govuk-table app-table--responsive" data-module="govuk-table" style="font-size: 1rem;">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-sixth">Project number</th>

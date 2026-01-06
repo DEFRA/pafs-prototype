@@ -1,44 +1,43 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="Select main RMA area" %}
+{% set areasData = data['areasData'] or (data.areas) %}
+{% set eaAreas = areasData.ea_areas or [] %}
+{% set selectedPsoAreas = data.currentUser.rmaPsoAreas or [] %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/edit-rma-pso-areas" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Select main RMA area</h1>
 
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
-
-    <h1 class="govuk-heading-xl">
-      Change main RMA area
-    </h1>
-
-    <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-main-rma-area" novalidate>
-
+    <form action="/admin/users/{{ data.currentUser.id }}/edit-main-rma-area" method="post" novalidate>
       <div class="govuk-form-group">
-        <label class="govuk-label govuk-label--m" for="main-rma-area">
-          Main RMA area
-        </label>
-        <select class="govuk-select" id="main-rma-area" name="mainArea">
-          <option value="">Select an area</option>
-          {% for ea in data.areasData.ea_areas or [] %}
-            {% for pso in ea.pso_areas or [] %}
-              {% for rma in pso.rma_areas or [] %}
-                <option value="{{ rma.id }}" {{ 'selected' if data.currentUser.mainArea == rma.id }}>{{ rma.name }}</option>
-              {% endfor %}
+        <label class="govuk-label govuk-label--m" for="mainArea">Main RMA area</label>
+        <div id="mainArea-hint" class="govuk-hint">This will be the user's primary area</div>
+        <select class="govuk-select" id="mainArea" name="mainArea" aria-describedby="mainArea-hint">
+          <option value="">Select an RMA area</option>
+          {% for ea in eaAreas %}
+            {% for pso in ea.pso_areas %}
+              {% if pso.id in selectedPsoAreas %}
+                <optgroup label="{{ ea.name }} - {{ pso.name }}">
+                  {% for rma in pso.rma_areas %}
+                    <option value="{{ rma.id }}" {% if data.currentUser.mainArea == rma.id %}selected{% endif %}>{{ rma.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
             {% endfor %}
           {% endfor %}
         </select>
       </div>
-
       <div class="govuk-button-group">
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-          Save and continue
-        </button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">Continue</button>
         <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-link">Cancel</a>
       </div>
     </form>
-
   </div>
 </div>
 

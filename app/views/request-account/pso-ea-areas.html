@@ -20,7 +20,7 @@
     {% endif %}
 
     <h1 class="govuk-heading-l">Select EA areas</h1>
-    <p class="govuk-body">Select the Environment Agency areas you work with.</p>
+    <p class="govuk-body">Select the Environment Agency areas {{ "the user" if isAdmin else "you" }} work with.</p>
 
     <form action="{{ ('/admin/add-user-pso-ea-areas' if isAdmin else '/request-account/pso-ea-areas') }}" method="post" novalidate>
       <div class="govuk-form-group {% if error == 'regions-not-selected' %}govuk-form-group--error{% endif %}">

@@ -1,0 +1,124 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Archived Proposals" %}
+{% set userType = data.userType or 'unknown' %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Archived Proposals</h1>
+
+    {% if projects.length > 0 %}
+    <table class="govuk-table" data-module="govuk-table" style="font-size: 1rem;">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">National project number</th>
+          <th scope="col" class="govuk-table__header">Project name</th>
+          <th scope="col" class="govuk-table__header">Created by</th>
+          <th scope="col" class="govuk-table__header">Last updated</th>
+          {% if userType != 'ea' %}
+          <th scope="col" class="govuk-table__header">Status</th>
+          {% endif %}
+          {% if userType == 'pso' %}
+          <th scope="col" class="govuk-table__header">In current programme</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for project in projects %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">
+            <a href="#" class="govuk-link">{{ project.projectNumber }}</a>
+          </td>
+          <td class="govuk-table__cell">{{ project.projectName }}</td>
+          <td class="govuk-table__cell">{{ project.createdBy }}</td>
+          <td class="govuk-table__cell">{{ project.lastUpdated }}</td>
+          {% if userType != 'ea' %}
+          <td class="govuk-table__cell">
+            <strong class="govuk-tag govuk-tag--grey">
+              Archived
+            </strong>
+          </td>
+          {% endif %}
+          {% if userType == 'pso' %}
+          <td class="govuk-table__cell">
+            {{ 'Y' if project.consented else 'N' }}
+          </td>
+          {% endif %}
+        </tr>
+        {% else %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell" colspan="{{ 6 if userType == 'pso' else (4 if userType == 'ea' else 5) }}">
+            <p class="govuk-body govuk-!-margin-top-4">Archive a project in the proposal overview</p>
+            <p class="govuk-body">Return to <a href="/proposal/proposals" class="govuk-link">Your proposals</a></p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+      <p class="govuk-body" style="margin: 0;">Showing <strong>{{ pagination.startIndex }} to {{ pagination.endIndex
+          }}</strong> of <strong>{{ pagination.totalItems }}</strong> archived proposals</p>
+
+      <nav class="govuk-pagination" role="navigation" aria-label="Pagination" style="margin: 0;">
+        {% if pagination.currentPage > 1 %}
+        <div class="govuk-pagination__prev">
+          <a class="govuk-link govuk-pagination__link" href="/proposal/archive?page={{ pagination.currentPage - 1 }}"
+            rel="prev">
+            <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg"
+              height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path
+                d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z">
+              </path>
+            </svg>
+            <span class="govuk-pagination__link-title">
+              Previous<span class="govuk-visually-hidden"> page</span>
+            </span>
+          </a>
+        </div>
+        {% endif %}
+
+        <ul class="govuk-pagination__list">
+          {% for i in range(1, pagination.totalPages + 1) %}
+          <li
+            class="govuk-pagination__item {% if i == pagination.currentPage %}govuk-pagination__item--current{% endif %}">
+            <a class="govuk-link govuk-pagination__link" href="/proposal/archive?page={{ i }}" aria-label="Page {{ i }}"
+              {% if i==pagination.currentPage %}aria-current="page" {% endif %}>{{ i }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if pagination.currentPage < pagination.totalPages %} <div class="govuk-pagination__next">
+          <a class="govuk-link govuk-pagination__link" href="/proposal/archive?page={{ pagination.currentPage + 1 }}"
+            rel="next">
+            <span class="govuk-pagination__link-title">
+              Next<span class="govuk-visually-hidden"> page</span>
+            </span>
+            <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg"
+              height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+              <path
+                d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z">
+              </path>
+            </svg>
+          </a>
+    </div>
+    {% endif %}
+    </nav>
+  </div>
+
+  <div class="govuk-!-margin-top-6">
+    <a href="/proposal/proposals" class="govuk-link">Back to your proposals</a>
+  </div>
+  {% else %}
+  <p class="govuk-body govuk-!-margin-top-4">No archived proposals found</p>
+  <p class="govuk-body">Archive a project in the proposal overview</p>
+  <p class="govuk-body">Return to <a href="/proposal/proposals" class="govuk-link">Your proposals</a></p>
+  {% endif %}
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,17 +1,20 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName="Users" %}
+{% set pageName="Change EA areas" %}
+
+{% block beforeContent %}
+  <a href="/admin/users/{{ data.currentUser.id }}/edit-details" class="govuk-back-link">Back</a>
+{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <a href="/admin/users/{{ data.currentUser.id }}/view" class="govuk-back-link">Back</a>
-
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-l">
       Change EA areas
     </h1>
+    <p class="govuk-body">Select the Environment Agency areas the user works with.</p>
 
     <form method="post" action="/admin/users/{{ data.currentUser.id }}/edit-pso-ea-areas" novalidate>
 

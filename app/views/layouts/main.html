@@ -39,8 +39,8 @@
         navigationId: "service-nav",
         navigation: [
           { href: "/proposal/proposals", text: "Your proposals", active: pageName == "Your proposals" },
-          { href: "#", text: "Download All" },
-          { href: "#", text: "Archive" }
+          { href: "/proposal/archive", text: "Archive", active: pageName == "Archived Proposals" },
+          { href: "#", text: "Download All" }
         ]
       }) }}
     {% elif data.journeyType == "admin" %}
@@ -78,8 +78,8 @@
         navigation: [
           { href: "/admin/user-management-active", text: "Users", active: pageName == "Users" },
           { href: "/admin/projects", text: "Projects", active: pageName == "Projects" },
-          { href: "#", text: "Submissions" },
-          { href: "/admin/organisations", text: "Organisations" },
+          { href: "/admin/failed-submissions", text: "Submissions", active: pageName == "Failed PoL Submissions" },
+          { href: "/admin/organisations", text: "Organisations", active: pageName == "Organisations" },
           { href: "#", text: "Download Projects" },
           { href: "#", text: "Download RMA" }
         ]

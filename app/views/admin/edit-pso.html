@@ -1,0 +1,65 @@
+{% extends "layouts/main.html" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageName="Edit PSO" %}
+
+{% block beforeContent %}
+  <a href="/admin/organisations" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Edit PSO</h1>
+
+    <form method="post" action="/admin/organisations/edit-pso/{{ org.id }}" novalidate>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="pso-name">Name of PSO</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="pso-name" name="pso-name" type="text" value="{{ org.name }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="identifier-code">Identifier code</label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="identifier-code" name="identifier-code" type="text" value="{{ org.identifierCode }}">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="ea-area">Associated EA Area</label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="ea-area" name="ea-area">
+          <option value="">Select an associated EA Area</option>
+          {% for ea in areasData.ea_areas %}
+            <option value="{{ ea.name }}" {% if org.associatedEaArea == ea.name or org.associatedEaArea == ea.id %}selected{% endif %}>{{ ea.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="rfcc-code">RFCC code</label>
+        <select class="govuk-select govuk-!-width-two-thirds" id="rfcc-code" name="rfcc-code">
+          <option value="">Select a RFCC code</option>
+          <option value="RFCC001" {% if org.rfccCode == 'RFCC001' %}selected{% endif %}>RFCC001</option>
+          <option value="RFCC002" {% if org.rfccCode == 'RFCC002' %}selected{% endif %}>RFCC002</option>
+          <option value="RFCC003" {% if org.rfccCode == 'RFCC003' %}selected{% endif %}>RFCC003</option>
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="end-date">
+          End date if available
+          <span class="govuk-hint">Optional</span>
+        </label>
+        <input class="govuk-input govuk-input--width-10" id="end-date" name="end-date" type="date" value="{{ org.endDate }}">
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save changes
+        </button>
+        <a href="/admin/organisations" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
