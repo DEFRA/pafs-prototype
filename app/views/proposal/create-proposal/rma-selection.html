@@ -2,60 +2,60 @@
 
 {% set userType = data.userType or 'unknown' %}
 
-{% set pageName="Create a new proposal" %}
+{% set pageName = "Create a new proposal" %}
 
 {% block content %}
 
-{% set hasError = errorMessage %}
+  {% set hasError = errorMessage %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    
-    {% if fromOverview %}
-      <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Return to proposal overview</a>
-    {% else %}
-      <a href="/proposal/create-proposal/title" class="govuk-back-link">Back</a>
-    {% endif %}
-    
-    {% if hasError %}
-      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if fromOverview %}
+        <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Return to proposal overview</a>
+      {% else %}
+        <a href="/proposal/create-proposal/title" class="govuk-back-link">Back</a>
+      {% endif %}
+
+      {% if hasError %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+          <h2 class="govuk-error-summary__title" id="error-summary-title">
           There is a problem
         </h2>
-        <div class="govuk-error-summary__body">
-          <ul class="govuk-list govuk-error-summary__list">
-            <li><a href="#rmaName">{{ errorMessage }}</a></li>
-          </ul>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#rmaName">{{ errorMessage }}</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
 
-    <form method="post" action="/proposal/create-proposal/rma-selection" novalidate>
-      <div class="govuk-form-group{% if hasError %} govuk-form-group--error{% endif %}">
-        <fieldset class="govuk-fieldset" aria-describedby="rmaName-hint">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <form method="post" action="/proposal/create-proposal/rma-selection" novalidate>
+        <div class="govuk-form-group{% if hasError %} govuk-form-group--error{% endif %}">
+          <fieldset class="govuk-fieldset" aria-describedby="rmaName-hint">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             Which risk management authority is leading the proposal?
           </legend>
-          {% if hasError %}
-            <p class="govuk-error-message">{{ errorMessage }}</p>
-          {% endif %}
-          <div class="govuk-radios" data-module="govuk-radios">
-            {% for option in rmaOptions %}
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="rma-{{ option.value }}" name="rmaName" type="radio" value="{{ option.value }}" {% if formData.rmaName == option.value %}checked{% endif %}>
-                <label class="govuk-label govuk-radios__label" for="rma-{{ option.value }}">
-                  {{ option.label }}
-                </label>
-              </div>
-            {% endfor %}
-          </div>
-        </fieldset>
-      </div>
+            {% if hasError %}
+              <p id="rmaName-error" class="govuk-error-message">{{ errorMessage }}</p>
+            {% endif %}
+            <div>
+              <select class="govuk-select govuk-!-width-two-thirds" id="rmaName" name="rmaName" {% if hasError %}aria-describedby="rmaName-error rmaName-hint" aria-invalid="true"{% else %}aria-describedby="rmaName-hint"{% endif %}>
+                <option value="">Select an option</option>
+                {% for option in rmaOptions %}
+                  <option value="{{ option.value }}" {% if formData.rmaName == option.value %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </fieldset>
+        </div>
 
-      <input type="hidden" name="fromOverview" value="{{ fromOverview }}">
-      <button class="govuk-button" data-module="govuk-button">Continue</button>
-    </form>
+        <input type="hidden" name="fromOverview" value="{{ fromOverview }}">
+        <button class="govuk-button" data-module="govuk-button">Continue</button>
+      </form>
+    </div>
   </div>
-</div>
 
 {% endblock %}
