@@ -1,0 +1,78 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="How developed is your proposal?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/nfm-experience" class="govuk-back-link">Back</a>
+
+    {% if data['proposal-development-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#proposal-development">{{ data['proposal-development-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/proposal-development">
+      <div class="govuk-form-group {%- if data['proposal-development-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data['proposal-development-error'] %}aria-describedby="proposal-development-error"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              How developed is your proposal?
+            </h1>
+          </legend>
+          {% if data['proposal-development-error'] %}
+            <p id="proposal-development-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['proposal-development-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios" id="proposal-development">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="proposal-development-early" name="proposal-development" type="radio" value="early-concept" {% if data['proposal-development'] == 'early-concept' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="proposal-development-early">
+                Early concept: ideas identified but designs are at scoping stage and a team is not yet formed or roles are unclear
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="proposal-development-developing" name="proposal-development" type="radio" value="developing-proposal" {% if data['proposal-development'] == 'developing-proposal' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="proposal-development-developing">
+                Developing proposal: Outline designs are drafted, a core team has been identified with some relevant skills, and initial partner engagement is underway
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="proposal-development-well" name="proposal-development" type="radio" value="well-developed" {% if data['proposal-development'] == 'well-developed' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="proposal-development-well">
+                Well-developed proposal: Detailed designs are ready, team roles have been defined and capacity assessed, and partnerships have been agreed in principle
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="proposal-development-ready" name="proposal-development" type="radio" value="ready-to-deliver" {% if data['proposal-development'] == 'ready-to-deliver' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="proposal-development-ready">
+                Ready to deliver: Detailed designs are ready, an experienced team is ready, and partners are confirmed and have clear responsibilities
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

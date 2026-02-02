@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Mountain moors and heath" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/select-land-type" class="govuk-back-link">Back</a>
+
+    {% if data['land-type-moors-before-error'] or data['land-type-moors-after-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['land-type-moors-before-error'] %}
+                <li>
+                  <a href="#land-type-moors-before">{{ data['land-type-moors-before-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['land-type-moors-after-error'] %}
+                <li>
+                  <a href="#land-type-moors-after">{{ data['land-type-moors-after-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/land-type-moors">
+      
+      <h1 class="govuk-heading-l">Mountain moors and heath</h1>
+
+      <div class="govuk-form-group {%- if data['land-type-moors-before-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-moors-before">
+          What is the area of mountain moors and heath Before natural flood measures?
+        </label>
+        
+        {% if data['land-type-moors-before-error'] %}
+          <p id="land-type-moors-before-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-moors-before-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-moors-before-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-moors-before" 
+                 name="land-type-moors-before" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-moors-before'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['land-type-moors-after-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-moors-after">
+          What is the area of mountain moors and heath After natural flood measures?
+        </label>
+        
+        {% if data['land-type-moors-after-error'] %}
+          <p id="land-type-moors-after-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-moors-after-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-moors-after-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-moors-after" 
+                 name="land-type-moors-after" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-moors-after'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

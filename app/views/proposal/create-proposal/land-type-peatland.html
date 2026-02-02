@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Peatland restoration" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/select-land-type" class="govuk-back-link">Back</a>
+
+    {% if data['land-type-peatland-before-error'] or data['land-type-peatland-after-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['land-type-peatland-before-error'] %}
+                <li>
+                  <a href="#land-type-peatland-before">{{ data['land-type-peatland-before-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['land-type-peatland-after-error'] %}
+                <li>
+                  <a href="#land-type-peatland-after">{{ data['land-type-peatland-after-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/land-type-peatland">
+      
+      <h1 class="govuk-heading-l">Peatland restoration</h1>
+
+      <div class="govuk-form-group {%- if data['land-type-peatland-before-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-peatland-before">
+          What is the area of peatland restoration Before natural flood measures?
+        </label>
+        
+        {% if data['land-type-peatland-before-error'] %}
+          <p id="land-type-peatland-before-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-peatland-before-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-peatland-before-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-peatland-before" 
+                 name="land-type-peatland-before" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-peatland-before'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['land-type-peatland-after-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-peatland-after">
+          What is the area of peatland restoration After natural flood measures?
+        </label>
+        
+        {% if data['land-type-peatland-after-error'] %}
+          <p id="land-type-peatland-after-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-peatland-after-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-peatland-after-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-peatland-after" 
+                 name="land-type-peatland-after" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-peatland-after'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

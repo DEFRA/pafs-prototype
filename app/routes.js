@@ -248,6 +248,79 @@ function mapIdsToNames(ids, areasData, type) {
     .filter(Boolean)
 }
 
+// Natural Flood Measures helpers
+function getNfmDetailPages(selectedMeasures) {
+  const pageMapping = {
+    'river-floodplain': '/proposal/create-proposal/nfm-river-floodplain',
+    'leaky-barriers': '/proposal/create-proposal/nfm-leaky-barriers',
+    'offline-storage': '/proposal/create-proposal/nfm-offline-storage',
+    'woodland': '/proposal/create-proposal/nfm-woodland',
+    'headwater-drainage': '/proposal/create-proposal/nfm-headwater-drainage',
+    'runoff-attenuation': '/proposal/create-proposal/nfm-runoff-attenuation',
+    'saltmarsh-mudflat': '/proposal/create-proposal/nfm-saltmarsh-mudflat',
+    'sand-dune': '/proposal/create-proposal/nfm-sand-dune'
+  }
+  
+  if (!selectedMeasures || selectedMeasures.length === 0) {
+    return []
+  }
+  
+  return selectedMeasures
+    .map(measure => pageMapping[measure])
+    .filter(Boolean)
+}
+
+function getNextNfmPage(data, currentMeasure) {
+  const selectedMeasures = data['natural-flood-measures'] || []
+  const detailPages = getNfmDetailPages(selectedMeasures)
+  
+  if (currentMeasure) {
+    const currentIndex = selectedMeasures.indexOf(currentMeasure)
+    if (currentIndex >= 0 && currentIndex < selectedMeasures.length - 1) {
+      return detailPages[currentIndex + 1]
+    }
+  }
+  
+  return '/proposal/create-proposal/select-land-type'
+}
+
+// Land Type helpers
+function getLandTypeDetailPages(selectedTypes) {
+  const pageMapping = {
+    'arable-farmland': '/proposal/create-proposal/land-type-arable',
+    'livestock-farmland': '/proposal/create-proposal/land-type-livestock',
+    'dairying-farmland': '/proposal/create-proposal/land-type-dairying',
+    'semi-natural-grassland': '/proposal/create-proposal/land-type-grassland',
+    'woodland': '/proposal/create-proposal/land-type-woodland',
+    'mountain-moors-heath': '/proposal/create-proposal/land-type-moors',
+    'peatland-restoration': '/proposal/create-proposal/land-type-peatland',
+    'rivers-wetlands-freshwater': '/proposal/create-proposal/land-type-rivers',
+    'coastal-margins': '/proposal/create-proposal/land-type-coastal'
+  }
+  
+  if (!selectedTypes || selectedTypes.length === 0) {
+    return []
+  }
+  
+  return selectedTypes
+    .map(type => pageMapping[type])
+    .filter(Boolean)
+}
+
+function getNextLandTypePage(data, currentType) {
+  const selectedTypes = data['land-type'] || []
+  const detailPages = getLandTypeDetailPages(selectedTypes)
+  
+  if (currentType) {
+    const currentIndex = selectedTypes.indexOf(currentType)
+    if (currentIndex >= 0 && currentIndex < selectedTypes.length - 1) {
+      return detailPages[currentIndex + 1]
+    }
+  }
+  
+  return '/proposal/create-proposal/landowner-consent'
+}
+
 // Make config available to views
 router.use((req, res, next) => {
   res.locals.config = config
@@ -5491,6 +5564,913 @@ router.post('/proposal/create-proposal/approach', function (req, res) {
     return res.redirect('/proposal/create-proposal/approach')
   }
 
+  res.redirect('/proposal/create-proposal/check-answers')
+})
+
+// GET natural flood measures
+router.get('/proposal/create-proposal/natural-flood-measures', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/natural-flood-measures', {
+    data: data
+  })
+})
+
+// POST natural flood measures
+router.post('/proposal/create-proposal/natural-flood-measures', function (req, res) {
+  const data = req.session.data || {}
+  const selected = normaliseArray(req.body['natural-flood-measures'])
+  data['natural-flood-measures'] = selected
+
+  if (!selected || selected.length === 0) {
+    data['natural-flood-measures-error'] =
+      'Select at least one natural flood management measure'
+    return res.render('proposal/create-proposal/natural-flood-measures', {
+      data: data
+    })
+  }
+
+  delete data['natural-flood-measures-error']
+  
+  // Get the first detail page for selected measures
+  const detailPages = getNfmDetailPages(selected)
+  if (detailPages.length > 0) {
+    return res.redirect(detailPages[0])
+  }
+  
+  res.redirect('/proposal/create-proposal/check-answers')
+})
+
+// GET river and floodplain restoration details
+router.get('/proposal/create-proposal/nfm-river-floodplain', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-river-floodplain', {
+    data: data
+  })
+})
+
+// POST river and floodplain restoration details
+router.post('/proposal/create-proposal/nfm-river-floodplain', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate area
+  const area = req.body['nfm-river-floodplain-area']
+  if (!area || area.trim() === '') {
+    data['nfm-river-floodplain-area-error'] = 'Enter the area in hectares'
+    hasError = true
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-river-floodplain-area-error'] = 'Area must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-river-floodplain-area-error']
+    data['nfm-river-floodplain-area'] = area
+  }
+  
+  // Validate volume
+  const volume = req.body['nfm-river-floodplain-volume']
+  if (!volume || volume.trim() === '') {
+    data['nfm-river-floodplain-volume-error'] = 'Enter the design storage volume in m³'
+    hasError = true
+  } else if (isNaN(volume) || parseFloat(volume) <= 0) {
+    data['nfm-river-floodplain-volume-error'] = 'Volume must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-river-floodplain-volume-error']
+    data['nfm-river-floodplain-volume'] = volume
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-river-floodplain', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'river-floodplain')
+  res.redirect(nextPage)
+})
+
+// GET leaky barriers and in-channel storage details
+router.get('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-leaky-barriers', {
+    data: data
+  })
+})
+
+// POST leaky barriers and in-channel storage details
+router.post('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate volume (optional field - if known)
+  const volume = req.body['nfm-leaky-barriers-volume']
+  if (volume && volume.trim() !== '') {
+    if (isNaN(volume) || parseFloat(volume) <= 0) {
+      data['nfm-leaky-barriers-volume-error'] = 'Volume must be a number greater than 0'
+      hasError = true
+    } else {
+      delete data['nfm-leaky-barriers-volume-error']
+      data['nfm-leaky-barriers-volume'] = volume
+    }
+  } else {
+    delete data['nfm-leaky-barriers-volume-error']
+    data['nfm-leaky-barriers-volume'] = volume
+  }
+  
+  // Validate length (required)
+  const length = req.body['nfm-leaky-barriers-length']
+  if (!length || length.trim() === '') {
+    data['nfm-leaky-barriers-length-error'] = 'Enter the length in kilometres'
+    hasError = true
+  } else if (isNaN(length) || parseFloat(length) <= 0) {
+    data['nfm-leaky-barriers-length-error'] = 'Length must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-leaky-barriers-length-error']
+    data['nfm-leaky-barriers-length'] = length
+  }
+  
+  // Validate width (required)
+  const width = req.body['nfm-leaky-barriers-width']
+  if (!width || width.trim() === '') {
+    data['nfm-leaky-barriers-width-error'] = 'Enter the typical width in metres'
+    hasError = true
+  } else if (isNaN(width) || parseFloat(width) <= 0) {
+    data['nfm-leaky-barriers-width-error'] = 'Width must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-leaky-barriers-width-error']
+    data['nfm-leaky-barriers-width'] = width
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-leaky-barriers', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'leaky-barriers')
+  res.redirect(nextPage)
+})
+
+// GET offline storage areas details
+router.get('/proposal/create-proposal/nfm-offline-storage', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-offline-storage', {
+    data: data
+  })
+})
+
+// POST offline storage areas details
+router.post('/proposal/create-proposal/nfm-offline-storage', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate area
+  const area = req.body['nfm-offline-storage-area']
+  if (!area || area.trim() === '') {
+    data['nfm-offline-storage-area-error'] = 'Enter the area in hectares'
+    hasError = true
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-offline-storage-area-error'] = 'Area must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-offline-storage-area-error']
+    data['nfm-offline-storage-area'] = area
+  }
+  
+  // Validate volume
+  const volume = req.body['nfm-offline-storage-volume']
+  if (!volume || volume.trim() === '') {
+    data['nfm-offline-storage-volume-error'] = 'Enter the design storage volume in m³'
+    hasError = true
+  } else if (isNaN(volume) || parseFloat(volume) <= 0) {
+    data['nfm-offline-storage-volume-error'] = 'Volume must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-offline-storage-volume-error']
+    data['nfm-offline-storage-volume'] = volume
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-offline-storage', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'offline-storage')
+  res.redirect(nextPage)
+})
+
+// GET woodland details
+router.get('/proposal/create-proposal/nfm-woodland', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-woodland', {
+    data: data
+  })
+})
+
+// POST woodland details
+router.post('/proposal/create-proposal/nfm-woodland', function (req, res) {
+  const data = req.session.data || {}
+  
+  // Validate area
+  const area = req.body['nfm-woodland-area']
+  if (!area || area.trim() === '') {
+    data['nfm-woodland-area-error'] = 'Enter the area in hectares'
+    return res.render('proposal/create-proposal/nfm-woodland', {
+      data: data
+    })
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-woodland-area-error'] = 'Area must be a number greater than 0'
+    return res.render('proposal/create-proposal/nfm-woodland', {
+      data: data
+    })
+  }
+  
+  delete data['nfm-woodland-area-error']
+  data['nfm-woodland-area'] = area
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'woodland')
+  res.redirect(nextPage)
+})
+
+// GET headwater drainage management details
+router.get('/proposal/create-proposal/nfm-headwater-drainage', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-headwater-drainage', {
+    data: data
+  })
+})
+
+// POST headwater drainage management details
+router.post('/proposal/create-proposal/nfm-headwater-drainage', function (req, res) {
+  const data = req.session.data || {}
+  
+  // Validate area
+  const area = req.body['nfm-headwater-drainage-area']
+  if (!area || area.trim() === '') {
+    data['nfm-headwater-drainage-area-error'] = 'Enter the area in hectares'
+    return res.render('proposal/create-proposal/nfm-headwater-drainage', {
+      data: data
+    })
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-headwater-drainage-area-error'] = 'Area must be a number greater than 0'
+    return res.render('proposal/create-proposal/nfm-headwater-drainage', {
+      data: data
+    })
+  }
+  
+  delete data['nfm-headwater-drainage-area-error']
+  data['nfm-headwater-drainage-area'] = area
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'headwater-drainage')
+  res.redirect(nextPage)
+})
+
+// GET runoff attenuation or management details
+router.get('/proposal/create-proposal/nfm-runoff-attenuation', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-runoff-attenuation', {
+    data: data
+  })
+})
+
+// POST runoff attenuation or management details
+router.post('/proposal/create-proposal/nfm-runoff-attenuation', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate area
+  const area = req.body['nfm-runoff-attenuation-area']
+  if (!area || area.trim() === '') {
+    data['nfm-runoff-attenuation-area-error'] = 'Enter the area in hectares'
+    hasError = true
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-runoff-attenuation-area-error'] = 'Area must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-runoff-attenuation-area-error']
+    data['nfm-runoff-attenuation-area'] = area
+  }
+  
+  // Validate volume
+  const volume = req.body['nfm-runoff-attenuation-volume']
+  if (!volume || volume.trim() === '') {
+    data['nfm-runoff-attenuation-volume-error'] = 'Enter the design storage volume in m³'
+    hasError = true
+  } else if (isNaN(volume) || parseFloat(volume) <= 0) {
+    data['nfm-runoff-attenuation-volume-error'] = 'Volume must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-runoff-attenuation-volume-error']
+    data['nfm-runoff-attenuation-volume'] = volume
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-runoff-attenuation', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'runoff-attenuation')
+  res.redirect(nextPage)
+})
+
+// GET saltmarsh or mudflat management details
+router.get('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-saltmarsh-mudflat', {
+    data: data
+  })
+})
+
+// POST saltmarsh or mudflat management details
+router.post('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate area
+  const area = req.body['nfm-saltmarsh-mudflat-area']
+  if (!area || area.trim() === '') {
+    data['nfm-saltmarsh-mudflat-area-error'] = 'Enter the area in hectares'
+    hasError = true
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-saltmarsh-mudflat-area-error'] = 'Area must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-saltmarsh-mudflat-area-error']
+    data['nfm-saltmarsh-mudflat-area'] = area
+  }
+  
+  // Validate length
+  const length = req.body['nfm-saltmarsh-mudflat-length']
+  if (!length || length.trim() === '') {
+    data['nfm-saltmarsh-mudflat-length-error'] = 'Enter the length of coast in kilometres'
+    hasError = true
+  } else if (isNaN(length) || parseFloat(length) <= 0) {
+    data['nfm-saltmarsh-mudflat-length-error'] = 'Length must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-saltmarsh-mudflat-length-error']
+    data['nfm-saltmarsh-mudflat-length'] = length
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-saltmarsh-mudflat', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or check-answers
+  const nextPage = getNextNfmPage(data, 'saltmarsh-mudflat')
+  res.redirect(nextPage)
+})
+
+// GET sand dune management details
+router.get('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-sand-dune', {
+    data: data
+  })
+})
+
+// POST sand dune management details
+router.post('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  // Validate area
+  const area = req.body['nfm-sand-dune-area']
+  if (!area || area.trim() === '') {
+    data['nfm-sand-dune-area-error'] = 'Enter the area in hectares'
+    hasError = true
+  } else if (isNaN(area) || parseFloat(area) <= 0) {
+    data['nfm-sand-dune-area-error'] = 'Area must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-sand-dune-area-error']
+    data['nfm-sand-dune-area'] = area
+  }
+  
+  // Validate length
+  const length = req.body['nfm-sand-dune-length']
+  if (!length || length.trim() === '') {
+    data['nfm-sand-dune-length-error'] = 'Enter the length of coast in kilometres'
+    hasError = true
+  } else if (isNaN(length) || parseFloat(length) <= 0) {
+    data['nfm-sand-dune-length-error'] = 'Length must be a number greater than 0'
+    hasError = true
+  } else {
+    delete data['nfm-sand-dune-length-error']
+    data['nfm-sand-dune-length'] = length
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/nfm-sand-dune', {
+      data: data
+    })
+  }
+  
+  // Redirect to next NFM detail page or select-land-type
+  const nextPage = getNextNfmPage(data, 'sand-dune')
+  res.redirect(nextPage)
+})
+
+// GET select land type
+router.get('/proposal/create-proposal/select-land-type', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/select-land-type', {
+    data: data
+  })
+})
+
+// POST select land type
+router.post('/proposal/create-proposal/select-land-type', function (req, res) {
+  const data = req.session.data || {}
+  const selected = normaliseArray(req.body['land-type'])
+  data['land-type'] = selected
+
+  if (!selected || selected.length === 0) {
+    data['land-type-error'] = 'Select at least one land type'
+    return res.render('proposal/create-proposal/select-land-type', {
+      data: data
+    })
+  }
+
+  delete data['land-type-error']
+  
+  // Get the first detail page for selected land types
+  const detailPages = getLandTypeDetailPages(selected)
+  if (detailPages.length > 0) {
+    return res.redirect(detailPages[0])
+  }
+  
+  res.redirect('/proposal/create-proposal/check-answers')
+})
+
+// GET land type arable details
+router.get('/proposal/create-proposal/land-type-arable', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-arable', { data: data })
+})
+
+// POST land type arable details
+router.post('/proposal/create-proposal/land-type-arable', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-arable-before']
+  if (!before || before.trim() === '') {
+    data['land-type-arable-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-arable-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-arable-before-error']
+    data['land-type-arable-before'] = before
+  }
+  
+  const after = req.body['land-type-arable-after']
+  if (!after || after.trim() === '') {
+    data['land-type-arable-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-arable-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-arable-after-error']
+    data['land-type-arable-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-arable', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'arable-farmland')
+  res.redirect(nextPage)
+})
+
+// GET land type livestock details
+router.get('/proposal/create-proposal/land-type-livestock', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-livestock', { data: data })
+})
+
+// POST land type livestock details
+router.post('/proposal/create-proposal/land-type-livestock', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-livestock-before']
+  if (!before || before.trim() === '') {
+    data['land-type-livestock-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-livestock-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-livestock-before-error']
+    data['land-type-livestock-before'] = before
+  }
+  
+  const after = req.body['land-type-livestock-after']
+  if (!after || after.trim() === '') {
+    data['land-type-livestock-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-livestock-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-livestock-after-error']
+    data['land-type-livestock-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-livestock', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'livestock-farmland')
+  res.redirect(nextPage)
+})
+
+// GET land type dairying details
+router.get('/proposal/create-proposal/land-type-dairying', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-dairying', { data: data })
+})
+
+// POST land type dairying details
+router.post('/proposal/create-proposal/land-type-dairying', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-dairying-before']
+  if (!before || before.trim() === '') {
+    data['land-type-dairying-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-dairying-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-dairying-before-error']
+    data['land-type-dairying-before'] = before
+  }
+  
+  const after = req.body['land-type-dairying-after']
+  if (!after || after.trim() === '') {
+    data['land-type-dairying-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-dairying-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-dairying-after-error']
+    data['land-type-dairying-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-dairying', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'dairying-farmland')
+  res.redirect(nextPage)
+})
+
+// GET land type grassland details
+router.get('/proposal/create-proposal/land-type-grassland', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-grassland', { data: data })
+})
+
+// POST land type grassland details
+router.post('/proposal/create-proposal/land-type-grassland', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-grassland-before']
+  if (!before || before.trim() === '') {
+    data['land-type-grassland-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-grassland-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-grassland-before-error']
+    data['land-type-grassland-before'] = before
+  }
+  
+  const after = req.body['land-type-grassland-after']
+  if (!after || after.trim() === '') {
+    data['land-type-grassland-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-grassland-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-grassland-after-error']
+    data['land-type-grassland-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-grassland', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'semi-natural-grassland')
+  res.redirect(nextPage)
+})
+
+// GET land type woodland details
+router.get('/proposal/create-proposal/land-type-woodland', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-woodland', { data: data })
+})
+
+// POST land type woodland details
+router.post('/proposal/create-proposal/land-type-woodland', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-woodland-before']
+  if (!before || before.trim() === '') {
+    data['land-type-woodland-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-woodland-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-woodland-before-error']
+    data['land-type-woodland-before'] = before
+  }
+  
+  const after = req.body['land-type-woodland-after']
+  if (!after || after.trim() === '') {
+    data['land-type-woodland-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-woodland-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-woodland-after-error']
+    data['land-type-woodland-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-woodland', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'woodland')
+  res.redirect(nextPage)
+})
+
+// GET land type moors details
+router.get('/proposal/create-proposal/land-type-moors', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-moors', { data: data })
+})
+
+// POST land type moors details
+router.post('/proposal/create-proposal/land-type-moors', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-moors-before']
+  if (!before || before.trim() === '') {
+    data['land-type-moors-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-moors-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-moors-before-error']
+    data['land-type-moors-before'] = before
+  }
+  
+  const after = req.body['land-type-moors-after']
+  if (!after || after.trim() === '') {
+    data['land-type-moors-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-moors-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-moors-after-error']
+    data['land-type-moors-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-moors', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'mountain-moors-heath')
+  res.redirect(nextPage)
+})
+
+// GET land type peatland details
+router.get('/proposal/create-proposal/land-type-peatland', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-peatland', { data: data })
+})
+
+// POST land type peatland details
+router.post('/proposal/create-proposal/land-type-peatland', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-peatland-before']
+  if (!before || before.trim() === '') {
+    data['land-type-peatland-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-peatland-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-peatland-before-error']
+    data['land-type-peatland-before'] = before
+  }
+  
+  const after = req.body['land-type-peatland-after']
+  if (!after || after.trim() === '') {
+    data['land-type-peatland-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-peatland-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-peatland-after-error']
+    data['land-type-peatland-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-peatland', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'peatland-restoration')
+  res.redirect(nextPage)
+})
+
+// GET land type rivers details
+router.get('/proposal/create-proposal/land-type-rivers', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-rivers', { data: data })
+})
+
+// POST land type rivers details
+router.post('/proposal/create-proposal/land-type-rivers', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-rivers-before']
+  if (!before || before.trim() === '') {
+    data['land-type-rivers-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-rivers-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-rivers-before-error']
+    data['land-type-rivers-before'] = before
+  }
+  
+  const after = req.body['land-type-rivers-after']
+  if (!after || after.trim() === '') {
+    data['land-type-rivers-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-rivers-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-rivers-after-error']
+    data['land-type-rivers-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-rivers', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'rivers-wetlands-freshwater')
+  res.redirect(nextPage)
+})
+
+// GET land type coastal details
+router.get('/proposal/create-proposal/land-type-coastal', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/land-type-coastal', { data: data })
+})
+
+// POST land type coastal details
+router.post('/proposal/create-proposal/land-type-coastal', function (req, res) {
+  const data = req.session.data || {}
+  let hasError = false
+  
+  const before = req.body['land-type-coastal-before']
+  if (!before || before.trim() === '') {
+    data['land-type-coastal-before-error'] = 'Enter the area before natural flood measures'
+    hasError = true
+  } else if (isNaN(before) || parseFloat(before) < 0) {
+    data['land-type-coastal-before-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-coastal-before-error']
+    data['land-type-coastal-before'] = before
+  }
+  
+  const after = req.body['land-type-coastal-after']
+  if (!after || after.trim() === '') {
+    data['land-type-coastal-after-error'] = 'Enter the area after natural flood measures'
+    hasError = true
+  } else if (isNaN(after) || parseFloat(after) < 0) {
+    data['land-type-coastal-after-error'] = 'Area must be a number 0 or greater'
+    hasError = true
+  } else {
+    delete data['land-type-coastal-after-error']
+    data['land-type-coastal-after'] = after
+  }
+  
+  if (hasError) {
+    return res.render('proposal/create-proposal/land-type-coastal', { data: data })
+  }
+  
+  const nextPage = getNextLandTypePage(data, 'coastal-margins')
+  res.redirect(nextPage)
+})
+
+// Landowner consent page
+router.get('/proposal/create-proposal/landowner-consent', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/landowner-consent', { data })
+})
+
+router.post('/proposal/create-proposal/landowner-consent', function (req, res) {
+  const data = req.session.data || {}
+  const consent = req.body['landowner-consent']
+  
+  // Clear any previous errors
+  delete data['landowner-consent-error']
+  
+  // Validate
+  if (!consent) {
+    data['landowner-consent-error'] = 'Select an option'
+    return res.redirect('/proposal/create-proposal/landowner-consent')
+  }
+  
+  // Save and redirect to NFM experience
+  data['landowner-consent'] = consent
+  res.redirect('/proposal/create-proposal/nfm-experience')
+})
+
+// NFM experience page
+router.get('/proposal/create-proposal/nfm-experience', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/nfm-experience', { data })
+})
+
+router.post('/proposal/create-proposal/nfm-experience', function (req, res) {
+  const data = req.session.data || {}
+  const experience = req.body['nfm-experience']
+  
+  // Clear any previous errors
+  delete data['nfm-experience-error']
+  
+  // Validate
+  if (!experience) {
+    data['nfm-experience-error'] = 'Select an option'
+    return res.redirect('/proposal/create-proposal/nfm-experience')
+  }
+  
+  // Save and redirect to proposal development
+  data['nfm-experience'] = experience
+  res.redirect('/proposal/create-proposal/proposal-development')
+})
+
+// Proposal development page
+router.get('/proposal/create-proposal/proposal-development', function (req, res) {
+  const data = req.session.data || {}
+  res.render('proposal/create-proposal/proposal-development', { data })
+})
+
+router.post('/proposal/create-proposal/proposal-development', function (req, res) {
+  const data = req.session.data || {}
+  const development = req.body['proposal-development']
+  
+  // Clear any previous errors
+  delete data['proposal-development-error']
+  
+  // Validate
+  if (!development) {
+    data['proposal-development-error'] = 'Select an option'
+    return res.redirect('/proposal/create-proposal/proposal-development')
+  }
+  
+  // Save and redirect to check answers
+  data['proposal-development'] = development
   res.redirect('/proposal/create-proposal/check-answers')
 })
 

@@ -1,0 +1,111 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Select the land type (demo question)" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/natural-flood-measures" class="govuk-back-link">Back</a>
+
+    {% if data['land-type-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#land-type">{{ data['land-type-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/select-land-type">
+      <div class="govuk-form-group {%- if data['land-type-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data['land-type-error'] %}aria-describedby="land-type-error land-type-hint"{% else %}aria-describedby="land-type-hint"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Select the land type (demo question)
+            </h1>
+          </legend>
+          <div id="land-type-hint" class="govuk-hint">
+            Select all that apply.
+          </div>
+          {% if data['land-type-error'] %}
+            <p id="land-type-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="land-type">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-arable" name="land-type" type="checkbox" value="arable-farmland" {% if data['land-type'] and 'arable-farmland' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-arable">
+                Enclosed arable farmland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-livestock" name="land-type" type="checkbox" value="livestock-farmland" {% if data['land-type'] and 'livestock-farmland' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-livestock">
+                Enclosed livestock farmland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-dairying" name="land-type" type="checkbox" value="dairying-farmland" {% if data['land-type'] and 'dairying-farmland' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-dairying">
+                Enclosed dairying farmland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-grassland" name="land-type" type="checkbox" value="semi-natural-grassland" {% if data['land-type'] and 'semi-natural-grassland' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-grassland">
+                Semi-natural grassland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-woodland" name="land-type" type="checkbox" value="woodland" {% if data['land-type'] and 'woodland' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-woodland">
+                Woodland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-moors" name="land-type" type="checkbox" value="mountain-moors-heath" {% if data['land-type'] and 'mountain-moors-heath' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-moors">
+                Mountain moors and heath
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-peatland" name="land-type" type="checkbox" value="peatland-restoration" {% if data['land-type'] and 'peatland-restoration' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-peatland">
+                Peatland restoration
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-rivers" name="land-type" type="checkbox" value="rivers-wetlands-freshwater" {% if data['land-type'] and 'rivers-wetlands-freshwater' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-rivers">
+                Rivers, wetlands, and freshwater habitats
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="land-type-coastal" name="land-type" type="checkbox" value="coastal-margins" {% if data['land-type'] and 'coastal-margins' in data['land-type'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="land-type-coastal">
+                Coastal margins
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

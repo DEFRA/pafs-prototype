@@ -581,6 +581,189 @@
 
     <div class="govuk-summary-card">
       <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Natural flood measures</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/natural-flood-measures">
+              {% if data['natural-flood-measures'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> natural flood measures</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if data['natural-flood-measures'] and data['natural-flood-measures'].length > 0 %}
+          
+          {# NFM Measures Section #}
+          <details class="govuk-details">
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">
+                Selected measures ({{ data['natural-flood-measures'].length }})
+              </span>
+            </summary>
+            <div class="govuk-details__text">
+              <div style="overflow-x: auto;">
+                <table class="govuk-table">
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header">Measure</th>
+                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Area (hectares)</th>
+                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Volume (m³)</th>
+                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Length (km)</th>
+                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Width (m)</th>
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    {% for measure in data['natural-flood-measures'] %}
+                      <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                          {% if measure == 'river-floodplain' %}River and floodplain restoration
+                          {% elif measure == 'leaky-barriers' %}Leaky barriers and in-channel storage
+                          {% elif measure == 'offline-storage' %}Offline storage areas
+                          {% elif measure == 'woodland' %}Woodland
+                          {% elif measure == 'headwater-drainage' %}Headwater drainage management
+                          {% elif measure == 'runoff-attenuation' %}Runoff attenuation or management
+                          {% elif measure == 'saltmarsh-mudflat' %}Saltmarsh or mudflat management
+                          {% elif measure == 'sand-dune' %}Sand dune management
+                          {% endif %}
+                        </th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                          {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-area'] or '-' }}
+                          {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-area'] or '-' }}
+                          {% elif measure == 'woodland' %}{{ data['nfm-woodland-area'] or '-' }}
+                          {% elif measure == 'headwater-drainage' %}{{ data['nfm-headwater-drainage-area'] or '-' }}
+                          {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-area'] or '-' }}
+                          {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-area'] or '-' }}
+                          {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-area'] or '-' }}
+                          {% else %}-
+                          {% endif %}
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                          {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-volume'] or '-' }}
+                          {% elif measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-volume'] or '-' }}
+                          {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-volume'] or '-' }}
+                          {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-volume'] or '-' }}
+                          {% else %}-
+                          {% endif %}
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                          {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-length'] or '-' }}
+                          {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-length'] or '-' }}
+                          {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-length'] or '-' }}
+                          {% else %}-
+                          {% endif %}
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                          {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-width'] or '-' }}
+                          {% else %}-
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </details>
+
+          {# Land Types Section #}
+          {% if data['land-type'] and data['land-type'].length > 0 %}
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Land type changes ({{ data['land-type'].length }})
+                </span>
+              </summary>
+              <div class="govuk-details__text">
+                <div style="overflow-x: auto;">
+                  <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                      <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Land type</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Before NFM (hectares)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">After NFM (hectares)</th>
+                      </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                      {% for type in data['land-type'] %}
+                        <tr class="govuk-table__row">
+                          <th scope="row" class="govuk-table__header">
+                            {% if type == 'arable-farmland' %}Arable farmland
+                            {% elif type == 'livestock-farmland' %}Livestock farmland
+                            {% elif type == 'dairying-farmland' %}Dairying farmland
+                            {% elif type == 'semi-natural-grassland' %}Semi-natural grassland
+                            {% elif type == 'woodland' %}Woodland
+                            {% elif type == 'mountain-moors-heath' %}Mountain, moors and heath
+                            {% elif type == 'peatland-restoration' %}Peatland restoration and management
+                            {% elif type == 'rivers-wetlands-freshwater' %}Rivers, wetlands, freshwater
+                            {% elif type == 'coastal-margins' %}Coastal margins
+                            {% endif %}
+                          </th>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-before'] or '-' }}</td>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-after'] or '-' }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+          {% endif %}
+
+          {# Project Readiness Section #}
+          <h3 class="govuk-heading-s govuk-!-margin-top-6">Project readiness</h3>
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Landowner consent</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['landowner-consent'] == 'fully-secured' %}Consent fully secured
+                {% elif data['landowner-consent'] == 'engaged-not-secured' %}Engaged but not fully secured
+                {% elif data['landowner-consent'] == 'initial-contact' %}Initial contact made
+                {% elif data['landowner-consent'] == 'not-engaged' %}Not yet engaged
+                {% else %}Not provided
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/landowner-consent">Change<span class="govuk-visually-hidden"> landowner consent</span></a>
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">NFM experience</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['nfm-experience'] == 'no-experience' %}No experience
+                {% elif data['nfm-experience'] == 'some-experience' %}Some experience
+                {% elif data['nfm-experience'] == 'moderate-experience' %}Moderate experience
+                {% elif data['nfm-experience'] == 'extensive-experience' %}Extensive experience
+                {% else %}Not provided
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/nfm-experience">Change<span class="govuk-visually-hidden"> NFM experience</span></a>
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Proposal development</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['proposal-development'] == 'early-concept' %}Early concept
+                {% elif data['proposal-development'] == 'developing-proposal' %}Developing proposal
+                {% elif data['proposal-development'] == 'well-developed' %}Well-developed proposal
+                {% elif data['proposal-development'] == 'ready-to-deliver' %}Ready to deliver
+                {% else %}Not provided
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/proposal-development">Change<span class="govuk-visually-hidden"> proposal development</span></a>
+              </dd>
+            </div>
+          </dl>
+
+        {% else %}
+          <p class="govuk-body">No natural flood measures added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
         <h2 class="govuk-summary-card__title">Environmental benefits</h2>
         <ul class="govuk-summary-card__actions">
           <li class="govuk-summary-card__action">

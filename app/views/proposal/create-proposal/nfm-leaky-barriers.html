@@ -1,0 +1,122 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Leaky barriers and in-channel storage" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/natural-flood-measures" class="govuk-back-link">Back</a>
+
+    {% if data['nfm-leaky-barriers-volume-error'] or data['nfm-leaky-barriers-length-error'] or data['nfm-leaky-barriers-width-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['nfm-leaky-barriers-volume-error'] %}
+                <li>
+                  <a href="#nfm-leaky-barriers-volume">{{ data['nfm-leaky-barriers-volume-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['nfm-leaky-barriers-length-error'] %}
+                <li>
+                  <a href="#nfm-leaky-barriers-length">{{ data['nfm-leaky-barriers-length-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['nfm-leaky-barriers-width-error'] %}
+                <li>
+                  <a href="#nfm-leaky-barriers-width">{{ data['nfm-leaky-barriers-width-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/nfm-leaky-barriers">
+      
+      <h1 class="govuk-heading-l">Details of new leaky barriers and in-channel storage</h1>
+
+      <div class="govuk-form-group {%- if data['nfm-leaky-barriers-volume-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-leaky-barriers-volume">
+          What is the design storage volume of new leaky barriers or in-channel storage?
+        </label>
+        <div id="nfm-leaky-barriers-volume-hint" class="govuk-hint">
+          If known
+        </div>
+        
+        {% if data['nfm-leaky-barriers-volume-error'] %}
+          <p id="nfm-leaky-barriers-volume-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-leaky-barriers-volume-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-leaky-barriers-volume-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-leaky-barriers-volume" 
+                 name="nfm-leaky-barriers-volume" 
+                 type="text" 
+                 spellcheck="false"
+                 aria-describedby="nfm-leaky-barriers-volume-hint"
+                 value="{{ data['nfm-leaky-barriers-volume'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">m³</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['nfm-leaky-barriers-length-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-leaky-barriers-length">
+          What is the length of river where the leaky barriers or in channel storage would be implemented?
+        </label>
+        
+        {% if data['nfm-leaky-barriers-length-error'] %}
+          <p id="nfm-leaky-barriers-length-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-leaky-barriers-length-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-leaky-barriers-length-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-leaky-barriers-length" 
+                 name="nfm-leaky-barriers-length" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-leaky-barriers-length'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">km</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['nfm-leaky-barriers-width-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-leaky-barriers-width">
+          What is the typical width of the leaky barriers on in-channel storage?
+        </label>
+        
+        {% if data['nfm-leaky-barriers-width-error'] %}
+          <p id="nfm-leaky-barriers-width-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-leaky-barriers-width-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-leaky-barriers-width-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-leaky-barriers-width" 
+                 name="nfm-leaky-barriers-width" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-leaky-barriers-width'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">m</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
