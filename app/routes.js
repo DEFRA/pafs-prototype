@@ -5691,6 +5691,63 @@ router.post(
   }
 )
 
+// GET property confidence
+router.get('/proposal/create-proposal/property-confidence', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/property-confidence', { data: data })
+})
+
+// POST property confidence
+router.post('/proposal/create-proposal/property-confidence', function (req, res) {
+  const data = req.session.data
+  delete data['property-confidence-error']
+
+  if (!req.body['property-confidence']) {
+    data['property-confidence-error'] = 'Select the confidence level'
+    return res.redirect('/proposal/create-proposal/property-confidence')
+  }
+
+  res.redirect('/proposal/create-proposal/gateway4-confidence')
+})
+
+// GET gateway4 confidence
+router.get('/proposal/create-proposal/gateway4-confidence', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/gateway4-confidence', { data: data })
+})
+
+// POST gateway4 confidence
+router.post('/proposal/create-proposal/gateway4-confidence', function (req, res) {
+  const data = req.session.data
+  delete data['gateway4-confidence-error']
+
+  if (!req.body['gateway4-confidence']) {
+    data['gateway4-confidence-error'] = 'Select the confidence level'
+    return res.redirect('/proposal/create-proposal/gateway4-confidence')
+  }
+
+  res.redirect('/proposal/create-proposal/funding-confidence')
+})
+
+// GET funding confidence
+router.get('/proposal/create-proposal/funding-confidence', function (req, res) {
+  const data = req.session.data
+  res.render('proposal/create-proposal/funding-confidence', { data: data })
+})
+
+// POST funding confidence
+router.post('/proposal/create-proposal/funding-confidence', function (req, res) {
+  const data = req.session.data
+  delete data['funding-confidence-error']
+
+  if (!req.body['funding-confidence']) {
+    data['funding-confidence-error'] = 'Select the confidence level'
+    return res.redirect('/proposal/create-proposal/funding-confidence')
+  }
+
+  res.redirect('/proposal/create-proposal/check-answers')
+})
+
 // GET urgency
 router.get('/proposal/create-proposal/urgency', function (req, res) {
   const data = req.session.data

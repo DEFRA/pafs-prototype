@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Confidence in securing contributions" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/gateway4-confidence" class="govuk-back-link">Back</a>
+
+    {% if data['funding-confidence-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#funding-confidence">{{ data['funding-confidence-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/funding-confidence">
+      <div class="govuk-form-group {%- if data['funding-confidence-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Confidence in securing contributions
+            </h1>
+          </legend>
+
+          {% if data['funding-confidence-error'] %}
+            <p id="funding-confidence-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['funding-confidence-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="funding-confidence-high" name="funding-confidence" type="radio" value="high" {% if data['funding-confidence'] == 'high' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="funding-confidence-high">
+                <strong><span class="bold-small">High</span></strong>
+                <div>Secure or heads of terms in place / scheme complete with funding secured</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="funding-confidence-medium-high" name="funding-confidence" type="radio" value="medium-high" {% if data['funding-confidence'] == 'medium-high' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="funding-confidence-medium-high">
+                <strong><span class="bold-small">Medium High</span></strong>
+                <div>Expected that contributions will be received. Some issues to overcome but confidence in contributions being achieved</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="funding-confidence-medium-low" name="funding-confidence" type="radio" value="medium-low" {% if data['funding-confidence'] == 'medium-low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="funding-confidence-medium-low">
+                <strong><span class="bold-small">Medium Low</span></strong>
+                <div>Optimistic contributions will be secured but contributors known and/or concerns over those identified</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="funding-confidence-low" name="funding-confidence" type="radio" value="low" {% if data['funding-confidence'] == 'low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="funding-confidence-low">
+                <strong><span class="bold-small">Low</span></strong>
+                <div>Low confidence contributions will be secured</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="funding-confidence-na" name="funding-confidence" type="radio" value="na" {% if data['funding-confidence'] == 'na' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="funding-confidence-na">
+                <strong><span class="bold-small">N/A</span></strong>
+                <div>Scheme to be fully funded through Grant in Aid</div>
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

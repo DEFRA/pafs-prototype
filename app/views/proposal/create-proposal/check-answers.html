@@ -47,7 +47,7 @@
               </a>
             </dd>
           </div>
-          
+
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
               Risk management authority
@@ -619,6 +619,60 @@
           <p class="govuk-body">No environmental benefits</p>
         {% else %}
           <p class="govuk-body">No environmental benefits data added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Confidence Assessment</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/property-confidence">
+              {% if data['property-confidence'] and data['gateway4-confidence'] and data['funding-confidence'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> confidence assessment</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if data['property-confidence'] and data['gateway4-confidence'] and data['funding-confidence'] %}
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in number of properties benefitting</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['property-confidence'] == 'high' %}High
+                {% elif data['property-confidence'] == 'medium-high' %}Medium High
+                {% elif data['property-confidence'] == 'medium-low' %}Medium Low
+                {% elif data['property-confidence'] == 'low' %}Low
+                {% elif data['property-confidence'] == 'na' %}N/A
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in achieving Gateway 4 date</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['gateway4-confidence'] == 'high' %}High
+                {% elif data['gateway4-confidence'] == 'medium-high' %}Medium High
+                {% elif data['gateway4-confidence'] == 'medium-low' %}Medium Low
+                {% elif data['gateway4-confidence'] == 'low' %}Low
+                {% elif data['gateway4-confidence'] == 'na' %}N/A
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in securing contributions</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['funding-confidence'] == 'high' %}High
+                {% elif data['funding-confidence'] == 'medium-high' %}Medium High
+                {% elif data['funding-confidence'] == 'medium-low' %}Medium Low
+                {% elif data['funding-confidence'] == 'low' %}Low
+                {% elif data['funding-confidence'] == 'na' %}N/A
+                {% endif %}
+              </dd>
+            </div>
+          </dl>
+        {% else %}
+          <p class="govuk-body">No confidence assessment added yet</p>
         {% endif %}
       </div>
     </div>
