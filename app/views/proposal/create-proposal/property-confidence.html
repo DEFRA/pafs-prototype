@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName="Confidence in number of properties benefitting by this project" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Back to overview</a>
+
+    {% if data['property-confidence-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#property-confidence">{{ data['property-confidence-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/property-confidence">
+      <div class="govuk-form-group {%- if data['property-confidence-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Confidence in number of properties benefitting by this project
+            </h1>
+          </legend>
+
+          {% if data['property-confidence-error'] %}
+            <p id="property-confidence-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['property-confidence-error'] }}
+            </p>
+          {% endif %}
+
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="property-confidence-high" name="property-confidence" type="radio" value="high" {% if data['property-confidence'] == 'high' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="property-confidence-high">
+                <strong><span class="bold-small">High</span></strong>
+                <div>In Construction/Scheme complete and properties delivered</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="property-confidence-medium-high" name="property-confidence" type="radio" value="medium-high" {% if data['property-confidence'] == 'medium-high' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="property-confidence-medium-high">
+                <strong><span class="bold-small">Medium High</span></strong>
+                <div>Number of properties verified in approved business case</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="property-confidence-medium-low" name="property-confidence" type="radio" value="medium-low" {% if data['property-confidence'] == 'medium-low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="property-confidence-medium-low">
+                <strong><span class="bold-small">Medium Low</span></strong>
+                <div>Initial modelling carried out</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="property-confidence-low" name="property-confidence" type="radio" value="low" {% if data['property-confidence'] == 'low' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="property-confidence-low">
+                <strong><span class="bold-small">Low</span></strong>
+                <div>Based on Shapefile / Estimate</div>
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="property-confidence-na" name="property-confidence" type="radio" value="na" {% if data['property-confidence'] == 'na' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="property-confidence-na">
+                <strong><span class="bold-small">N/A</span></strong>
+                <div>No properties benefitting from this project</div>
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

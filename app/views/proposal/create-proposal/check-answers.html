@@ -47,7 +47,7 @@
               </a>
             </dd>
           </div>
-          
+
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
               Risk management authority
@@ -619,6 +619,60 @@
           <p class="govuk-body">No environmental benefits</p>
         {% else %}
           <p class="govuk-body">No environmental benefits data added yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Confidence Assessment</h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link" href="/proposal/create-proposal/property-confidence">
+              {% if data['property-confidence'] and data['gateway4-confidence'] and data['funding-confidence'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> confidence assessment</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        {% if data['property-confidence'] and data['gateway4-confidence'] and data['funding-confidence'] %}
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in number of properties benefitting</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['property-confidence'] == 'high' %}High - In Construction/Scheme complete and properties delivered
+                {% elif data['property-confidence'] == 'medium-high' %}Medium High - Number of properties verified in approved business case
+                {% elif data['property-confidence'] == 'medium-low' %}Medium Low - Initial modelling carried out
+                {% elif data['property-confidence'] == 'low' %}Low - Based on Shapefile / Estimate
+                {% elif data['property-confidence'] == 'na' %}N/A - No properties benefitting from this project
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in achieving Gateway 4 date</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['gateway4-confidence'] == 'high' %}High - High confidence in completing by specified Gateway 4 date / Scheme complete and properties delivered
+                {% elif data['gateway4-confidence'] == 'medium-high' %}Medium High - Low level concerns in completing by specified Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'medium-low' %}Medium Low - Moderate concern in completing by specifed Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'low' %}Low - Significant concerns in completing by specified Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'na' %}N/A - No property benefits being provided by the project
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Confidence in securing contributions</dt>
+              <dd class="govuk-summary-list__value">
+                {% if data['funding-confidence'] == 'high' %}High - Secure or heads of terms in place / scheme complete with funding secured
+                {% elif data['funding-confidence'] == 'medium-high' %}Medium High - Expected that contributions will be received. Some issues to overcome but confidence in contributions being achieved
+                {% elif data['funding-confidence'] == 'medium-low' %}Medium Low - Optimistic contributions will be secured but contributors known and/or concerns over those identified
+                {% elif data['funding-confidence'] == 'low' %}Low - Low confidence contributions will be secured
+                {% elif data['funding-confidence'] == 'na' %}N/A - Scheme to be fully funded through Grant in Aid
+                {% endif %}
+              </dd>
+            </div>
+          </dl>
+        {% else %}
+          <p class="govuk-body">No confidence assessment added yet</p>
         {% endif %}
       </div>
     </div>
