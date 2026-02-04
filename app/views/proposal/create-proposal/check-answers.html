@@ -640,33 +640,33 @@
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Confidence in number of properties benefitting</dt>
               <dd class="govuk-summary-list__value">
-                {% if data['property-confidence'] == 'high' %}High
-                {% elif data['property-confidence'] == 'medium-high' %}Medium High
-                {% elif data['property-confidence'] == 'medium-low' %}Medium Low
-                {% elif data['property-confidence'] == 'low' %}Low
-                {% elif data['property-confidence'] == 'na' %}N/A
+                {% if data['property-confidence'] == 'high' %}High - In Construction/Scheme complete and properties delivered
+                {% elif data['property-confidence'] == 'medium-high' %}Medium High - Number of properties verified in approved business case
+                {% elif data['property-confidence'] == 'medium-low' %}Medium Low - Initial modelling carried out
+                {% elif data['property-confidence'] == 'low' %}Low - Based on Shapefile / Estimate
+                {% elif data['property-confidence'] == 'na' %}N/A - No properties benefitting from this project
                 {% endif %}
               </dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Confidence in achieving Gateway 4 date</dt>
               <dd class="govuk-summary-list__value">
-                {% if data['gateway4-confidence'] == 'high' %}High
-                {% elif data['gateway4-confidence'] == 'medium-high' %}Medium High
-                {% elif data['gateway4-confidence'] == 'medium-low' %}Medium Low
-                {% elif data['gateway4-confidence'] == 'low' %}Low
-                {% elif data['gateway4-confidence'] == 'na' %}N/A
+                {% if data['gateway4-confidence'] == 'high' %}High - High confidence in completing by specified Gateway 4 date / Scheme complete and properties delivered
+                {% elif data['gateway4-confidence'] == 'medium-high' %}Medium High - Low level concerns in completing by specified Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'medium-low' %}Medium Low - Moderate concern in completing by specifed Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'low' %}Low - Significant concerns in completing by specified Gateway 4 date or profile of properties benefitting
+                {% elif data['gateway4-confidence'] == 'na' %}N/A - No property benefits being provided by the project
                 {% endif %}
               </dd>
             </div>
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Confidence in securing contributions</dt>
               <dd class="govuk-summary-list__value">
-                {% if data['funding-confidence'] == 'high' %}High
-                {% elif data['funding-confidence'] == 'medium-high' %}Medium High
-                {% elif data['funding-confidence'] == 'medium-low' %}Medium Low
-                {% elif data['funding-confidence'] == 'low' %}Low
-                {% elif data['funding-confidence'] == 'na' %}N/A
+                {% if data['funding-confidence'] == 'high' %}High - Secure or heads of terms in place / scheme complete with funding secured
+                {% elif data['funding-confidence'] == 'medium-high' %}Medium High - Expected that contributions will be received. Some issues to overcome but confidence in contributions being achieved
+                {% elif data['funding-confidence'] == 'medium-low' %}Medium Low - Optimistic contributions will be secured but contributors known and/or concerns over those identified
+                {% elif data['funding-confidence'] == 'low' %}Low - Low confidence contributions will be secured
+                {% elif data['funding-confidence'] == 'na' %}N/A - Scheme to be fully funded through Grant in Aid
                 {% endif %}
               </dd>
             </div>
