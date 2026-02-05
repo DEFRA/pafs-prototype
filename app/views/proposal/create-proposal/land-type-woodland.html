@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Woodland" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/select-land-type" class="govuk-back-link">Back</a>
+
+    {% if data['land-type-woodland-before-error'] or data['land-type-woodland-after-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['land-type-woodland-before-error'] %}
+                <li>
+                  <a href="#land-type-woodland-before">{{ data['land-type-woodland-before-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['land-type-woodland-after-error'] %}
+                <li>
+                  <a href="#land-type-woodland-after">{{ data['land-type-woodland-after-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/land-type-woodland">
+      
+      <h1 class="govuk-heading-l">Woodland</h1>
+
+      <div class="govuk-form-group {%- if data['land-type-woodland-before-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-woodland-before">
+          What is the area of woodland Before natural flood measures?
+        </label>
+        
+        {% if data['land-type-woodland-before-error'] %}
+          <p id="land-type-woodland-before-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-woodland-before-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-woodland-before-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-woodland-before" 
+                 name="land-type-woodland-before" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-woodland-before'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['land-type-woodland-after-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="land-type-woodland-after">
+          What is the area of woodland After natural flood measures?
+        </label>
+        
+        {% if data['land-type-woodland-after-error'] %}
+          <p id="land-type-woodland-after-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['land-type-woodland-after-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['land-type-woodland-after-error'] %} govuk-input--error {%- endif %}" 
+                 id="land-type-woodland-after" 
+                 name="land-type-woodland-after" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['land-type-woodland-after'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

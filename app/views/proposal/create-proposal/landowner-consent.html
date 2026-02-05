@@ -1,0 +1,78 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Have you secured consent from the relevant landowners?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/select-land-type" class="govuk-back-link">Back</a>
+
+    {% if data['landowner-consent-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#landowner-consent">{{ data['landowner-consent-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/landowner-consent">
+      <div class="govuk-form-group {%- if data['landowner-consent-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data['landowner-consent-error'] %}aria-describedby="landowner-consent-error"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Have you secured consent from the relevant landowners?
+            </h1>
+          </legend>
+          {% if data['landowner-consent-error'] %}
+            <p id="landowner-consent-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['landowner-consent-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-radios" data-module="govuk-radios" id="landowner-consent">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="landowner-consent-fully" name="landowner-consent" type="radio" value="fully-secured" {% if data['landowner-consent'] == 'fully-secured' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="landowner-consent-fully">
+                Consent fully secured
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="landowner-consent-engaged" name="landowner-consent" type="radio" value="engaged-not-secured" {% if data['landowner-consent'] == 'engaged-not-secured' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="landowner-consent-engaged">
+                Engaged but not fully secured
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="landowner-consent-initial" name="landowner-consent" type="radio" value="initial-contact" {% if data['landowner-consent'] == 'initial-contact' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="landowner-consent-initial">
+                Initial contact made
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="landowner-consent-not-engaged" name="landowner-consent" type="radio" value="not-engaged" {% if data['landowner-consent'] == 'not-engaged' %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="landowner-consent-not-engaged">
+                Not yet engaged
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

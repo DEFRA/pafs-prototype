@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="River and floodplain restoration" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/natural-flood-measures" class="govuk-back-link">Back</a>
+
+    {% if data['nfm-river-floodplain-area-error'] or data['nfm-river-floodplain-volume-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['nfm-river-floodplain-area-error'] %}
+                <li>
+                  <a href="#nfm-river-floodplain-area">{{ data['nfm-river-floodplain-area-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['nfm-river-floodplain-volume-error'] %}
+                <li>
+                  <a href="#nfm-river-floodplain-volume">{{ data['nfm-river-floodplain-volume-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/nfm-river-floodplain">
+      
+      <h1 class="govuk-heading-l">River and floodplain restoration</h1>
+
+      <div class="govuk-form-group {%- if data['nfm-river-floodplain-area-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-river-floodplain-area">
+          What is the area of the new river and floodplain restoration?
+        </label>
+        
+        {% if data['nfm-river-floodplain-area-error'] %}
+          <p id="nfm-river-floodplain-area-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-river-floodplain-area-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-river-floodplain-area-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-river-floodplain-area" 
+                 name="nfm-river-floodplain-area" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-river-floodplain-area'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['nfm-river-floodplain-volume-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-river-floodplain-volume">
+          What is the design storage volume of the new river and floodplain restoration?
+        </label>
+        
+        {% if data['nfm-river-floodplain-volume-error'] %}
+          <p id="nfm-river-floodplain-volume-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-river-floodplain-volume-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-river-floodplain-volume-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-river-floodplain-volume" 
+                 name="nfm-river-floodplain-volume" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-river-floodplain-volume'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">m³</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

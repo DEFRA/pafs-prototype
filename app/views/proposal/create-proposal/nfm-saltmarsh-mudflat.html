@@ -1,0 +1,91 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Saltmarsh or mudflat management" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/natural-flood-measures" class="govuk-back-link">Back</a>
+
+    {% if data['nfm-saltmarsh-mudflat-area-error'] or data['nfm-saltmarsh-mudflat-length-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% if data['nfm-saltmarsh-mudflat-area-error'] %}
+                <li>
+                  <a href="#nfm-saltmarsh-mudflat-area">{{ data['nfm-saltmarsh-mudflat-area-error'] }}</a>
+                </li>
+              {% endif %}
+              {% if data['nfm-saltmarsh-mudflat-length-error'] %}
+                <li>
+                  <a href="#nfm-saltmarsh-mudflat-length">{{ data['nfm-saltmarsh-mudflat-length-error'] }}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/nfm-saltmarsh-mudflat">
+      
+      <h1 class="govuk-heading-l">Saltmarsh or mudflat management</h1>
+
+      <div class="govuk-form-group {%- if data['nfm-saltmarsh-mudflat-area-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-saltmarsh-mudflat-area">
+          What is the area of the new saltmarsh or mudflat management?
+        </label>
+        
+        {% if data['nfm-saltmarsh-mudflat-area-error'] %}
+          <p id="nfm-saltmarsh-mudflat-area-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-saltmarsh-mudflat-area-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-saltmarsh-mudflat-area-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-saltmarsh-mudflat-area" 
+                 name="nfm-saltmarsh-mudflat-area" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-saltmarsh-mudflat-area'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">hectares</div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group {%- if data['nfm-saltmarsh-mudflat-length-error'] %} govuk-form-group--error {%- endif %}">
+        <label class="govuk-label govuk-label--m" for="nfm-saltmarsh-mudflat-length">
+          What is the length of coast where the new saltmarsh or mudflat management would be implemented?
+        </label>
+        
+        {% if data['nfm-saltmarsh-mudflat-length-error'] %}
+          <p id="nfm-saltmarsh-mudflat-length-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ data['nfm-saltmarsh-mudflat-length-error'] }}
+          </p>
+        {% endif %}
+
+        <div class="govuk-input__wrapper">
+          <input class="govuk-input govuk-input--width-10 {%- if data['nfm-saltmarsh-mudflat-length-error'] %} govuk-input--error {%- endif %}" 
+                 id="nfm-saltmarsh-mudflat-length" 
+                 name="nfm-saltmarsh-mudflat-length" 
+                 type="text" 
+                 spellcheck="false" 
+                 value="{{ data['nfm-saltmarsh-mudflat-length'] }}">
+          <div class="govuk-input__suffix" aria-hidden="true">km</div>
+        </div>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "layouts/main.html" %}
+
+{% set userType = data.userType or 'unknown' %}
+
+{% set pageName="Which natural flood management measures are in your project?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a href="/proposal/create-proposal/check-answers" class="govuk-back-link">Back</a>
+
+    {% if data and data['natural-flood-measures-error'] %}
+      <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              <li>
+                <a href="#natural-flood-measures">{{ data['natural-flood-measures-error'] }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/natural-flood-measures">
+      <div class="govuk-form-group {%- if data and data['natural-flood-measures-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset" {% if data and data['natural-flood-measures-error'] %}aria-describedby="natural-flood-measures-error natural-flood-measures-hint"{% else %}aria-describedby="natural-flood-measures-hint"{% endif %}>
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Which natural flood management measures are in your project?
+            </h1>
+          </legend>
+          <div id="natural-flood-measures-hint" class="govuk-hint">
+            Select all that apply.
+          </div>
+          {% if data and data['natural-flood-measures-error'] %}
+            <p id="natural-flood-measures-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['natural-flood-measures-error'] }}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="natural-flood-measures">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-river-floodplain" name="natural-flood-measures" type="checkbox" value="river-floodplain" {% if data and data['natural-flood-measures'] and 'river-floodplain' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-river-floodplain">
+                River and floodplain restoration
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-leaky-barriers" name="natural-flood-measures" type="checkbox" value="leaky-barriers" {% if data and data['natural-flood-measures'] and 'leaky-barriers' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-leaky-barriers">
+                Leaky barriers and in-channel storage
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-offline-storage" name="natural-flood-measures" type="checkbox" value="offline-storage" {% if data and data['natural-flood-measures'] and 'offline-storage' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-offline-storage">
+                Offline storage areas
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-woodland" name="natural-flood-measures" type="checkbox" value="woodland" {% if data and data['natural-flood-measures'] and 'woodland' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-woodland">
+                Woodland
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-headwater-drainage" name="natural-flood-measures" type="checkbox" value="headwater-drainage" {% if data and data['natural-flood-measures'] and 'headwater-drainage' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-headwater-drainage">
+                Headwater drainage management
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-runoff-attenuation" name="natural-flood-measures" type="checkbox" value="runoff-attenuation" {% if data and data['natural-flood-measures'] and 'runoff-attenuation' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-runoff-attenuation">
+                Runoff attenuation or management
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-saltmarsh-mudflat" name="natural-flood-measures" type="checkbox" value="saltmarsh-mudflat" {% if data and data['natural-flood-measures'] and 'saltmarsh-mudflat' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-saltmarsh-mudflat">
+                Saltmarsh or mudflat management
+              </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="nfm-sand-dune" name="natural-flood-measures" type="checkbox" value="sand-dune" {% if data and data['natural-flood-measures'] and 'sand-dune' in data['natural-flood-measures'] %}checked{% endif %}>
+              <label class="govuk-label govuk-checkboxes__label" for="nfm-sand-dune">
+                Sand dune management
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <button class="govuk-button" data-module="govuk-button">
+        Save and continue
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
