@@ -582,25 +582,32 @@
     <div class="govuk-summary-card">
       <div class="govuk-summary-card__title-wrapper">
         <h2 class="govuk-summary-card__title">Natural flood measures</h2>
+        {% if not data['natural-flood-measures'] %}
         <ul class="govuk-summary-card__actions">
           <li class="govuk-summary-card__action">
             <a class="govuk-link" href="/proposal/create-proposal/natural-flood-measures">
-              {% if data['natural-flood-measures'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> natural flood measures</span>
+              Add<span class="govuk-visually-hidden"> natural flood measures</span>
             </a>
           </li>
         </ul>
+        {% endif %}
       </div>
       <div class="govuk-summary-card__content">
         {% if data['natural-flood-measures'] and data['natural-flood-measures'].length > 0 %}
           
           {# NFM Measures Section #}
-          <details class="govuk-details">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">
-                Selected measures ({{ data['natural-flood-measures'].length }})
-              </span>
-            </summary>
-            <div class="govuk-details__text">
+          <div class="govuk-!-margin-bottom-6">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h3 class="govuk-heading-s" style="margin: 0;">Selected measures</h3>
+              <a class="govuk-link" href="/proposal/create-proposal/natural-flood-measures">Change<span class="govuk-visually-hidden"> selected measures</span></a>
+            </div>
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  View measures ({{ data['natural-flood-measures'].length }})
+                </span>
+              </summary>
+              <div class="govuk-details__text">
               <div style="overflow-x: auto;">
                 <table class="govuk-table">
                   <thead class="govuk-table__head">
@@ -662,18 +669,24 @@
                   </tbody>
                 </table>
               </div>
-            </div>
-          </details>
+              </div>
+            </details>
+          </div>
 
           {# Land Types Section #}
           {% if data['land-type'] and data['land-type'].length > 0 %}
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Land type changes ({{ data['land-type'].length }})
-                </span>
-              </summary>
-              <div class="govuk-details__text">
+            <div class="govuk-!-margin-bottom-6">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 class="govuk-heading-s" style="margin: 0;">Land type changes</h3>
+                <a class="govuk-link" href="/proposal/create-proposal/select-land-type">Change<span class="govuk-visually-hidden"> land type changes</span></a>
+              </div>
+              <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
+                    View land types ({{ data['land-type'].length }})
+                  </span>
+                </summary>
+                <div class="govuk-details__text">
                 <div style="overflow-x: auto;">
                   <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -705,8 +718,9 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </details>
+                </div>
+              </details>
+            </div>
           {% endif %}
 
           {# Project Readiness Section #}

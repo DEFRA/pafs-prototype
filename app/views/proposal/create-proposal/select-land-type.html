@@ -2,11 +2,11 @@
 
 {% set userType = data.userType or 'unknown' %}
 
-{% set pageName="Select the land type (demo question)" %}
+{% set pageName="Tell us what the land use in your project area will be before and after your natural flood measure project?" %}
 
 {% block content %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div>
 
     <a href="/proposal/create-proposal/natural-flood-measures" class="govuk-back-link">Back</a>
 
@@ -32,7 +32,7 @@
         <fieldset class="govuk-fieldset" {% if data['land-type-error'] %}aria-describedby="land-type-error land-type-hint"{% else %}aria-describedby="land-type-hint"{% endif %}>
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
-              Select the land type (demo question)
+              Tell us what the land use in your project area will be before and after your natural flood measure project?
             </h1>
           </legend>
           <div id="land-type-hint" class="govuk-hint">
