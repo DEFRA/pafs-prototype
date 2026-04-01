@@ -57,7 +57,7 @@ function loadProjectsData() {
 }
 
 function toArray(value) {
-  if (!value) return []
+  if (value === undefined || value === null) return []
   return Array.isArray(value) ? value : [value]
 }
 
@@ -211,6 +211,73 @@ function getFundingYears(data) {
   return years
 }
 
+// Calculate totals server-side for no-JS progressive enhancement
+function calculateServerTotals(
+  vals,
+  selectedSources,
+  giaSources,
+  publicNames,
+  privateNames,
+  otherEaNames,
+  years
+) {
+  const rowTotals = {}
+  const columnTotals = {}
+  let grandTotal = 0
+
+  years.forEach(function (y) {
+    columnTotals[y] = 0
+  })
+
+  // Helper to sum a row
+  function sumRow(sourceKey, yearValues) {
+    let total = 0
+    years.forEach(function (y) {
+      const v = parseInt((yearValues && yearValues[y]) || '0', 10) || 0
+      total += v
+      columnTotals[y] = (columnTotals[y] || 0) + v
+    })
+    return total
+  }
+
+  // Base funding sources
+  const baseSources = ['grant-in-aid', 'local-levy', 'precept', 'other']
+  baseSources.forEach(function (key) {
+    if (selectedSources.includes(key)) {
+      rowTotals[key] = sumRow(key, vals[key])
+    }
+  })
+
+  // GIA sub-sources
+  giaSources.forEach(function (key) {
+    rowTotals[key] = sumRow(key, vals[key])
+  })
+
+  // Contributor groups
+  function sumContributors(type, names) {
+    names.forEach(function (name) {
+      if (name && name.trim()) {
+        const yearVals = vals[type] && vals[type][name] ? vals[type][name] : {}
+        rowTotals[type + ':' + name] = sumRow(type + ':' + name, yearVals)
+      }
+    })
+  }
+
+  if (selectedSources.includes('public-sector'))
+    sumContributors('public-contributor', publicNames)
+  if (selectedSources.includes('private-sector'))
+    sumContributors('private-contributor', privateNames)
+  if (selectedSources.includes('ea-contributions'))
+    sumContributors('ea-contributor', otherEaNames)
+
+  // Grand total
+  years.forEach(function (y) {
+    grandTotal += columnTotals[y] || 0
+  })
+
+  return { rowTotals: rowTotals, columnTotals: columnTotals, grandTotal: grandTotal }
+}
+
 function findEaArea(areasData, id) {
   return (areasData.ea_areas || []).find((ea) => ea.id === id)
 }
@@ -260,11 +327,11 @@ function getNfmDetailPages(selectedMeasures) {
     'saltmarsh-mudflat': '/proposal/create-proposal/nfm-saltmarsh-mudflat',
     'sand-dune': '/proposal/create-proposal/nfm-sand-dune'
   }
-  
+
   if (!selectedMeasures || selectedMeasures.length === 0) {
     return []
   }
-  
+
   return selectedMeasures
     .map(measure => pageMapping[measure])
     .filter(Boolean)
@@ -273,14 +340,14 @@ function getNfmDetailPages(selectedMeasures) {
 function getNextNfmPage(data, currentMeasure) {
   const selectedMeasures = data['natural-flood-measures'] || []
   const detailPages = getNfmDetailPages(selectedMeasures)
-  
+
   if (currentMeasure) {
     const currentIndex = selectedMeasures.indexOf(currentMeasure)
     if (currentIndex >= 0 && currentIndex < selectedMeasures.length - 1) {
       return detailPages[currentIndex + 1]
     }
   }
-  
+
   return '/proposal/create-proposal/select-land-type'
 }
 
@@ -297,11 +364,11 @@ function getLandTypeDetailPages(selectedTypes) {
     'rivers-wetlands-freshwater': '/proposal/create-proposal/land-type-rivers',
     'coastal-margins': '/proposal/create-proposal/land-type-coastal'
   }
-  
+
   if (!selectedTypes || selectedTypes.length === 0) {
     return []
   }
-  
+
   return selectedTypes
     .map(type => pageMapping[type])
     .filter(Boolean)
@@ -310,14 +377,14 @@ function getLandTypeDetailPages(selectedTypes) {
 function getNextLandTypePage(data, currentType) {
   const selectedTypes = data['land-type'] || []
   const detailPages = getLandTypeDetailPages(selectedTypes)
-  
+
   if (currentType) {
     const currentIndex = selectedTypes.indexOf(currentType)
     if (currentIndex >= 0 && currentIndex < selectedTypes.length - 1) {
       return detailPages[currentIndex + 1]
     }
   }
-  
+
   return '/proposal/create-proposal/landowner-consent'
 }
 
@@ -4401,6 +4468,7 @@ router.get(
     }
 
     data.publicContributors = data.publicContributors || ['']
+    delete data['public-contributors-error']
 
     res.render('proposal/create-proposal/funding-public-contributors', {
       data: data
@@ -4430,7 +4498,7 @@ router.post(
 
     if (names.length === 0) {
       data['public-contributors-error'] = 'Please add at least one contributor'
-      data.publicContributors = raw
+      data.publicContributors = raw.length > 0 ? raw : ['']
       return res.render(
         'proposal/create-proposal/funding-public-contributors',
         {
@@ -4457,6 +4525,48 @@ router.post(
     data.publicContributors = names
     return res.redirect(
       '/proposal/create-proposal/funding/public-contributor-values'
+    )
+  }
+)
+
+// Public contributors - Remove confirmation
+router.get(
+  '/proposal/create-proposal/funding/public-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const index = parseInt(req.params.index, 10)
+    const contributors = data.publicContributors || []
+    const name = contributors[index] || 'Contributor ' + (index + 1)
+
+    res.render(
+      'proposal/create-proposal/funding-remove-contributor-confirm',
+      {
+        data: data,
+        contributorName: name,
+        backLink: '/proposal/create-proposal/funding/public-contributors',
+        actionUrl:
+          '/proposal/create-proposal/funding/public-contributors/remove/' +
+          index
+      }
+    )
+  }
+)
+
+router.post(
+  '/proposal/create-proposal/funding/public-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const confirm = req.body['confirm-remove']
+
+    if (confirm === 'yes') {
+      const index = parseInt(req.params.index, 10)
+      const contributors = data.publicContributors || []
+      const updated = contributors.filter((_, i) => i !== index)
+      data.publicContributors = updated.length > 0 ? updated : ['']
+    }
+
+    return res.redirect(
+      '/proposal/create-proposal/funding/public-contributors'
     )
   }
 )
@@ -4499,6 +4609,11 @@ router.post(
     const values = {}
     let hasError = false
 
+    console.log('=== PUBLIC CONTRIBUTOR VALUES DEBUG ===')
+    console.log('Contributors:', names)
+    console.log('Years:', years)
+    console.log('Request body keys:', Object.keys(req.body))
+
     names.forEach((name, index) => {
       let contributorTotal = 0
       const yearValues = {}
@@ -4512,6 +4627,11 @@ router.post(
           .toString()
           .replace(/,/g, '')
         const amount = rawAmount === '' ? 0 : Number(rawAmount)
+
+        console.log(`Contributor: ${name} (index ${index}), Year: ${year}`)
+        console.log(`  Field name: ${amountField}`)
+        console.log(`  Raw value: "${req.body[amountField]}"`)
+        console.log(`  Parsed amount: ${amount}`)
 
         if (!Number.isNaN(amount)) {
           yearValues[year] = {
@@ -4529,12 +4649,17 @@ router.post(
         }
       })
 
+      console.log(`Total for ${name}: ${contributorTotal}`)
       if (contributorTotal <= 0) {
+        console.log(`  ERROR: No values entered for ${name}`)
         hasError = true
       }
 
       values[name] = yearValues
     })
+
+    console.log('Has error:', hasError)
+    console.log('=== END DEBUG ===\n')
 
     if (hasError) {
       data['public-contributor-values-error'] =
@@ -4569,6 +4694,7 @@ router.get(
     }
 
     data.privateContributors = data.privateContributors || ['']
+    delete data['private-contributors-error']
 
     res.render('proposal/create-proposal/funding-private-contributors', {
       data: data
@@ -4598,7 +4724,7 @@ router.post(
 
     if (names.length === 0) {
       data['private-contributors-error'] = 'Please add at least one contributor'
-      data.privateContributors = raw
+      data.privateContributors = raw.length > 0 ? raw : ['']
       return res.render(
         'proposal/create-proposal/funding-private-contributors',
         {
@@ -4625,6 +4751,48 @@ router.post(
     data.privateContributors = names
     return res.redirect(
       '/proposal/create-proposal/funding/private-contributor-values'
+    )
+  }
+)
+
+// Private contributors - Remove confirmation
+router.get(
+  '/proposal/create-proposal/funding/private-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const index = parseInt(req.params.index, 10)
+    const contributors = data.privateContributors || []
+    const name = contributors[index] || 'Contributor ' + (index + 1)
+
+    res.render(
+      'proposal/create-proposal/funding-remove-contributor-confirm',
+      {
+        data: data,
+        contributorName: name,
+        backLink: '/proposal/create-proposal/funding/private-contributors',
+        actionUrl:
+          '/proposal/create-proposal/funding/private-contributors/remove/' +
+          index
+      }
+    )
+  }
+)
+
+router.post(
+  '/proposal/create-proposal/funding/private-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const confirm = req.body['confirm-remove']
+
+    if (confirm === 'yes') {
+      const index = parseInt(req.params.index, 10)
+      const contributors = data.privateContributors || []
+      const updated = contributors.filter((_, i) => i !== index)
+      data.privateContributors = updated.length > 0 ? updated : ['']
+    }
+
+    return res.redirect(
+      '/proposal/create-proposal/funding/private-contributors'
     )
   }
 )
@@ -4736,6 +4904,7 @@ router.get(
     }
 
     data.otherEaContributors = data.otherEaContributors || ['']
+    delete data['other-ea-contributors-error']
 
     res.render('proposal/create-proposal/funding-other-ea-contributors', {
       data: data
@@ -4764,7 +4933,7 @@ router.post(
     if (names.length === 0) {
       data['other-ea-contributors-error'] =
         'Please add at least one contributor'
-      data.otherEaContributors = raw
+      data.otherEaContributors = raw.length > 0 ? raw : ['']
       return res.render(
         'proposal/create-proposal/funding-other-ea-contributors',
         { data: data }
@@ -4787,6 +4956,49 @@ router.post(
     data.otherEaContributors = names
     return res.redirect(
       '/proposal/create-proposal/funding/other-ea-contributor-values'
+    )
+  }
+)
+
+// Other EA contributors - Remove confirmation
+router.get(
+  '/proposal/create-proposal/funding/other-ea-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const index = parseInt(req.params.index, 10)
+    const contributors = data.otherEaContributors || []
+    const name = contributors[index] || 'Contributor ' + (index + 1)
+
+    res.render(
+      'proposal/create-proposal/funding-remove-contributor-confirm',
+      {
+        data: data,
+        contributorName: name,
+        backLink:
+          '/proposal/create-proposal/funding/other-ea-contributors',
+        actionUrl:
+          '/proposal/create-proposal/funding/other-ea-contributors/remove/' +
+          index
+      }
+    )
+  }
+)
+
+router.post(
+  '/proposal/create-proposal/funding/other-ea-contributors/remove/:index',
+  function (req, res) {
+    const data = req.session.data || {}
+    const confirm = req.body['confirm-remove']
+
+    if (confirm === 'yes') {
+      const index = parseInt(req.params.index, 10)
+      const contributors = data.otherEaContributors || []
+      const updated = contributors.filter((_, i) => i !== index)
+      data.otherEaContributors = updated.length > 0 ? updated : ['']
+    }
+
+    return res.redirect(
+      '/proposal/create-proposal/funding/other-ea-contributors'
     )
   }
 )
@@ -4979,6 +5191,92 @@ router.post('/proposal/create-proposal/funding-values', function (req, res) {
   return res.redirect('/proposal/create-proposal/funding-values-summary')
 })
 
+// Funding values - NEW LAYOUT (with financial years as horizontal headers)
+router.get(
+  '/proposal/create-proposal/funding-values-new-layout',
+  function (req, res) {
+    const data = req.session.data || {}
+    const fundingYears = getFundingYears(data)
+    const selectedSources = data['funding-sources'] || []
+    const selectedGiaSources = data['gia-funding-sources'] || []
+
+    // Build label map for GIA sources
+    const sourceLabels = {}
+    selectedGiaSources.forEach(function (key) {
+      sourceLabels[key] = getFundingSourceLabel(key)
+    })
+
+    // Server-side totals for no-JS
+    const vals = data.fundingValuesData || {}
+    const serverTotals = calculateServerTotals(
+      vals,
+      selectedSources,
+      selectedGiaSources,
+      data.publicContributors || [],
+      data.privateContributors || [],
+      data.otherEaContributors || [],
+      fundingYears
+    )
+
+    delete data['funding-values-error']
+
+    res.render('proposal/create-proposal/funding-values-new-layout', {
+      data: data,
+      fundingYears: fundingYears,
+      selectedSources: selectedSources,
+      selectedGiaSources: selectedGiaSources,
+      sourceLabels: sourceLabels,
+      serverTotals: serverTotals
+    })
+  }
+)
+
+router.post(
+  '/proposal/create-proposal/funding-values-new-layout',
+  function (req, res) {
+    const data = req.session.data || {}
+    const action = req.body.action
+
+    // Store the nested fv object from form
+    data.fundingValuesData = req.body.fv || {}
+
+    if (action === 'update-totals') {
+      // Re-render the page with server-calculated totals (no-JS path)
+      const fundingYears = getFundingYears(data)
+      const selectedSources = data['funding-sources'] || []
+      const selectedGiaSources = data['gia-funding-sources'] || []
+
+      const sourceLabels = {}
+      selectedGiaSources.forEach(function (key) {
+        sourceLabels[key] = getFundingSourceLabel(key)
+      })
+
+      const vals = data.fundingValuesData || {}
+      const serverTotals = calculateServerTotals(
+        vals,
+        selectedSources,
+        selectedGiaSources,
+        data.publicContributors || [],
+        data.privateContributors || [],
+        data.otherEaContributors || [],
+        fundingYears
+      )
+
+      return res.render('proposal/create-proposal/funding-values-new-layout', {
+        data: data,
+        fundingYears: fundingYears,
+        selectedSources: selectedSources,
+        selectedGiaSources: selectedGiaSources,
+        sourceLabels: sourceLabels,
+        serverTotals: serverTotals
+      })
+    }
+
+    // 'continue' action — save and proceed
+    return res.redirect('/proposal/create-proposal/funding-values-summary')
+  }
+)
+
 // Funding values summary
 router.get(
   '/proposal/create-proposal/funding-values-summary',
@@ -5087,12 +5385,37 @@ router.get('/proposal/create-proposal/check-answers', function (req, res) {
 
   const fundingSectionStarted = !!(data && data['funding-section-started'])
 
+  // Funding values from the new layout
+  const fundingYears = getFundingYears(data)
+  const selectedGiaSources = giaFundingSources
+  const vals = data.fundingValuesData || {}
+
+  const sourceLabels = {}
+  selectedGiaSources.forEach(function (key) {
+    sourceLabels[key] = getFundingSourceLabel(key)
+  })
+
+  const serverTotals = calculateServerTotals(
+    vals,
+    fundingSources,
+    selectedGiaSources,
+    data.publicContributors || [],
+    data.privateContributors || [],
+    data.otherEaContributors || [],
+    fundingYears
+  )
+
   res.render('proposal/create-proposal/check-answers', {
     data: data,
     locationMapUrl: locationMapUrl,
     importantDates: importantDates,
     fundingSummary: fundingSummary,
-    fundingSectionStarted: fundingSectionStarted
+    fundingSectionStarted: fundingSectionStarted,
+    fundingYears: fundingYears,
+    selectedSources: fundingSources,
+    selectedGiaSources: selectedGiaSources,
+    sourceLabels: sourceLabels,
+    serverTotals: serverTotals
   })
 })
 
@@ -5590,13 +5913,13 @@ router.post('/proposal/create-proposal/natural-flood-measures', function (req, r
   }
 
   delete data['natural-flood-measures-error']
-  
+
   // Get the first detail page for selected measures
   const detailPages = getNfmDetailPages(selected)
   if (detailPages.length > 0) {
     return res.redirect(detailPages[0])
   }
-  
+
   res.redirect('/proposal/create-proposal/check-answers')
 })
 
@@ -5612,7 +5935,7 @@ router.get('/proposal/create-proposal/nfm-river-floodplain', function (req, res)
 router.post('/proposal/create-proposal/nfm-river-floodplain', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate area
   const area = req.body['nfm-river-floodplain-area']
   if (!area || area.trim() === '') {
@@ -5625,7 +5948,7 @@ router.post('/proposal/create-proposal/nfm-river-floodplain', function (req, res
     delete data['nfm-river-floodplain-area-error']
     data['nfm-river-floodplain-area'] = area
   }
-  
+
   // Validate volume
   const volume = req.body['nfm-river-floodplain-volume']
   if (!volume || volume.trim() === '') {
@@ -5638,13 +5961,13 @@ router.post('/proposal/create-proposal/nfm-river-floodplain', function (req, res
     delete data['nfm-river-floodplain-volume-error']
     data['nfm-river-floodplain-volume'] = volume
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-river-floodplain', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'river-floodplain')
   res.redirect(nextPage)
@@ -5662,7 +5985,7 @@ router.get('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) {
 router.post('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate volume (optional field - if known)
   const volume = req.body['nfm-leaky-barriers-volume']
   if (volume && volume.trim() !== '') {
@@ -5677,7 +6000,7 @@ router.post('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) 
     delete data['nfm-leaky-barriers-volume-error']
     data['nfm-leaky-barriers-volume'] = volume
   }
-  
+
   // Validate length (required)
   const length = req.body['nfm-leaky-barriers-length']
   if (!length || length.trim() === '') {
@@ -5690,7 +6013,7 @@ router.post('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) 
     delete data['nfm-leaky-barriers-length-error']
     data['nfm-leaky-barriers-length'] = length
   }
-  
+
   // Validate width (required)
   const width = req.body['nfm-leaky-barriers-width']
   if (!width || width.trim() === '') {
@@ -5703,13 +6026,13 @@ router.post('/proposal/create-proposal/nfm-leaky-barriers', function (req, res) 
     delete data['nfm-leaky-barriers-width-error']
     data['nfm-leaky-barriers-width'] = width
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-leaky-barriers', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'leaky-barriers')
   res.redirect(nextPage)
@@ -5727,7 +6050,7 @@ router.get('/proposal/create-proposal/nfm-offline-storage', function (req, res) 
 router.post('/proposal/create-proposal/nfm-offline-storage', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate area
   const area = req.body['nfm-offline-storage-area']
   if (!area || area.trim() === '') {
@@ -5740,7 +6063,7 @@ router.post('/proposal/create-proposal/nfm-offline-storage', function (req, res)
     delete data['nfm-offline-storage-area-error']
     data['nfm-offline-storage-area'] = area
   }
-  
+
   // Validate volume
   const volume = req.body['nfm-offline-storage-volume']
   if (!volume || volume.trim() === '') {
@@ -5753,13 +6076,13 @@ router.post('/proposal/create-proposal/nfm-offline-storage', function (req, res)
     delete data['nfm-offline-storage-volume-error']
     data['nfm-offline-storage-volume'] = volume
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-offline-storage', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'offline-storage')
   res.redirect(nextPage)
@@ -5776,7 +6099,7 @@ router.get('/proposal/create-proposal/nfm-woodland', function (req, res) {
 // POST woodland details
 router.post('/proposal/create-proposal/nfm-woodland', function (req, res) {
   const data = req.session.data || {}
-  
+
   // Validate area
   const area = req.body['nfm-woodland-area']
   if (!area || area.trim() === '') {
@@ -5790,10 +6113,10 @@ router.post('/proposal/create-proposal/nfm-woodland', function (req, res) {
       data: data
     })
   }
-  
+
   delete data['nfm-woodland-area-error']
   data['nfm-woodland-area'] = area
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'woodland')
   res.redirect(nextPage)
@@ -5810,7 +6133,7 @@ router.get('/proposal/create-proposal/nfm-headwater-drainage', function (req, re
 // POST headwater drainage management details
 router.post('/proposal/create-proposal/nfm-headwater-drainage', function (req, res) {
   const data = req.session.data || {}
-  
+
   // Validate area
   const area = req.body['nfm-headwater-drainage-area']
   if (!area || area.trim() === '') {
@@ -5824,10 +6147,10 @@ router.post('/proposal/create-proposal/nfm-headwater-drainage', function (req, r
       data: data
     })
   }
-  
+
   delete data['nfm-headwater-drainage-area-error']
   data['nfm-headwater-drainage-area'] = area
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'headwater-drainage')
   res.redirect(nextPage)
@@ -5845,7 +6168,7 @@ router.get('/proposal/create-proposal/nfm-runoff-attenuation', function (req, re
 router.post('/proposal/create-proposal/nfm-runoff-attenuation', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate area
   const area = req.body['nfm-runoff-attenuation-area']
   if (!area || area.trim() === '') {
@@ -5858,7 +6181,7 @@ router.post('/proposal/create-proposal/nfm-runoff-attenuation', function (req, r
     delete data['nfm-runoff-attenuation-area-error']
     data['nfm-runoff-attenuation-area'] = area
   }
-  
+
   // Validate volume
   const volume = req.body['nfm-runoff-attenuation-volume']
   if (!volume || volume.trim() === '') {
@@ -5871,13 +6194,13 @@ router.post('/proposal/create-proposal/nfm-runoff-attenuation', function (req, r
     delete data['nfm-runoff-attenuation-volume-error']
     data['nfm-runoff-attenuation-volume'] = volume
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-runoff-attenuation', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'runoff-attenuation')
   res.redirect(nextPage)
@@ -5895,7 +6218,7 @@ router.get('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, res
 router.post('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate area
   const area = req.body['nfm-saltmarsh-mudflat-area']
   if (!area || area.trim() === '') {
@@ -5908,7 +6231,7 @@ router.post('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, re
     delete data['nfm-saltmarsh-mudflat-area-error']
     data['nfm-saltmarsh-mudflat-area'] = area
   }
-  
+
   // Validate length
   const length = req.body['nfm-saltmarsh-mudflat-length']
   if (!length || length.trim() === '') {
@@ -5921,13 +6244,13 @@ router.post('/proposal/create-proposal/nfm-saltmarsh-mudflat', function (req, re
     delete data['nfm-saltmarsh-mudflat-length-error']
     data['nfm-saltmarsh-mudflat-length'] = length
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-saltmarsh-mudflat', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or check-answers
   const nextPage = getNextNfmPage(data, 'saltmarsh-mudflat')
   res.redirect(nextPage)
@@ -5945,7 +6268,7 @@ router.get('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
 router.post('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   // Validate area
   const area = req.body['nfm-sand-dune-area']
   if (!area || area.trim() === '') {
@@ -5958,7 +6281,7 @@ router.post('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
     delete data['nfm-sand-dune-area-error']
     data['nfm-sand-dune-area'] = area
   }
-  
+
   // Validate length
   const length = req.body['nfm-sand-dune-length']
   if (!length || length.trim() === '') {
@@ -5971,13 +6294,13 @@ router.post('/proposal/create-proposal/nfm-sand-dune', function (req, res) {
     delete data['nfm-sand-dune-length-error']
     data['nfm-sand-dune-length'] = length
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/nfm-sand-dune', {
       data: data
     })
   }
-  
+
   // Redirect to next NFM detail page or select-land-type
   const nextPage = getNextNfmPage(data, 'sand-dune')
   res.redirect(nextPage)
@@ -6005,13 +6328,13 @@ router.post('/proposal/create-proposal/select-land-type', function (req, res) {
   }
 
   delete data['land-type-error']
-  
+
   // Get the first detail page for selected land types
   const detailPages = getLandTypeDetailPages(selected)
   if (detailPages.length > 0) {
     return res.redirect(detailPages[0])
   }
-  
+
   res.redirect('/proposal/create-proposal/check-answers')
 })
 
@@ -6025,7 +6348,7 @@ router.get('/proposal/create-proposal/land-type-arable', function (req, res) {
 router.post('/proposal/create-proposal/land-type-arable', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-arable-before']
   if (!before || before.trim() === '') {
     data['land-type-arable-before-error'] = 'Enter the area before natural flood measures'
@@ -6037,7 +6360,7 @@ router.post('/proposal/create-proposal/land-type-arable', function (req, res) {
     delete data['land-type-arable-before-error']
     data['land-type-arable-before'] = before
   }
-  
+
   const after = req.body['land-type-arable-after']
   if (!after || after.trim() === '') {
     data['land-type-arable-after-error'] = 'Enter the area after natural flood measures'
@@ -6049,11 +6372,11 @@ router.post('/proposal/create-proposal/land-type-arable', function (req, res) {
     delete data['land-type-arable-after-error']
     data['land-type-arable-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-arable', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'arable-farmland')
   res.redirect(nextPage)
 })
@@ -6068,7 +6391,7 @@ router.get('/proposal/create-proposal/land-type-livestock', function (req, res) 
 router.post('/proposal/create-proposal/land-type-livestock', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-livestock-before']
   if (!before || before.trim() === '') {
     data['land-type-livestock-before-error'] = 'Enter the area before natural flood measures'
@@ -6080,7 +6403,7 @@ router.post('/proposal/create-proposal/land-type-livestock', function (req, res)
     delete data['land-type-livestock-before-error']
     data['land-type-livestock-before'] = before
   }
-  
+
   const after = req.body['land-type-livestock-after']
   if (!after || after.trim() === '') {
     data['land-type-livestock-after-error'] = 'Enter the area after natural flood measures'
@@ -6092,11 +6415,11 @@ router.post('/proposal/create-proposal/land-type-livestock', function (req, res)
     delete data['land-type-livestock-after-error']
     data['land-type-livestock-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-livestock', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'livestock-farmland')
   res.redirect(nextPage)
 })
@@ -6111,7 +6434,7 @@ router.get('/proposal/create-proposal/land-type-dairying', function (req, res) {
 router.post('/proposal/create-proposal/land-type-dairying', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-dairying-before']
   if (!before || before.trim() === '') {
     data['land-type-dairying-before-error'] = 'Enter the area before natural flood measures'
@@ -6123,7 +6446,7 @@ router.post('/proposal/create-proposal/land-type-dairying', function (req, res) 
     delete data['land-type-dairying-before-error']
     data['land-type-dairying-before'] = before
   }
-  
+
   const after = req.body['land-type-dairying-after']
   if (!after || after.trim() === '') {
     data['land-type-dairying-after-error'] = 'Enter the area after natural flood measures'
@@ -6135,11 +6458,11 @@ router.post('/proposal/create-proposal/land-type-dairying', function (req, res) 
     delete data['land-type-dairying-after-error']
     data['land-type-dairying-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-dairying', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'dairying-farmland')
   res.redirect(nextPage)
 })
@@ -6154,7 +6477,7 @@ router.get('/proposal/create-proposal/land-type-grassland', function (req, res) 
 router.post('/proposal/create-proposal/land-type-grassland', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-grassland-before']
   if (!before || before.trim() === '') {
     data['land-type-grassland-before-error'] = 'Enter the area before natural flood measures'
@@ -6166,7 +6489,7 @@ router.post('/proposal/create-proposal/land-type-grassland', function (req, res)
     delete data['land-type-grassland-before-error']
     data['land-type-grassland-before'] = before
   }
-  
+
   const after = req.body['land-type-grassland-after']
   if (!after || after.trim() === '') {
     data['land-type-grassland-after-error'] = 'Enter the area after natural flood measures'
@@ -6178,11 +6501,11 @@ router.post('/proposal/create-proposal/land-type-grassland', function (req, res)
     delete data['land-type-grassland-after-error']
     data['land-type-grassland-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-grassland', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'semi-natural-grassland')
   res.redirect(nextPage)
 })
@@ -6197,7 +6520,7 @@ router.get('/proposal/create-proposal/land-type-woodland', function (req, res) {
 router.post('/proposal/create-proposal/land-type-woodland', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-woodland-before']
   if (!before || before.trim() === '') {
     data['land-type-woodland-before-error'] = 'Enter the area before natural flood measures'
@@ -6209,7 +6532,7 @@ router.post('/proposal/create-proposal/land-type-woodland', function (req, res) 
     delete data['land-type-woodland-before-error']
     data['land-type-woodland-before'] = before
   }
-  
+
   const after = req.body['land-type-woodland-after']
   if (!after || after.trim() === '') {
     data['land-type-woodland-after-error'] = 'Enter the area after natural flood measures'
@@ -6221,11 +6544,11 @@ router.post('/proposal/create-proposal/land-type-woodland', function (req, res) 
     delete data['land-type-woodland-after-error']
     data['land-type-woodland-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-woodland', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'woodland')
   res.redirect(nextPage)
 })
@@ -6240,7 +6563,7 @@ router.get('/proposal/create-proposal/land-type-moors', function (req, res) {
 router.post('/proposal/create-proposal/land-type-moors', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-moors-before']
   if (!before || before.trim() === '') {
     data['land-type-moors-before-error'] = 'Enter the area before natural flood measures'
@@ -6252,7 +6575,7 @@ router.post('/proposal/create-proposal/land-type-moors', function (req, res) {
     delete data['land-type-moors-before-error']
     data['land-type-moors-before'] = before
   }
-  
+
   const after = req.body['land-type-moors-after']
   if (!after || after.trim() === '') {
     data['land-type-moors-after-error'] = 'Enter the area after natural flood measures'
@@ -6264,11 +6587,11 @@ router.post('/proposal/create-proposal/land-type-moors', function (req, res) {
     delete data['land-type-moors-after-error']
     data['land-type-moors-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-moors', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'mountain-moors-heath')
   res.redirect(nextPage)
 })
@@ -6283,7 +6606,7 @@ router.get('/proposal/create-proposal/land-type-peatland', function (req, res) {
 router.post('/proposal/create-proposal/land-type-peatland', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-peatland-before']
   if (!before || before.trim() === '') {
     data['land-type-peatland-before-error'] = 'Enter the area before natural flood measures'
@@ -6295,7 +6618,7 @@ router.post('/proposal/create-proposal/land-type-peatland', function (req, res) 
     delete data['land-type-peatland-before-error']
     data['land-type-peatland-before'] = before
   }
-  
+
   const after = req.body['land-type-peatland-after']
   if (!after || after.trim() === '') {
     data['land-type-peatland-after-error'] = 'Enter the area after natural flood measures'
@@ -6307,11 +6630,11 @@ router.post('/proposal/create-proposal/land-type-peatland', function (req, res) 
     delete data['land-type-peatland-after-error']
     data['land-type-peatland-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-peatland', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'peatland-restoration')
   res.redirect(nextPage)
 })
@@ -6326,7 +6649,7 @@ router.get('/proposal/create-proposal/land-type-rivers', function (req, res) {
 router.post('/proposal/create-proposal/land-type-rivers', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-rivers-before']
   if (!before || before.trim() === '') {
     data['land-type-rivers-before-error'] = 'Enter the area before natural flood measures'
@@ -6338,7 +6661,7 @@ router.post('/proposal/create-proposal/land-type-rivers', function (req, res) {
     delete data['land-type-rivers-before-error']
     data['land-type-rivers-before'] = before
   }
-  
+
   const after = req.body['land-type-rivers-after']
   if (!after || after.trim() === '') {
     data['land-type-rivers-after-error'] = 'Enter the area after natural flood measures'
@@ -6350,11 +6673,11 @@ router.post('/proposal/create-proposal/land-type-rivers', function (req, res) {
     delete data['land-type-rivers-after-error']
     data['land-type-rivers-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-rivers', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'rivers-wetlands-freshwater')
   res.redirect(nextPage)
 })
@@ -6369,7 +6692,7 @@ router.get('/proposal/create-proposal/land-type-coastal', function (req, res) {
 router.post('/proposal/create-proposal/land-type-coastal', function (req, res) {
   const data = req.session.data || {}
   let hasError = false
-  
+
   const before = req.body['land-type-coastal-before']
   if (!before || before.trim() === '') {
     data['land-type-coastal-before-error'] = 'Enter the area before natural flood measures'
@@ -6381,7 +6704,7 @@ router.post('/proposal/create-proposal/land-type-coastal', function (req, res) {
     delete data['land-type-coastal-before-error']
     data['land-type-coastal-before'] = before
   }
-  
+
   const after = req.body['land-type-coastal-after']
   if (!after || after.trim() === '') {
     data['land-type-coastal-after-error'] = 'Enter the area after natural flood measures'
@@ -6393,11 +6716,11 @@ router.post('/proposal/create-proposal/land-type-coastal', function (req, res) {
     delete data['land-type-coastal-after-error']
     data['land-type-coastal-after'] = after
   }
-  
+
   if (hasError) {
     return res.render('proposal/create-proposal/land-type-coastal', { data: data })
   }
-  
+
   const nextPage = getNextLandTypePage(data, 'coastal-margins')
   res.redirect(nextPage)
 })
@@ -6411,16 +6734,16 @@ router.get('/proposal/create-proposal/landowner-consent', function (req, res) {
 router.post('/proposal/create-proposal/landowner-consent', function (req, res) {
   const data = req.session.data || {}
   const consent = req.body['landowner-consent']
-  
+
   // Clear any previous errors
   delete data['landowner-consent-error']
-  
+
   // Validate
   if (!consent) {
     data['landowner-consent-error'] = 'Select an option'
     return res.redirect('/proposal/create-proposal/landowner-consent')
   }
-  
+
   // Save and redirect to NFM experience
   data['landowner-consent'] = consent
   res.redirect('/proposal/create-proposal/nfm-experience')
@@ -6435,16 +6758,16 @@ router.get('/proposal/create-proposal/nfm-experience', function (req, res) {
 router.post('/proposal/create-proposal/nfm-experience', function (req, res) {
   const data = req.session.data || {}
   const experience = req.body['nfm-experience']
-  
+
   // Clear any previous errors
   delete data['nfm-experience-error']
-  
+
   // Validate
   if (!experience) {
     data['nfm-experience-error'] = 'Select an option'
     return res.redirect('/proposal/create-proposal/nfm-experience')
   }
-  
+
   // Save and redirect to proposal development
   data['nfm-experience'] = experience
   res.redirect('/proposal/create-proposal/proposal-development')
@@ -6459,16 +6782,16 @@ router.get('/proposal/create-proposal/proposal-development', function (req, res)
 router.post('/proposal/create-proposal/proposal-development', function (req, res) {
   const data = req.session.data || {}
   const development = req.body['proposal-development']
-  
+
   // Clear any previous errors
   delete data['proposal-development-error']
-  
+
   // Validate
   if (!development) {
     data['proposal-development-error'] = 'Select an option'
     return res.redirect('/proposal/create-proposal/proposal-development')
   }
-  
+
   // Save and redirect to check answers
   data['proposal-development'] = development
   res.redirect('/proposal/create-proposal/check-answers')

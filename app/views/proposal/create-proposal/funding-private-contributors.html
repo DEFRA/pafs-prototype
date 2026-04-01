@@ -9,23 +9,18 @@
     <a href="/proposal/create-proposal/funding-sources" class="govuk-back-link">Back</a>
 
     {% if data and data['private-contributors-error'] %}
-      <div class="govuk-error-summary" data-module="govuk-error-summary">
-        <div role="alert">
-          <h2 class="govuk-error-summary__title">
-            There is a problem
-          </h2>
-          <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-              <li>
-                <a href="#private-contributors">{{ data['private-contributors-error'] }}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: data['private-contributors-error'],
+            href: "#private-contributor-1"
+          }
+        ]
+      }) }}
     {% endif %}
 
-    <form method="post" action="/proposal/create-proposal/funding/private-contributors">
+    <form method="post" action="/proposal/create-proposal/funding/private-contributors" novalidate>
       <div class="govuk-form-group {%- if data and data['private-contributors-error'] %} govuk-form-group--error {%- endif %}">
         <fieldset class="govuk-fieldset" aria-describedby="private-contributors-hint">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -47,23 +42,35 @@
             {% for name in contributors %}
               <div class="govuk-form-group">
                 <label class="govuk-label" for="private-contributor-{{ loop.index }}">
-                  Contributor name
+                  Contributor {{ loop.index }}
                 </label>
-                <input class="govuk-input govuk-!-width-two-thirds" id="private-contributor-{{ loop.index }}" name="private-contributors" type="text" value="{{ name }}">
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-two-thirds">
+                    <input class="govuk-input" id="private-contributor-{{ loop.index }}" name="private-contributors" type="text" value="{{ name }}">
+                  </div>
+                  <div class="govuk-grid-column-one-third" style="padding-top: 5px;">
+                    {% if contributors | length > 1 %}
+                      <a class="govuk-link govuk-!-font-size-19" href="/proposal/create-proposal/funding/private-contributors/remove/{{ loop.index0 }}">
+                        Remove<span class="govuk-visually-hidden"> contributor {{ loop.index }}</span>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
             {% endfor %}
           </div>
-          <p class="govuk-body">
-            <button class="govuk-button govuk-button--secondary" type="submit" name="action" value="add">
-              Add another contributor
-            </button>
-          </p>
+
         </fieldset>
       </div>
 
-      <button class="govuk-button" data-module="govuk-button">
-        Save and continue
-      </button>
+      <div class="govuk-button-group">
+        <button class="govuk-button" type="submit" name="action" value="continue" data-module="govuk-button">
+          Save and continue
+        </button>
+        <button class="govuk-button govuk-button--secondary" type="submit" name="action" value="add" data-module="govuk-button">
+          Add another contributor
+        </button>
+      </div>
     </form>
 
   </div>

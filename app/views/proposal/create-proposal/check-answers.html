@@ -2,485 +2,680 @@
 
 {% set userType = data.userType or 'unknown' %}
 
-{% set pageName="Proposal Overview" %}
+{% set pageName = "Proposal Overview" %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Proposal Overview</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">Proposal Overview</h1>
 
-    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-body-l">National proposal number</dt>
-        <dd class="govuk-summary-list__value govuk-body-l">Not yet assigned</dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-body-l">Last updated</dt>
-        <dd class="govuk-summary-list__value govuk-body-l">Not yet submitted</dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-body-l">Status</dt>
-        <dd class="govuk-summary-list__value govuk-body-l">
+      <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-l">National proposal number</dt>
+          <dd class="govuk-summary-list__value govuk-body-l">Not yet assigned</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-l">Last updated</dt>
+          <dd class="govuk-summary-list__value govuk-body-l">Not yet submitted</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-l">Status</dt>
+          <dd class="govuk-summary-list__value govuk-body-l">
           Draft &nbsp; | &nbsp;<a class="govuk-link" href="#">Archive</a> &nbsp; | &nbsp;<a class="govuk-link" href="#">Delete</a>
-        </dd>
-      </div>
-    </dl>
+          </dd>
+        </div>
+      </dl>
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Proposal details</h2>
-      </div>
-      <div class="govuk-summary-card__content">
-        <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Project name
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ data.proposalTitle or 'Not provided' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/proposal/create-proposal/title">
-                Change<span class="govuk-visually-hidden"> project name</span>
-              </a>
-            </dd>
-          </div>
-          
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Risk management authority
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ data.selectedRmaLabel or 'Not provided' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/proposal/create-proposal/rma-selection">
-                Change<span class="govuk-visually-hidden"> risk management authority</span>
-              </a>
-            </dd>
-          </div>
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Project type
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {% set projectTypeLabel = '' %}
-              {% if data.projectType == 'DEF' %}
-                {% set projectTypeLabel = 'Create a new flood and coastal erosion risk management asset, or change an existing approach to risk management in an area already with assets' %}
-              {% elif data.projectType == 'REF' %}
-                {% set projectTypeLabel = 'Substantially renew or replace, one or more asset elements or components in an existing flood and coastal erosion risk management asset' %}
-              {% elif data.projectType == 'REP' %}
-                {% set projectTypeLabel = 'Replace an existing flood and coastal erosion risk management asset that is at the end of its life with another asset which sustains the standard of service and the design performance on an equivalent basis' %}
-              {% elif data.projectType == 'ELO' %}
-                {% set projectTypeLabel = 'Implement measures to address impacts arising from existing or historic flood or coastal erosion risk management assets or actions to comply with specified environmental legislation - Sites of Special Scientific Interest (SSSIs) and Water Environment Regulations (WER)' %}
-              {% elif data.projectType == 'HCR' %}
-                {% set projectTypeLabel = 'Implement measures to protect, compensate or restore habitats and natural functions, to support coastal risk management legal compliance (Habitat Regulations) and wider environmental outcomes' %}
-              {% elif data.projectType == 'STR' %}
-                {% set projectTypeLabel = 'Produce a strategy for complex flood or coastal erosion risk situations across several interconnected areas' %}
-              {% elif data.projectType == 'STU' %}
-                {% set projectTypeLabel = 'To support the case that a project is needed to resolve a flood or coastal erosion risk problem – helping to define the scope, purpose, and viability of any future project(s)' %}
-              {% endif %}
-              {{ projectTypeLabel or 'Not provided' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/proposal/create-proposal/project-type">
-                Change<span class="govuk-visually-hidden"> project type</span>
-              </a>
-            </dd>
-          </div>
-
-          {% if data.assetTypes %}
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Proposal details</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">
-                Intervention types
-              </dt>
+              Project name
+            </dt>
               <dd class="govuk-summary-list__value">
-                <ul class="govuk-list govuk-list--bullet">
-                  {% for type in data.assetTypes %}
-                    <li>
-                      {% if type == 'NFM' %}Natural Flood Management
-                      {% elif type == 'SUD' %}Sustainable Drainage Systems
-                      {% elif type == 'PFE' %}Property Flood Resilience
-                      {% elif type == 'OTH' %}Other
-                      {% else %}{{ type }}
-                      {% endif %}
-                    </li>
-                  {% endfor %}
-                </ul>
+                {{ data.proposalTitle or 'Not provided' }}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="/proposal/create-proposal/project-type-assets">
-                  Change<span class="govuk-visually-hidden"> intervention types</span>
+                <a class="govuk-link" href="/proposal/create-proposal/title">
+                Change<span class="govuk-visually-hidden"> project name</span>
                 </a>
               </dd>
             </div>
 
-            {% set effectivePrimaryBenefit = data.primaryBenefit %}
-            {% if not effectivePrimaryBenefit and (data.assetTypes | length) == 1 %}
-              {% set effectivePrimaryBenefit = data.assetTypes[0] %}
-            {% endif %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+              Risk management authority
+            </dt>
+              <dd class="govuk-summary-list__value">
+                {{ data.selectedRmaLabel or 'Not provided' }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/rma-selection">
+                Change<span class="govuk-visually-hidden"> risk management authority</span>
+                </a>
+              </dd>
+            </div>
 
-            {% if effectivePrimaryBenefit %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+              Project type
+            </dt>
+              <dd class="govuk-summary-list__value">
+                {% set projectTypeLabel = '' %}
+                {% if data.projectType == 'DEF' %}
+                  {% set projectTypeLabel = 'Create a new flood and coastal erosion risk management asset, or change an existing approach to risk management in an area already with assets' %}
+                {% elif data.projectType == 'REF' %}
+                  {% set projectTypeLabel = 'Substantially renew or replace, one or more asset elements or components in an existing flood and coastal erosion risk management asset' %}
+                {% elif data.projectType == 'REP' %}
+                  {% set projectTypeLabel = 'Replace an existing flood and coastal erosion risk management asset that is at the end of its life with another asset which sustains the standard of service and the design performance on an equivalent basis' %}
+                {% elif data.projectType == 'ELO' %}
+                  {% set projectTypeLabel = 'Implement measures to address impacts arising from existing or historic flood or coastal erosion risk management assets or actions to comply with specified environmental legislation - Sites of Special Scientific Interest (SSSIs) and Water Environment Regulations (WER)' %}
+                {% elif data.projectType == 'HCR' %}
+                  {% set projectTypeLabel = 'Implement measures to protect, compensate or restore habitats and natural functions, to support coastal risk management legal compliance (Habitat Regulations) and wider environmental outcomes' %}
+                {% elif data.projectType == 'STR' %}
+                  {% set projectTypeLabel = 'Produce a strategy for complex flood or coastal erosion risk situations across several interconnected areas' %}
+                {% elif data.projectType == 'STU' %}
+                  {% set projectTypeLabel = 'To support the case that a project is needed to resolve a flood or coastal erosion risk problem – helping to define the scope, purpose, and viability of any future project(s)' %}
+                {% endif %}
+                {{ projectTypeLabel or 'Not provided' }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/project-type">
+                Change<span class="govuk-visually-hidden"> project type</span>
+                </a>
+              </dd>
+            </div>
+
+            {% if data.assetTypes %}
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
+                Intervention types
+              </dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list govuk-list--bullet">
+                    {% for type in data.assetTypes %}
+                      <li>
+                        {% if type == 'NFM' %}Natural Flood Management
+                      {% elif type == 'SUD' %}Sustainable Drainage Systems
+                      {% elif type == 'PFE' %}Property Flood Resilience
+                      {% elif type == 'OTH' %}Other
+                      {% else %}{{ type }}
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="/proposal/create-proposal/project-type-assets">
+                  Change<span class="govuk-visually-hidden"> intervention types</span>
+                  </a>
+                </dd>
+              </div>
+
+              {% set effectivePrimaryBenefit = data.primaryBenefit %}
+              {% if not effectivePrimaryBenefit and(data.assetTypes | length) == 1 %}
+                {% set effectivePrimaryBenefit = data.assetTypes[0] %}
+              {% endif %}
+
+              {% if effectivePrimaryBenefit %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
                   Primary benefit intervention
                 </dt>
-                <dd class="govuk-summary-list__value">
-                  {% if effectivePrimaryBenefit == 'NFM' %}Natural Flood Management
+                  <dd class="govuk-summary-list__value">
+                    {% if effectivePrimaryBenefit == 'NFM' %}Natural Flood Management
                   {% elif effectivePrimaryBenefit == 'SUD' %}Sustainable Drainage Systems
                   {% elif effectivePrimaryBenefit == 'PFE' %}Property Flood Resilience
                   {% elif effectivePrimaryBenefit == 'OTH' %}Other
                   {% else %}{{ effectivePrimaryBenefit }}
-                  {% endif %}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                  <a class="govuk-link" href="/proposal/create-proposal/project-type-primary-benefit">
+                    {% endif %}
+                  </dd>
+                  <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/proposal/create-proposal/project-type-primary-benefit">
                     Change<span class="govuk-visually-hidden"> primary benefit intervention</span>
-                  </a>
-                </dd>
-              </div>
-            {% endif %}
-          {% endif %}
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Financial year (start spending)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {% set startYearLabel = data.financialYearLabel or data.financialYearAfterLabel %}
-              {{ startYearLabel or 'Not provided' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/proposal/create-proposal/financial-year">
-                Change<span class="govuk-visually-hidden"> financial year (start spending)</span>
-              </a>
-            </dd>
-          </div>
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Financial year (stop spending)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {% set stopYearLabel = data.financialYearSpendingLabel or data.financialYearSpendingAfterLabel %}
-              {{ stopYearLabel or 'Not provided' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/proposal/create-proposal/financial-year-spending?from=overview">
-                Change<span class="govuk-visually-hidden"> financial year (stop spending)</span>
-              </a>
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </div>
-
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Location</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/location">
-              {% if data['grid-reference'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> location</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if data['grid-reference'] or data['benefit-area-file-uploaded'] %}
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">National Grid Reference</h3>
-              <p class="govuk-body govuk-!-margin-bottom-1">{{ data['grid-reference'] }}</p>
-              {% if locationMapUrl %}
-                <p class="govuk-body govuk-!-margin-bottom-4">
-                  <a class="govuk-link" href="{{ locationMapUrl }}" target="_blank" rel="noopener noreferrer">See this location on a map (opens in new tab)</a>
-                </p>
-              {% endif %}
-
-              <p class="govuk-body govuk-!-margin-bottom-1"><strong>Region:</strong> South West</p>
-              <p class="govuk-body govuk-!-margin-bottom-1"><strong>County:</strong></p>
-              <p class="govuk-body"><strong>Constituency:</strong> Bristol North West</p>
-            </div>
-
-            <div class="govuk-grid-column-one-half">
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Project benefit area</h3>
-              {% if data['benefit-area-file-uploaded'] %}
-                <div style="display: flex; align-items: flex-start; gap: 15px;">
-                  <div style="flex-shrink: 0;">
-                    <svg width="60" height="80" viewBox="0 0 60 80" style="border: 2px solid #b1b4b6;">
-                      <rect width="60" height="80" fill="#f3f2f1"/>
-                      <rect x="5" y="5" width="50" height="10" fill="#d4d4d4"/>
-                      <rect x="5" y="20" width="35" height="6" fill="#d4d4d4"/>
-                      <rect x="5" y="30" width="40" height="6" fill="#d4d4d4"/>
-                      <rect x="5" y="40" width="30" height="6" fill="#d4d4d4"/>
-                      <text x="30" y="65" text-anchor="middle" font-size="12" fill="#505a5f" font-family="Arial">ZIP</text>
-                    </svg>
-                  </div>
-                  <div style="flex-grow: 1;">
-                    <p class="govuk-body govuk-!-margin-bottom-1">
-                      <a class="govuk-link" href="#">{{ data['benefit-area-file'] or 'magic_graphics1.zip' }}</a>
-                    </p>
-                    <p class="govuk-body govuk-body-s govuk-!-margin-bottom-1">Size 3.38 KB</p>
-                    <p class="govuk-body govuk-body-s">Uploaded {{ data['benefit-area-uploaded-date'] or '11 December 2025' }}</p>
-                  </div>
-                </div>
-              {% else %}
-                <p class="govuk-body">No benefit area file uploaded yet</p>
-              {% endif %}
-            </div>
-          </div>
-        {% else %}
-          <p class="govuk-body">No location added yet</p>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Important dates</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/important-dates/obc-start?from=overview">
-              {% if data['important-dates-added'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> important dates</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if data['important-dates-added'] %}
-          <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Outline business case start date</dt>
-              <dd class="govuk-summary-list__value">
-                {{ importantDates.obcStart or 'Not Provided' }}
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Outline business case completion date</dt>
-              <dd class="govuk-summary-list__value">
-                {{ importantDates.obcCompletion or 'Not Provided' }}
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Contract awarded</dt>
-              <dd class="govuk-summary-list__value">
-                {{ importantDates.contractAwarded or 'Not Provided' }}
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Start construction</dt>
-              <dd class="govuk-summary-list__value">
-                {{ importantDates.startConstruction or 'Not Provided' }}
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Ready for service</dt>
-              <dd class="govuk-summary-list__value">
-                {{ importantDates.readyForService or 'Not Provided' }}
-              </dd>
-            </div>
-            {% if data['could-start-earlier'] %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Could start earlier with Grant in Aid</dt>
-                <dd class="govuk-summary-list__value">
-                  {% if data['could-start-earlier'] == 'yes' %}Yes{% else %}No{% endif %}
-                </dd>
-              </div>
-              {% if data['could-start-earlier'] == 'yes' and importantDates.earliestWithGia %}
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Earliest start date with Grant in Aid</dt>
-                  <dd class="govuk-summary-list__value">
-                    {{ importantDates.earliestWithGia }}
+                    </a>
                   </dd>
                 </div>
               {% endif %}
             {% endif %}
-          </dl>
-        {% else %}
-          <p class="govuk-body">No important dates added yet</p>
-        {% endif %}
-      </div>
-    </div>
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Funding sources and spending</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/funding-sources">
-              {% if fundingSectionStarted %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> the funding sources and spending details</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if fundingSectionStarted %}
-          {% if fundingSummary.selectedSources and (fundingSummary.selectedSources | length) > 0 %}
-            <table class="govuk-table full-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Funding Source</th>
-                  <th scope="col" class="govuk-table__header align-right">Total Estimated Spend</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                {% for source in fundingSummary.selectedSources %}
-                  {% set sourceTotal = 0 %}
-                  {% for year in fundingYears %}
-                    {% set value = (data['funding-values'] and data['funding-values'][year] and data['funding-values'][year][source.key]) or 0 %}
-                    {% set sourceTotal = sourceTotal + (value | int) %}
-                  {% endfor %}
-                  <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">{{ source.label }}</td>
-                    <td class="govuk-table__cell align-right">£{{ sourceTotal }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-
-            <details class="govuk-details govuk-!-margin-top-4" data-module="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">View funding sources and spending detail</span>
-              </summary>
-              <div class="govuk-details__text">
-                <div class="scroll-horz">
-                  <table class="govuk-table funding_sources_and_spending_detail_table">
-                    <thead class="govuk-table__head">
-                      <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header financial-year-column">Financial year</th>
-                        {% for source in fundingSummary.selectedSources %}
-                          <th scope="col" class="govuk-table__header align-right data-column">{{ source.label }}</th>
-                        {% endfor %}
-                        <th scope="col" class="govuk-table__header align-right data-total">Total (£)</th>
-                      </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                      {% for year in fundingYears %}
-                        <tr class="govuk-table__row">
-                          <td class="govuk-table__cell financial_year">April {{ year }} to March {{ year + 1 }}</td>
-                          {% set rowTotal = 0 %}
-                          {% for source in fundingSummary.selectedSources %}
-                            {% set value = (data['funding-values'] and data['funding-values'][year] and data['funding-values'][year][source.key]) or 0 %}
-                            {% set numValue = value | int %}
-                            {% set rowTotal = rowTotal + numValue %}
-                            <td class="govuk-table__cell numeric">{{ numValue }}</td>
-                          {% endfor %}
-                          <td class="govuk-table__cell row-total numeric">{{ rowTotal }}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                    <tfoot class="govuk-table__foot">
-                      <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">Total (£)</td>
-                        {% set footerGrandTotal = 0 %}
-                        {% for source in fundingSummary.selectedSources %}
-                          {% set columnTotal = 0 %}
-                          {% for year in fundingYears %}
-                            {% set value = (data['funding-values'] and data['funding-values'][year] and data['funding-values'][year][source.key]) or 0 %}
-                            {% set columnTotal = columnTotal + (value | int) %}
-                          {% endfor %}
-                          {% set footerGrandTotal = footerGrandTotal + columnTotal %}
-                          <td class="govuk-table__cell numeric">{{ columnTotal }}</td>
-                        {% endfor %}
-                        <td class="govuk-table__cell numeric grand-total">{{ footerGrandTotal }}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-
-                {% set hasContributors = false %}
-                {% if data['public-contributors'] and (data['public-contributors'] | length) > 0 %}
-                  {% set hasContributors = true %}
-                {% endif %}
-                {% if data['private-contributors'] and (data['private-contributors'] | length) > 0 %}
-                  {% set hasContributors = true %}
-                {% endif %}
-                {% if data['other-ea-contributors'] and (data['other-ea-contributors'] | length) > 0 %}
-                  {% set hasContributors = true %}
-                {% endif %}
-
-                {% if hasContributors %}
-                  <div id="contributor_detail">
-                    <br>
-                    {% if data['public-contributors'] and (data['public-contributors'] | length) > 0 %}
-                      <div>
-                        <h3 class="govuk-heading-s">Public sector contributors:</h3>
-                        {% for contributor in data['public-contributors'] %}
-                          <p class="govuk-body">{{ contributor.name }}</p>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-
-                    {% if data['private-contributors'] and (data['private-contributors'] | length) > 0 %}
-                      <div>
-                        <h3 class="govuk-heading-s">Private sector contributors:</h3>
-                        {% for contributor in data['private-contributors'] %}
-                          <p class="govuk-body">{{ contributor.name }}</p>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-
-                    {% if data['other-ea-contributors'] and (data['other-ea-contributors'] | length) > 0 %}
-                      <div>
-                        <h3 class="govuk-heading-s">Other Environment Agency contributors:</h3>
-                        {% for contributor in data['other-ea-contributors'] %}
-                          <p class="govuk-body">{{ contributor.name }}</p>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              </div>
-            </details>
-          {% else %}
-            <p class="govuk-body">No funding sources selected yet</p>
-          {% endif %}
-        {% else %}
-          <p class="govuk-body">No funding sources and spending details added yet</p>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Risks and properties benefitting</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/risks">
-              {% if data['risks-selected'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> risks and properties benefitting</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if data['risks-selected'] %}
-          <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">
-                Selected risks
-              </dt>
+              Financial year (start spending)
+            </dt>
               <dd class="govuk-summary-list__value">
-                <ul class="govuk-list govuk-list--bullet">
-                  {% if data['fluvial-flooding'] %}<li>Fluvial flooding (river flooding)</li>{% endif %}
-                  {% if data['tidal-flooding'] %}<li>Tidal flooding</li>{% endif %}
-                  {% if data['groundwater-flooding'] %}<li>Groundwater flooding</li>{% endif %}
-                  {% if data['surface-water-flooding'] %}<li>Surface water flooding</li>{% endif %}
-                  {% if data['sea-flooding'] %}<li>Sea flooding</li>{% endif %}
-                  {% if data['reservoir-flooding'] %}<li>Reservoir flooding</li>{% endif %}
-                  {% if data['coastal-erosion'] %}<li>Coastal erosion</li>{% endif %}
-                </ul>
+                {% set startYearLabel = data.financialYearLabel or data.financialYearAfterLabel %}
+                {{ startYearLabel or 'Not provided' }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/financial-year">
+                Change<span class="govuk-visually-hidden"> financial year (start spending)</span>
+                </a>
               </dd>
             </div>
+
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">
+              Financial year (stop spending)
+            </dt>
+              <dd class="govuk-summary-list__value">
+                {% set stopYearLabel = data.financialYearSpendingLabel or data.financialYearSpendingAfterLabel %}
+                {{ stopYearLabel or 'Not provided' }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/proposal/create-proposal/financial-year-spending?from=overview">
+                Change<span class="govuk-visually-hidden"> financial year (stop spending)</span>
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Location</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/location">
+                {% if data['grid-reference'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> location</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['grid-reference'] or data['benefit-area-file-uploaded'] %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-2">National Grid Reference</h3>
+                <p class="govuk-body govuk-!-margin-bottom-1">{{ data['grid-reference'] }}</p>
+                {% if locationMapUrl %}
+                  <p class="govuk-body govuk-!-margin-bottom-4">
+                    <a class="govuk-link" href="{{ locationMapUrl }}" target="_blank" rel="noopener noreferrer">See this location on a map (opens in new tab)</a>
+                  </p>
+                {% endif %}
+
+                <p class="govuk-body govuk-!-margin-bottom-1">
+                  <strong>Region:</strong> South West</p>
+                <p class="govuk-body govuk-!-margin-bottom-1">
+                  <strong>County:</strong>
+                </p>
+                <p class="govuk-body">
+                  <strong>Constituency:</strong> Bristol North West</p>
+              </div>
+
+              <div class="govuk-grid-column-one-half">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Project benefit area</h3>
+                {% if data['benefit-area-file-uploaded'] %}
+                  <div style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="flex-shrink: 0;">
+                      <svg width="60" height="80" viewBox="0 0 60 80" style="border: 2px solid #b1b4b6;">
+                        <rect width="60" height="80" fill="#f3f2f1"/>
+                        <rect x="5" y="5" width="50" height="10" fill="#d4d4d4"/>
+                        <rect x="5" y="20" width="35" height="6" fill="#d4d4d4"/>
+                        <rect x="5" y="30" width="40" height="6" fill="#d4d4d4"/>
+                        <rect x="5" y="40" width="30" height="6" fill="#d4d4d4"/>
+                        <text x="30" y="65" text-anchor="middle" font-size="12" fill="#505a5f" font-family="Arial">ZIP</text>
+                      </svg>
+                    </div>
+                    <div style="flex-grow: 1;">
+                      <p class="govuk-body govuk-!-margin-bottom-1">
+                        <a class="govuk-link" href="#">{{ data['benefit-area-file'] or 'magic_graphics1.zip' }}</a>
+                      </p>
+                      <p class="govuk-body govuk-body-s govuk-!-margin-bottom-1">Size 3.38 KB</p>
+                      <p class="govuk-body govuk-body-s">Uploaded {{ data['benefit-area-uploaded-date'] or '11 December 2025' }}</p>
+                    </div>
+                  </div>
+                {% else %}
+                  <p class="govuk-body">No benefit area file uploaded yet</p>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <p class="govuk-body">No location added yet</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Important dates</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/important-dates/obc-start?from=overview">
+                {% if data['important-dates-added'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> important dates</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['important-dates-added'] %}
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Outline business case start date</dt>
+                <dd class="govuk-summary-list__value">
+                  {{ importantDates.obcStart or 'Not Provided' }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Outline business case completion date</dt>
+                <dd class="govuk-summary-list__value">
+                  {{ importantDates.obcCompletion or 'Not Provided' }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Contract awarded</dt>
+                <dd class="govuk-summary-list__value">
+                  {{ importantDates.contractAwarded or 'Not Provided' }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Start construction</dt>
+                <dd class="govuk-summary-list__value">
+                  {{ importantDates.startConstruction or 'Not Provided' }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Ready for service</dt>
+                <dd class="govuk-summary-list__value">
+                  {{ importantDates.readyForService or 'Not Provided' }}
+                </dd>
+              </div>
+              {% if data['could-start-earlier'] %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Could start earlier with Grant in Aid</dt>
+                  <dd class="govuk-summary-list__value">
+                    {% if data['could-start-earlier'] == 'yes' %}Yes{% else %}No{% endif %}
+                  </dd>
+                </div>
+                {% if data['could-start-earlier'] == 'yes' and importantDates.earliestWithGia %}
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Earliest start date with Grant in Aid</dt>
+                    <dd class="govuk-summary-list__value">
+                      {{ importantDates.earliestWithGia }}
+                    </dd>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </dl>
+          {% else %}
+            <p class="govuk-body">No important dates added yet</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Funding sources and spending</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/funding-sources">
+                {% if fundingSectionStarted %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> the funding sources and spending details</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if fundingSectionStarted %}
+            {% set sources = selectedSources or[] %}
+            {% set giaSources = selectedGiaSources or[] %}
+            {% set years = fundingYears or[] %}
+            {% set vals = data.fundingValuesData or {} %}
+            {% set publicNames = data.publicContributors or[] %}
+            {% set privateNames = data.privateContributors or[] %}
+            {% set otherEaNames = data.otherEaContributors or[] %}
+
+            {% if sources | length > 0 %}
+              <table class="govuk-table full-table">
+                <thead class="govuk-table__head">
+                  <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Funding source</th>
+                    <th scope="col" class="govuk-table__header align-right">Total estimated spend (£)</th>
+                  </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                  {# Grant in aid #}
+                  {% if 'grant-in-aid' in sources %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Grant in aid</td>
+                      <td class="govuk-table__cell align-right">£{{ (serverTotals.rowTotals['grant-in-aid'] or 0) | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Local Levy #}
+                  {% if 'local-levy' in sources %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Local levy</td>
+                      <td class="govuk-table__cell align-right">£{{ (serverTotals.rowTotals['local-levy'] or 0) | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Additional FCRM Grant-in-Aid (sum of all GIA sub-sources) #}
+                  {% if 'fcrm-grant' in sources and giaSources | length > 0 %}
+                    {% set giaTotal = 0 %}
+                    {% for giaKey in giaSources %}
+                      {% set giaTotal = giaTotal + (serverTotals.rowTotals[giaKey] or 0) %}
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Additional FCRM Grant-in-Aid</td>
+                      <td class="govuk-table__cell align-right">£{{ giaTotal | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Precept #}
+                  {% if 'precept' in sources %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Funds recovered from an internal drainage board by the Environment Agency, known as a precept</td>
+                      <td class="govuk-table__cell align-right">£{{ (serverTotals.rowTotals['precept'] or 0) | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Other #}
+                  {% if 'other' in sources %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Other funding sources not yet identified</td>
+                      <td class="govuk-table__cell align-right">£{{ (serverTotals.rowTotals['other'] or 0) | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Public sector contributors (sum) #}
+                  {% if 'public-sector' in sources and publicNames | length > 0 %}
+                    {% set pubTotal = 0 %}
+                    {% for name in publicNames %}
+                      {% if name | trim %}
+                        {% set pubTotal = pubTotal + (serverTotals.rowTotals['public-contributor:' + name] or 0) %}
+                      {% endif %}
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Public sector contributors</td>
+                      <td class="govuk-table__cell align-right">£{{ pubTotal | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Private sector contributors (sum) #}
+                  {% if 'private-sector' in sources and privateNames | length > 0 %}
+                    {% set privTotal = 0 %}
+                    {% for name in privateNames %}
+                      {% if name | trim %}
+                        {% set privTotal = privTotal + (serverTotals.rowTotals['private-contributor:' + name] or 0) %}
+                      {% endif %}
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Private sector contributors</td>
+                      <td class="govuk-table__cell align-right">£{{ privTotal | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+
+                  {# Other EA contributors (sum) #}
+                  {% if 'ea-contributions' in sources and otherEaNames | length > 0 %}
+                    {% set eaTotal = 0 %}
+                    {% for name in otherEaNames %}
+                      {% if name | trim %}
+                        {% set eaTotal = eaTotal + (serverTotals.rowTotals['ea-contributor:' + name] or 0) %}
+                      {% endif %}
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Other Environment Agency contributors</td>
+                      <td class="govuk-table__cell align-right">£{{ eaTotal | numFormat }}</td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+                <tfoot class="govuk-table__foot">
+                  <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Total</th>
+                    <td class="govuk-table__cell align-right">
+                      <strong>£{{ (serverTotals.grandTotal or 0) | numFormat }}</strong>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+
+              <details class="govuk-details govuk-!-margin-top-4" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">View funding sources and spending detail</span>
+                </summary>
+                <div class="govuk-details__text">
+                  <div class="scroll-horz">
+                    <table class="govuk-table funding_sources_and_spending_detail_table">
+                      <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                          <th scope="col" class="govuk-table__header" style="min-width: 250px;">Funding source / contributor</th>
+                          {% for year in years %}
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ (year % 100) | string + "/" + ((year + 1) % 100) | string }}</th>
+                          {% endfor %}
+                          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total (£)</th>
+                        </tr>
+                      </thead>
+                      <tbody class="govuk-table__body">
+
+                        {# Grant in Aid #}
+                        {% if 'grant-in-aid' in sources %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Grant in aid</th>
+                            {% for year in years %}
+                              <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['grant-in-aid'][year] if vals['grant-in-aid'] and vals['grant-in-aid'][year] else '0') | numFormat }}</td>
+                            {% endfor %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.rowTotals['grant-in-aid'] or 0) | numFormat }}</strong>
+                            </td>
+                          </tr>
+                        {% endif %}
+
+                        {# Local Levy #}
+                        {% if 'local-levy' in sources %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Local levy</th>
+                            {% for year in years %}
+                              <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['local-levy'][year] if vals['local-levy'] and vals['local-levy'][year] else '0') | numFormat }}</td>
+                            {% endfor %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.rowTotals['local-levy'] or 0) | numFormat }}</strong>
+                            </td>
+                          </tr>
+                        {% endif %}
+
+                        {# Additional FCRM Grant-in-Aid items #}
+                        {% for giaKey in giaSources %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">{{ sourceLabels[giaKey] or giaKey }}</th>
+                            {% for year in years %}
+                              <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals[giaKey][year] if vals[giaKey] and vals[giaKey][year] else '0') | numFormat }}</td>
+                            {% endfor %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.rowTotals[giaKey] or 0) | numFormat }}</strong>
+                            </td>
+                          </tr>
+                        {% endfor %}
+
+                        {# Precept #}
+                        {% if 'precept' in sources %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Internal drainage board precept</th>
+                            {% for year in years %}
+                              <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['precept'][year] if vals['precept'] and vals['precept'][year] else '0') | numFormat }}</td>
+                            {% endfor %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.rowTotals['precept'] or 0) | numFormat }}</strong>
+                            </td>
+                          </tr>
+                        {% endif %}
+
+                        {# Other #}
+                        {% if 'other' in sources %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Other funding sources not yet identified</th>
+                            {% for year in years %}
+                              <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['other'][year] if vals['other'] and vals['other'][year] else '0') | numFormat }}</td>
+                            {% endfor %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.rowTotals['other'] or 0) | numFormat }}</strong>
+                            </td>
+                          </tr>
+                        {% endif %}
+
+                        {# Public sector contributors #}
+                        {% if 'public-sector' in sources and publicNames | length > 0 %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header detail-section-header" colspan="{{ years | length + 2 }}">
+                              <strong>Public sector contributions</strong>
+                            </th>
+                          </tr>
+                          {% for name in publicNames %}
+                            {% if name | trim %}
+                              <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header detail-contributor-name">{{ name }}</th>
+                                {% for year in years %}
+                                  <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['public-contributor'][name][year] if vals['public-contributor'] and vals['public-contributor'][name] and vals['public-contributor'][name][year] else '0') | numFormat }}</td>
+                                {% endfor %}
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                  <strong>{{ (serverTotals.rowTotals['public-contributor:' + name] or 0) | numFormat }}</strong>
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+
+                        {# Private sector contributors #}
+                        {% if 'private-sector' in sources and privateNames | length > 0 %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header detail-section-header" colspan="{{ years | length + 2 }}">
+                              <strong>Private sector contributions</strong>
+                            </th>
+                          </tr>
+                          {% for name in privateNames %}
+                            {% if name | trim %}
+                              <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header detail-contributor-name">{{ name }}</th>
+                                {% for year in years %}
+                                  <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['private-contributor'][name][year] if vals['private-contributor'] and vals['private-contributor'][name] and vals['private-contributor'][name][year] else '0') | numFormat }}</td>
+                                {% endfor %}
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                  <strong>{{ (serverTotals.rowTotals['private-contributor:' + name] or 0) | numFormat }}</strong>
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+
+                        {# Other EA contributors #}
+                        {% if 'ea-contributions' in sources and otherEaNames | length > 0 %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header detail-section-header" colspan="{{ years | length + 2 }}">
+                              <strong>Other Environment Agency contributions</strong>
+                            </th>
+                          </tr>
+                          {% for name in otherEaNames %}
+                            {% if name | trim %}
+                              <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header detail-contributor-name">{{ name }}</th>
+                                {% for year in years %}
+                                  <td class="govuk-table__cell govuk-table__cell--numeric">{{ (vals['ea-contributor'][name][year] if vals['ea-contributor'] and vals['ea-contributor'][name] and vals['ea-contributor'][name][year] else '0') | numFormat }}</td>
+                                {% endfor %}
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                  <strong>{{ (serverTotals.rowTotals['ea-contributor:' + name] or 0) | numFormat }}</strong>
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+
+                      </tbody>
+                      <tfoot class="govuk-table__foot">
+                        <tr class="govuk-table__row">
+                          <th scope="row" class="govuk-table__header">Total (£)</th>
+                          {% for year in years %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                              <strong>{{ (serverTotals.columnTotals[year] or 0) | numFormat }}</strong>
+                            </td>
+                          {% endfor %}
+                          <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <strong>{{ (serverTotals.grandTotal or 0) | numFormat }}</strong>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+
+                  <style>
+                    .funding_sources_and_spending_detail_table .detail-section-header {
+                      background-color: #f3f2f1;
+                    }
+                    .funding_sources_and_spending_detail_table .detail-contributor-name {
+                      padding-left: 30px;
+                      font-weight: normal;
+                    }
+                  </style>
+                </div>
+              </details>
+            {% else %}
+              <p class="govuk-body">No funding sources selected yet</p>
+            {% endif %}
+          {% else %}
+            <p class="govuk-body">No funding sources and spending details added yet</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Risks and properties benefitting</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/risks">
+                {% if data['risks-selected'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> risks and properties benefitting</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['risks-selected'] %}
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                Selected risks
+              </dt>
+                <dd class="govuk-summary-list__value">
+                  <ul class="govuk-list govuk-list--bullet">
+                    {% if data['fluvial-flooding'] %}
+                      <li>Fluvial flooding (river flooding)</li>
+                    {% endif %}
+                    {% if data['tidal-flooding'] %}
+                      <li>Tidal flooding</li>
+                    {% endif %}
+                    {% if data['groundwater-flooding'] %}
+                      <li>Groundwater flooding</li>
+                    {% endif %}
+                    {% if data['surface-water-flooding'] %}
+                      <li>Surface water flooding</li>
+                    {% endif %}
+                    {% if data['sea-flooding'] %}
+                      <li>Sea flooding</li>
+                    {% endif %}
+                    {% if data['reservoir-flooding'] %}
+                      <li>Reservoir flooding</li>
+                    {% endif %}
+                    {% if data['coastal-erosion'] %}
+                      <li>Coastal erosion</li>
+                    {% endif %}
+                  </ul>
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                 Main risk
               </dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['main-risk'] == 'fluvial-flooding' %}Fluvial flooding (river flooding)
+                <dd class="govuk-summary-list__value">
+                  {% if data['main-risk'] == 'fluvial-flooding' %}Fluvial flooding (river flooding)
                 {% elif data['main-risk'] == 'tidal-flooding' %}Tidal flooding
                 {% elif data['main-risk'] == 'groundwater-flooding' %}Groundwater flooding
                 {% elif data['main-risk'] == 'surface-water-flooding' %}Surface water flooding
@@ -488,135 +683,149 @@
                 {% elif data['main-risk'] == 'reservoir-flooding' %}Reservoir flooding
                 {% elif data['main-risk'] == 'coastal-erosion' %}Coastal erosion
                 {% endif %}
-              </dd>
-            </div>
+                </dd>
+              </div>
 
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
-                Properties affected by flooding
-              </dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['no-properties-affected-flooding'] == 'true' %}
-                  No properties affected by flooding
-                {% else %}
-                  <ul class="govuk-list">
-                    {% if data['properties-maintaining-protection'] %}<li>Maintaining flood protection: {{ data['properties-maintaining-protection'] }}</li>{% endif %}
-                    {% if data['properties-reducing-risk-50-plus'] %}<li>Reducing flood risk (50% or more): {{ data['properties-reducing-risk-50-plus'] }}</li>{% endif %}
-                    {% if data['properties-reducing-risk-less-50'] %}<li>Reducing flood risk (less than 50%): {{ data['properties-reducing-risk-less-50'] }}</li>{% endif %}
-                    {% if data['properties-increasing-resilience'] %}<li>Increasing flood resilience: {{ data['properties-increasing-resilience'] }}</li>{% endif %}
-                  </ul>
-                {% endif %}
-              </dd>
-            </div>
-
-            {% if data['coastal-erosion'] %}
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                  Properties affected by coastal erosion
-                </dt>
+                Properties affected by flooding
+              </dt>
                 <dd class="govuk-summary-list__value">
-                  {% if data['no-properties-affected-coastal'] == 'true' %}
-                    No properties affected by coastal erosion
-                  {% else %}
+                  {% if data['no-properties-affected-flooding'] == 'true' %}
+                  No properties affected by flooding
+                {% else %}
                     <ul class="govuk-list">
-                      {% if data['properties-maintaining-coastal-protection'] %}<li>Maintaining coastal erosion protection: {{ data['properties-maintaining-coastal-protection'] }}</li>{% endif %}
-                      {% if data['properties-reducing-coastal-risk'] %}<li>Reducing coastal erosion risk: {{ data['properties-reducing-coastal-risk'] }}</li>{% endif %}
+                      {% if data['properties-maintaining-protection'] %}
+                        <li>Maintaining flood protection: {{ data['properties-maintaining-protection'] }}</li>
+                      {% endif %}
+                      {% if data['properties-reducing-risk-50-plus'] %}
+                        <li>Reducing flood risk (50% or more): {{ data['properties-reducing-risk-50-plus'] }}</li>
+                      {% endif %}
+                      {% if data['properties-reducing-risk-less-50'] %}
+                        <li>Reducing flood risk (less than 50%): {{ data['properties-reducing-risk-less-50'] }}</li>
+                      {% endif %}
+                      {% if data['properties-increasing-resilience'] %}
+                        <li>Increasing flood resilience: {{ data['properties-increasing-resilience'] }}</li>
+                      {% endif %}
                     </ul>
                   {% endif %}
                 </dd>
               </div>
-            {% endif %}
 
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
+              {% if data['coastal-erosion'] %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                  Properties affected by coastal erosion
+                </dt>
+                  <dd class="govuk-summary-list__value">
+                    {% if data['no-properties-affected-coastal'] == 'true' %}
+                    No properties affected by coastal erosion
+                  {% else %}
+                      <ul class="govuk-list">
+                        {% if data['properties-maintaining-coastal-protection'] %}
+                          <li>Maintaining coastal erosion protection: {{ data['properties-maintaining-coastal-protection'] }}</li>
+                        {% endif %}
+                        {% if data['properties-reducing-coastal-risk'] %}
+                          <li>Reducing coastal erosion risk: {{ data['properties-reducing-coastal-risk'] }}</li>
+                        {% endif %}
+                      </ul>
+                    {% endif %}
+                  </dd>
+                </div>
+              {% endif %}
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                 Current flood risk
               </dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['current-flood-risk'] == 'high' %}High risk (greater than 3.3%)
+                <dd class="govuk-summary-list__value">
+                  {% if data['current-flood-risk'] == 'high' %}High risk (greater than 3.3%)
                 {% elif data['current-flood-risk'] == 'medium' %}Medium risk (between 1% and 3.3%)
                 {% elif data['current-flood-risk'] == 'low' %}Low risk (between 0.1% and 1%)
                 {% elif data['current-flood-risk'] == 'very-low' %}Very low risk (less than 0.1%)
                 {% else %}Not provided{% endif %}
-              </dd>
-            </div>
-
-            {% if data['coastal-erosion'] %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  Current coastal erosion risk
-                </dt>
-                <dd class="govuk-summary-list__value">
-                  {% if data['current-coastal-risk'] == 'medium-term' %}Medium term loss (≤ 30 years)
-                  {% elif data['current-coastal-risk'] == 'longer-term' %}Longer term loss (> 30 years)
-                  {% else %}Not provided{% endif %}
                 </dd>
               </div>
-            {% endif %}
-          </dl>
-        {% else %}
-          <p class="govuk-body">No risks and properties benefitting data added yet</p>
-        {% endif %}
-      </div>
-    </div>
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Approach</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/approach">
-              {% if data['approach'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> approach</span>
-            </a>
-          </li>
-        </ul>
+              {% if data['coastal-erosion'] %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                  Current coastal erosion risk
+                </dt>
+                  <dd class="govuk-summary-list__value">
+                    {% if data['current-coastal-risk'] == 'medium-term' %}Medium term loss (≤ 30 years)
+                  {% elif data['current-coastal-risk'] == 'longer-term' %}Longer term loss (> 30 years)
+                  {% else %}Not provided{% endif %}
+                  </dd>
+                </div>
+              {% endif %}
+            </dl>
+          {% else %}
+            <p class="govuk-body">No risks and properties benefitting data added yet</p>
+          {% endif %}
+        </div>
       </div>
-      <div class="govuk-summary-card__content">
-        {% if data['approach'] %}
-          <p class="govuk-body">{{ data['approach'] }}</p>
-        {% else %}
-          <p class="govuk-body">No approach added yet</p>
-        {% endif %}
-      </div>
-    </div>
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Natural flood measures</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/natural-flood-measures">
-              {% if data['natural-flood-measures'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> natural flood measures</span>
-            </a>
-          </li>
-        </ul>
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Approach</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/approach">
+                {% if data['approach'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> approach</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['approach'] %}
+            <p class="govuk-body">{{ data['approach'] }}</p>
+          {% else %}
+            <p class="govuk-body">No approach added yet</p>
+          {% endif %}
+        </div>
       </div>
-      <div class="govuk-summary-card__content">
-        {% if data['natural-flood-measures'] and data['natural-flood-measures'].length > 0 %}
-          
-          {# NFM Measures Section #}
-          <details class="govuk-details">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">
+
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Natural flood measures</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/natural-flood-measures">
+                {% if data['natural-flood-measures'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> natural flood measures</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['natural-flood-measures'] and data['natural-flood-measures'].length > 0 %}
+
+            {# NFM Measures Section #}
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
                 Selected measures ({{ data['natural-flood-measures'].length }})
               </span>
-            </summary>
-            <div class="govuk-details__text">
-              <div style="overflow-x: auto;">
-                <table class="govuk-table">
-                  <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                      <th scope="col" class="govuk-table__header">Measure</th>
-                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Area (hectares)</th>
-                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Volume (m³)</th>
-                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Length (km)</th>
-                      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Width (m)</th>
-                    </tr>
-                  </thead>
-                  <tbody class="govuk-table__body">
-                    {% for measure in data['natural-flood-measures'] %}
+              </summary>
+              <div class="govuk-details__text">
+                <div style="overflow-x: auto;">
+                  <table class="govuk-table">
+                    <thead class="govuk-table__head">
                       <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">
-                          {% if measure == 'river-floodplain' %}River and floodplain restoration
+                        <th scope="col" class="govuk-table__header">Measure</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Area (hectares)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Volume (m³)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Length (km)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Width (m)</th>
+                      </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                      {% for measure in data['natural-flood-measures'] %}
+                        <tr class="govuk-table__row">
+                          <th scope="row" class="govuk-table__header">
+                            {% if measure == 'river-floodplain' %}River and floodplain restoration
                           {% elif measure == 'leaky-barriers' %}Leaky barriers and in-channel storage
                           {% elif measure == 'offline-storage' %}Offline storage areas
                           {% elif measure == 'woodland' %}Woodland
@@ -625,69 +834,69 @@
                           {% elif measure == 'saltmarsh-mudflat' %}Saltmarsh or mudflat management
                           {% elif measure == 'sand-dune' %}Sand dune management
                           {% endif %}
-                        </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                          {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-area'] or '-' }}
-                          {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-area'] or '-' }}
-                          {% elif measure == 'woodland' %}{{ data['nfm-woodland-area'] or '-' }}
-                          {% elif measure == 'headwater-drainage' %}{{ data['nfm-headwater-drainage-area'] or '-' }}
-                          {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-area'] or '-' }}
-                          {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-area'] or '-' }}
-                          {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-area'] or '-' }}
-                          {% else %}-
+                          </th>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">
+                            {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-area'] or '-' }}
+                            {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-area'] or '-' }}
+                            {% elif measure == 'woodland' %}{{ data['nfm-woodland-area'] or '-' }}
+                            {% elif measure == 'headwater-drainage' %}{{ data['nfm-headwater-drainage-area'] or '-' }}
+                            {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-area'] or '-' }}
+                            {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-area'] or '-' }}
+                            {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-area'] or '-' }}
+                            {% else %}-
                           {% endif %}
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                          {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-volume'] or '-' }}
-                          {% elif measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-volume'] or '-' }}
-                          {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-volume'] or '-' }}
-                          {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-volume'] or '-' }}
-                          {% else %}-
+                          </td>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">
+                            {% if measure == 'river-floodplain' %}{{ data['nfm-river-floodplain-volume'] or '-' }}
+                            {% elif measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-volume'] or '-' }}
+                            {% elif measure == 'offline-storage' %}{{ data['nfm-offline-storage-volume'] or '-' }}
+                            {% elif measure == 'runoff-attenuation' %}{{ data['nfm-runoff-attenuation-volume'] or '-' }}
+                            {% else %}-
                           {% endif %}
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                          {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-length'] or '-' }}
-                          {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-length'] or '-' }}
-                          {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-length'] or '-' }}
-                          {% else %}-
+                          </td>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">
+                            {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-length'] or '-' }}
+                            {% elif measure == 'saltmarsh-mudflat' %}{{ data['nfm-saltmarsh-mudflat-length'] or '-' }}
+                            {% elif measure == 'sand-dune' %}{{ data['nfm-sand-dune-length'] or '-' }}
+                            {% else %}-
                           {% endif %}
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                          {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-width'] or '-' }}
-                          {% else %}-
+                          </td>
+                          <td class="govuk-table__cell govuk-table__cell--numeric">
+                            {% if measure == 'leaky-barriers' %}{{ data['nfm-leaky-barriers-width'] or '-' }}
+                            {% else %}-
                           {% endif %}
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          </details>
+            </details>
 
-          {# Land Types Section #}
-          {% if data['land-type'] and data['land-type'].length > 0 %}
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
+            {# Land Types Section #}
+            {% if data['land-type'] and data['land-type'].length > 0 %}
+              <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
                   Land type changes ({{ data['land-type'].length }})
                 </span>
-              </summary>
-              <div class="govuk-details__text">
-                <div style="overflow-x: auto;">
-                  <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                      <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">Land type</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Before NFM (hectares)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">After NFM (hectares)</th>
-                      </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                      {% for type in data['land-type'] %}
+                </summary>
+                <div class="govuk-details__text">
+                  <div style="overflow-x: auto;">
+                    <table class="govuk-table">
+                      <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                          <th scope="row" class="govuk-table__header">
-                            {% if type == 'arable-farmland' %}Arable farmland
+                          <th scope="col" class="govuk-table__header">Land type</th>
+                          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Before NFM (hectares)</th>
+                          <th scope="col" class="govuk-table__header govuk-table__header--numeric">After NFM (hectares)</th>
+                        </tr>
+                      </thead>
+                      <tbody class="govuk-table__body">
+                        {% for type in data['land-type'] %}
+                          <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                              {% if type == 'arable-farmland' %}Arable farmland
                             {% elif type == 'livestock-farmland' %}Livestock farmland
                             {% elif type == 'dairying-farmland' %}Dairying farmland
                             {% elif type == 'semi-natural-grassland' %}Semi-natural grassland
@@ -697,90 +906,91 @@
                             {% elif type == 'rivers-wetlands-freshwater' %}Rivers, wetlands, freshwater
                             {% elif type == 'coastal-margins' %}Coastal margins
                             {% endif %}
-                          </th>
-                          <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-before'] or '-' }}</td>
-                          <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-after'] or '-' }}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                            </th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-before'] or '-' }}</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">{{ data['land-type-' + type + '-after'] or '-' }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            </details>
-          {% endif %}
+              </details>
+            {% endif %}
 
-          {# Project Readiness Section #}
-          <h3 class="govuk-heading-s govuk-!-margin-top-6">Project readiness</h3>
-          <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Landowner consent</dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['landowner-consent'] == 'fully-secured' %}Consent fully secured
+            {# Project Readiness Section #}
+            <h3 class="govuk-heading-s govuk-!-margin-top-6">Project readiness</h3>
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Landowner consent</dt>
+                <dd class="govuk-summary-list__value">
+                  {% if data['landowner-consent'] == 'fully-secured' %}Consent fully secured
                 {% elif data['landowner-consent'] == 'engaged-not-secured' %}Engaged but not fully secured
                 {% elif data['landowner-consent'] == 'initial-contact' %}Initial contact made
                 {% elif data['landowner-consent'] == 'not-engaged' %}Not yet engaged
                 {% else %}Not provided
                 {% endif %}
-              </dd>
-              <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="/proposal/create-proposal/landowner-consent">Change<span class="govuk-visually-hidden"> landowner consent</span></a>
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">NFM experience</dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['nfm-experience'] == 'no-experience' %}No experience
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="/proposal/create-proposal/landowner-consent">Change<span class="govuk-visually-hidden"> landowner consent</span></a>
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">NFM experience</dt>
+                <dd class="govuk-summary-list__value">
+                  {% if data['nfm-experience'] == 'no-experience' %}No experience
                 {% elif data['nfm-experience'] == 'some-experience' %}Some experience
                 {% elif data['nfm-experience'] == 'moderate-experience' %}Moderate experience
                 {% elif data['nfm-experience'] == 'extensive-experience' %}Extensive experience
                 {% else %}Not provided
                 {% endif %}
-              </dd>
-              <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="/proposal/create-proposal/nfm-experience">Change<span class="govuk-visually-hidden"> NFM experience</span></a>
-              </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Proposal development</dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['proposal-development'] == 'early-concept' %}Early concept
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="/proposal/create-proposal/nfm-experience">Change<span class="govuk-visually-hidden"> NFM experience</span></a>
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Proposal development</dt>
+                <dd class="govuk-summary-list__value">
+                  {% if data['proposal-development'] == 'early-concept' %}Early concept
                 {% elif data['proposal-development'] == 'developing-proposal' %}Developing proposal
                 {% elif data['proposal-development'] == 'well-developed' %}Well-developed proposal
                 {% elif data['proposal-development'] == 'ready-to-deliver' %}Ready to deliver
                 {% else %}Not provided
                 {% endif %}
-              </dd>
-              <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="/proposal/create-proposal/proposal-development">Change<span class="govuk-visually-hidden"> proposal development</span></a>
-              </dd>
-            </div>
-          </dl>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="/proposal/create-proposal/proposal-development">Change<span class="govuk-visually-hidden"> proposal development</span></a>
+                </dd>
+              </div>
+            </dl>
 
-        {% else %}
-          <p class="govuk-body">No natural flood measures added yet</p>
-        {% endif %}
+          {% else %}
+            <p class="govuk-body">No natural flood measures added yet</p>
+          {% endif %}
+        </div>
       </div>
-    </div>
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Environmental benefits</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/any-environmental-benefits">
-              {% if data['any-environmental-benefits'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> environmental benefits</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if data['any-environmental-benefits'] == 'yes' %}
-          <dl class="govuk-summary-list">
-            {% for benefit in environmentalBenefits %}
-              {% if data[benefit.id] == 'yes' %}
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">
-                    {% if benefit.id == 'intertidal-habitat' %}Intertidal wetland habitat
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Environmental benefits</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/any-environmental-benefits">
+                {% if data['any-environmental-benefits'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> environmental benefits</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['any-environmental-benefits'] == 'yes' %}
+            <dl class="govuk-summary-list">
+              {% for benefit in environmentalBenefits %}
+                {% if data[benefit.id] == 'yes' %}
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                      {% if benefit.id == 'intertidal-habitat' %}Intertidal wetland habitat
                     {% elif benefit.id == 'woodland-habitat' %}Woodland habitat
                     {% elif benefit.id == 'wet-woodland-habitat' %}Wet woodland habitat
                     {% elif benefit.id == 'wetland-or-wet-grassland-habitat' %}Wetland or wet grassland habitat
@@ -792,66 +1002,68 @@
                     {% elif benefit.id == 'partial-restoration' %}Partial restoration
                     {% elif benefit.id == 'create-habitat-watercourse' %}Single major physical or habitat of watercourse
                     {% endif %}
-                  </dt>
-                  <dd class="govuk-summary-list__value">{{ data[benefit.id + '-amount'] }} {{ benefit.unit }}</dd>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </dl>
-        {% elif data['any-environmental-benefits'] == 'no' %}
-          <p class="govuk-body">No environmental benefits</p>
-        {% else %}
-          <p class="govuk-body">No environmental benefits data added yet</p>
-        {% endif %}
+                    </dt>
+                    <dd class="govuk-summary-list__value">{{ data[benefit.id + '-amount'] }}
+                      {{ benefit.unit }}</dd>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </dl>
+          {% elif data['any-environmental-benefits'] == 'no' %}
+            <p class="govuk-body">No environmental benefits</p>
+          {% else %}
+            <p class="govuk-body">No environmental benefits data added yet</p>
+          {% endif %}
+        </div>
       </div>
-    </div>
 
-    <div class="govuk-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">Urgency</h2>
-        <ul class="govuk-summary-card__actions">
-          <li class="govuk-summary-card__action">
-            <a class="govuk-link" href="/proposal/create-proposal/urgency">
-              {% if data['urgency'] %}Change{% else %}Add{% endif %}<span class="govuk-visually-hidden"> urgency</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="govuk-summary-card__content">
-        {% if data['urgency'] %}
-          <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Reason</dt>
-              <dd class="govuk-summary-list__value">
-                {% if data['urgency'] == 'not_urgent' %}The project is not urgent
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Urgency</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="/proposal/create-proposal/urgency">
+                {% if data['urgency'] %}Change{% else %}Add{% endif %}
+                <span class="govuk-visually-hidden"> urgency</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          {% if data['urgency'] %}
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reason</dt>
+                <dd class="govuk-summary-list__value">
+                  {% if data['urgency'] == 'not_urgent' %}The project is not urgent
                 {% elif data['urgency'] == 'statutory_need' %}There is a business critical statutory need
                 {% elif data['urgency'] == 'legal_need' %}There is a business critical legal need
                 {% elif data['urgency'] == 'health_and_safety' %}There is a health and safety issue
                 {% elif data['urgency'] == 'emergency_works' %}There is an emergency
                 {% elif data['urgency'] == 'time_limited' %}There is a specific aspect of the project that has a time limit
                 {% endif %}
-              </dd>
-            </div>
-            {% if data['urgency'] != 'not_urgent' %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Details</dt>
-                <dd class="govuk-summary-list__value">{{ data['urgency-details'] }}</dd>
+                </dd>
               </div>
-            {% endif %}
-          </dl>
-        {% else %}
-          <p class="govuk-body">No urgency data added yet</p>
-        {% endif %}
+              {% if data['urgency'] != 'not_urgent' %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Details</dt>
+                  <dd class="govuk-summary-list__value">{{ data['urgency-details'] }}</dd>
+                </div>
+              {% endif %}
+            </dl>
+          {% else %}
+            <p class="govuk-body">No urgency data added yet</p>
+          {% endif %}
+        </div>
       </div>
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-6">
+
+      <p class="govuk-body">By submitting this proposal you confirm that all information is accurate and complete.</p>
+
+      <form method="post" action="/proposal/create-proposal/check-answers" class="govuk-!-margin-top-2">
+        <button class="govuk-button" data-module="govuk-button">Submit proposal</button>
+      </form>
     </div>
-
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-6">
-
-    <p class="govuk-body">By submitting this proposal you confirm that all information is accurate and complete.</p>
-
-    <form method="post" action="/proposal/create-proposal/check-answers" class="govuk-!-margin-top-2">
-      <button class="govuk-button" data-module="govuk-button">Submit proposal</button>
-    </form>
   </div>
-</div>
 {% endblock %}

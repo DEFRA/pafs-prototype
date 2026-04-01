@@ -45,6 +45,7 @@
         <div class="govuk-form-group {%- if data and data['other-ea-contributor-values-error'] %} govuk-form-group--error {%- endif %}" id="other-ea-contributor-values">
 
           {% for name in contributors %}
+            {% set contributorIndex = loop.index0 %}
             <div class="govuk-form-group">
               <h2 class="govuk-heading-m">{{ name }}</h2>
 
@@ -65,13 +66,13 @@
                     <tr class="govuk-table__row">
                       <th scope="row" class="govuk-table__header">{{ year }} to {{ year + 1 }}</th>
                       <td class="govuk-table__cell">
-                        <label class="govuk-visually-hidden" for="other-ea-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}">
+                        <label class="govuk-visually-hidden" for="other-ea-contributor-amount-{{ contributorIndex }}-{{ year }}">
                           Estimated spend for {{ name }} in {{ year }} to {{ year + 1 }}
                         </label>
                         <input
                           class="govuk-input govuk-input--width-10 contributor-amount-value"
-                          id="other-ea-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}"
-                          name="other-ea-contributor-amount-{{ loop.parent.loop.index0 }}-{{ year }}"
+                          id="other-ea-contributor-amount-{{ contributorIndex }}-{{ year }}"
+                          name="other-ea-contributor-amount-{{ contributorIndex }}-{{ year }}"
                           type="text"
                           value="{{ yearValue.amount or '' }}"
                           data-contributor="{{ name }}"
@@ -80,26 +81,26 @@
                       <td class="govuk-table__cell govuk-table__cell--numeric checkbox-cell">
                         <input
                           class="contributor-checkbox"
-                          id="other-ea-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}"
-                          name="other-ea-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}"
+                          id="other-ea-contributor-secured-{{ contributorIndex }}-{{ year }}"
+                          name="other-ea-contributor-secured-{{ contributorIndex }}-{{ year }}"
                           type="checkbox"
                           value="on"
                           {% if yearValue.secured %}checked{% endif %}
                         >
-                        <label class="govuk-visually-hidden" for="other-ea-contributor-secured-{{ loop.parent.loop.index0 }}-{{ year }}">
+                        <label class="govuk-visually-hidden" for="other-ea-contributor-secured-{{ contributorIndex }}-{{ year }}">
                           Secured
                         </label>
                       </td>
                       <td class="govuk-table__cell govuk-table__cell--numeric checkbox-cell">
                         <input
                           class="contributor-checkbox"
-                          id="other-ea-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}"
-                          name="other-ea-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}"
+                          id="other-ea-contributor-constrained-{{ contributorIndex }}-{{ year }}"
+                          name="other-ea-contributor-constrained-{{ contributorIndex }}-{{ year }}"
                           type="checkbox"
                           value="on"
                           {% if yearValue.constrained %}checked{% endif %}
                         >
-                        <label class="govuk-visually-hidden" for="other-ea-contributor-constrained-{{ loop.parent.loop.index0 }}-{{ year }}">
+                        <label class="govuk-visually-hidden" for="other-ea-contributor-constrained-{{ contributorIndex }}-{{ year }}">
                           Time constrained
                         </label>
                       </td>

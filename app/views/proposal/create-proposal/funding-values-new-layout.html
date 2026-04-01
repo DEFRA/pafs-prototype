@@ -1,0 +1,345 @@
+﻿{% extends "layouts/main.html" %}
+
+{% set pageName="What is the estimated spend for each financial year?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <a href="/proposal/create-proposal/funding-sources" class="govuk-back-link">Back</a>
+
+    {% if data and data['funding-values-error'] %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          { text: data['funding-values-error'], href: "#funding-values-table" }
+        ]
+      }) }}
+    {% endif %}
+
+    <form method="post" action="/proposal/create-proposal/funding-values-new-layout" novalidate>
+      <div class="govuk-form-group {%- if data and data['funding-values-error'] %} govuk-form-group--error {%- endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              What is the estimated spend for each financial year?
+            </h1>
+          </legend>
+          <p class="govuk-body">
+            Spending estimates should be in pounds (for example £50,000) and estimated at current prices. Future maintenance costs are not required.
+          </p>
+
+          <div class="govuk-inset-text js-hidden" id="no-js-guidance">
+            After entering your values, use the 'Update totals' button to recalculate row and column totals.
+          </div>
+
+          {% if data and data['funding-values-error'] %}
+            <p id="funding-values-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ data['funding-values-error'] }}
+            </p>
+          {% endif %}
+
+          {% set years = fundingYears or [] %}
+          {% set sources = selectedSources or [] %}
+          {% set giaSources = selectedGiaSources or [] %}
+          {% set publicNames = data.publicContributors or [] %}
+          {% set privateNames = data.privateContributors or [] %}
+          {% set otherEaNames = data.otherEaContributors or [] %}
+          {% set vals = data.fundingValuesData or {} %}
+
+          <div class="scroll-horz">
+            <table class="govuk-table" id="funding-values-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header" style="min-width: 250px;">Funding source / contributor</th>
+                  {% for year in years %}
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ (year % 100) | string + "/" + ((year + 1) % 100) | string }}</th>
+                  {% endfor %}
+                  <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total (£)</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+
+                {# --- Grant in Aid --- #}
+                {% if 'grant-in-aid' in sources %}
+                <tr class="govuk-table__row funding-source-row">
+                  <th scope="row" class="govuk-table__header">Grant in aid</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell">
+                      <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                        name="fv[grant-in-aid][{{ year }}]"
+                        value="{{ vals['grant-in-aid'][year] if vals['grant-in-aid'] and vals['grant-in-aid'][year] else '0' }}"
+                        inputmode="numeric" data-source="grant-in-aid" data-year="{{ year }}">
+                    </td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-source="grant-in-aid">{{ serverTotals.rowTotals['grant-in-aid'] or 0 }}</td>
+                </tr>
+                {% endif %}
+
+                {# --- Local Levy --- #}
+                {% if 'local-levy' in sources %}
+                <tr class="govuk-table__row funding-source-row">
+                  <th scope="row" class="govuk-table__header">Local levy</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell">
+                      <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                        name="fv[local-levy][{{ year }}]"
+                        value="{{ vals['local-levy'][year] if vals['local-levy'] and vals['local-levy'][year] else '0' }}"
+                        inputmode="numeric" data-source="local-levy" data-year="{{ year }}">
+                    </td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-source="local-levy">{{ serverTotals.rowTotals['local-levy'] or 0 }}</td>
+                </tr>
+                {% endif %}
+
+                {# --- Additional FCRM Grant-in-Aid items (ungrouped, individual rows) --- #}
+                {% for giaKey in giaSources %}
+                <tr class="govuk-table__row funding-source-row">
+                  <th scope="row" class="govuk-table__header">{{ sourceLabels[giaKey] or giaKey }}</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell">
+                      <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                        name="fv[{{ giaKey }}][{{ year }}]"
+                        value="{{ vals[giaKey][year] if vals[giaKey] and vals[giaKey][year] else '0' }}"
+                        inputmode="numeric" data-source="{{ giaKey }}" data-year="{{ year }}">
+                    </td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-source="{{ giaKey }}">{{ serverTotals.rowTotals[giaKey] or 0 }}</td>
+                </tr>
+                {% endfor %}
+
+                {# --- Internal Drainage Board Precept --- #}
+                {% if 'precept' in sources %}
+                <tr class="govuk-table__row funding-source-row">
+                  <th scope="row" class="govuk-table__header">Internal drainage board precept</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell">
+                      <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                        name="fv[precept][{{ year }}]"
+                        value="{{ vals['precept'][year] if vals['precept'] and vals['precept'][year] else '0' }}"
+                        inputmode="numeric" data-source="precept" data-year="{{ year }}">
+                    </td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-source="precept">{{ serverTotals.rowTotals['precept'] or 0 }}</td>
+                </tr>
+                {% endif %}
+
+                {# --- Other funding sources not yet identified --- #}
+                {% if 'other' in sources %}
+                <tr class="govuk-table__row funding-source-row">
+                  <th scope="row" class="govuk-table__header">Other funding sources not yet identified</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell">
+                      <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                        name="fv[other][{{ year }}]"
+                        value="{{ vals['other'][year] if vals['other'] and vals['other'][year] else '0' }}"
+                        inputmode="numeric" data-source="other" data-year="{{ year }}">
+                    </td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-source="other">{{ serverTotals.rowTotals['other'] or 0 }}</td>
+                </tr>
+                {% endif %}
+
+                {# --- Public Sector Contributors (grouped) --- #}
+                {% if 'public-sector' in sources and publicNames | length > 0 %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header section-header" colspan="{{ years | length + 2 }}">
+                    <strong>Public sector contributions</strong>
+                  </th>
+                </tr>
+                {% for name in publicNames %}
+                  {% if name | trim %}
+                  <tr class="govuk-table__row contributor-row">
+                    <th scope="row" class="govuk-table__header contributor-name">{{ name }}</th>
+                    {% for year in years %}
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                          name="fv[public-contributor][{{ name }}][{{ year }}]"
+                          value="{{ vals['public-contributor'][name][year] if vals['public-contributor'] and vals['public-contributor'][name] and vals['public-contributor'][name][year] else '0' }}"
+                          inputmode="numeric" data-source="public-contributor" data-contributor="{{ name }}" data-year="{{ year }}">
+                      </td>
+                    {% endfor %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-contributor="{{ name }}" data-source="public-contributor">{{ serverTotals.rowTotals['public-contributor:' + name] or 0 }}</td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {# --- Private Sector Contributors (grouped) --- #}
+                {% if 'private-sector' in sources and privateNames | length > 0 %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header section-header" colspan="{{ years | length + 2 }}">
+                    <strong>Private sector contributions</strong>
+                  </th>
+                </tr>
+                {% for name in privateNames %}
+                  {% if name | trim %}
+                  <tr class="govuk-table__row contributor-row">
+                    <th scope="row" class="govuk-table__header contributor-name">{{ name }}</th>
+                    {% for year in years %}
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                          name="fv[private-contributor][{{ name }}][{{ year }}]"
+                          value="{{ vals['private-contributor'][name][year] if vals['private-contributor'] and vals['private-contributor'][name] and vals['private-contributor'][name][year] else '0' }}"
+                          inputmode="numeric" data-source="private-contributor" data-contributor="{{ name }}" data-year="{{ year }}">
+                      </td>
+                    {% endfor %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-contributor="{{ name }}" data-source="private-contributor">{{ serverTotals.rowTotals['private-contributor:' + name] or 0 }}</td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {# --- Other EA Contributors (grouped) --- #}
+                {% if 'ea-contributions' in sources and otherEaNames | length > 0 %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header section-header" colspan="{{ years | length + 2 }}">
+                    <strong>Other Environment Agency contributions</strong>
+                  </th>
+                </tr>
+                {% for name in otherEaNames %}
+                  {% if name | trim %}
+                  <tr class="govuk-table__row contributor-row">
+                    <th scope="row" class="govuk-table__header contributor-name">{{ name }}</th>
+                    {% for year in years %}
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10 funding-value" type="text"
+                          name="fv[ea-contributor][{{ name }}][{{ year }}]"
+                          value="{{ vals['ea-contributor'][name][year] if vals['ea-contributor'] and vals['ea-contributor'][name] and vals['ea-contributor'][name][year] else '0' }}"
+                          inputmode="numeric" data-source="ea-contributor" data-contributor="{{ name }}" data-year="{{ year }}">
+                      </td>
+                    {% endfor %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric row-total" data-contributor="{{ name }}" data-source="ea-contributor">{{ serverTotals.rowTotals['ea-contributor:' + name] or 0 }}</td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+                {% endif %}
+
+              </tbody>
+              <tfoot class="govuk-table__foot">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Total (£)</th>
+                  {% for year in years %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric column-total" data-year="{{ year }}">{{ serverTotals.columnTotals[year] or 0 }}</td>
+                  {% endfor %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric grand-total">{{ serverTotals.grandTotal or 0 }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <style>
+            .scroll-horz {
+              overflow-x: auto;
+              margin-bottom: 20px;
+            }
+
+            #funding-values-table input {
+              text-align: right;
+            }
+
+            #funding-values-table .section-header {
+              background-color: #f3f2f1;
+            }
+
+            #funding-values-table .contributor-name {
+              padding-left: 30px;
+              font-weight: normal;
+            }
+          </style>
+
+        </fieldset>
+      </div>
+
+      <div class="govuk-button-group">
+        <button class="govuk-button" type="submit" name="action" value="continue" data-module="govuk-button">
+          Save and continue
+        </button>
+        <button class="govuk-button govuk-button--secondary js-hidden" type="submit" name="action" value="update-totals" data-module="govuk-button" id="update-totals-btn">
+          Update totals
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  // Progressive enhancement — if JS is available, calculate totals live
+  // and hide the 'Update totals' button and no-JS guidance
+  (function () {
+    // Hide the no-JS guidance and update totals button
+    var noJsGuidance = document.getElementById('no-js-guidance');
+    var updateTotalsBtn = document.getElementById('update-totals-btn');
+    if (noJsGuidance) noJsGuidance.style.display = 'none';
+    if (updateTotalsBtn) updateTotalsBtn.style.display = 'none';
+
+    function parseValue(str) {
+      return parseInt((str || '0').replace(/,/g, ''), 10) || 0;
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString();
+    }
+
+    function calculateRowTotals() {
+      document.querySelectorAll('.row-total').forEach(function (cell) {
+        var source = cell.getAttribute('data-source');
+        var contributor = cell.getAttribute('data-contributor');
+        var total = 0;
+
+        var inputs;
+        if (contributor) {
+          inputs = document.querySelectorAll(
+            'input[data-contributor="' + contributor + '"][data-source="' + source + '"]'
+          );
+        } else {
+          inputs = document.querySelectorAll(
+            'input[data-source="' + source + '"]:not([data-contributor])'
+          );
+        }
+
+        inputs.forEach(function (input) {
+          total += parseValue(input.value);
+        });
+
+        cell.textContent = formatNumber(total);
+      });
+    }
+
+    function calculateColumnTotals() {
+      document.querySelectorAll('.column-total').forEach(function (cell) {
+        var year = cell.getAttribute('data-year');
+        var total = 0;
+
+        document.querySelectorAll('input[data-year="' + year + '"]').forEach(function (input) {
+          total += parseValue(input.value);
+        });
+
+        cell.textContent = formatNumber(total);
+      });
+    }
+
+    function calculateGrandTotal() {
+      var grandTotal = 0;
+      document.querySelectorAll('.column-total').forEach(function (cell) {
+        grandTotal += parseValue(cell.textContent);
+      });
+      var el = document.querySelector('.grand-total');
+      if (el) el.textContent = formatNumber(grandTotal);
+    }
+
+    function updateAllTotals() {
+      calculateRowTotals();
+      calculateColumnTotals();
+      calculateGrandTotal();
+    }
+
+    document.querySelectorAll('.funding-value').forEach(function (input) {
+      input.addEventListener('input', updateAllTotals);
+    });
+
+    updateAllTotals();
+  })();
+</script>
+{% endblock %}
